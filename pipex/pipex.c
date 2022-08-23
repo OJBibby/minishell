@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/08/22 17:14:21 by obibby           ###   ########.fr       */
+/*   Updated: 2022/08/23 09:57:42 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,7 @@ int	out_file(char *file, t_info *info)
 	i = -1;
 	while (file[++i])
 		info->outfile[i] = file[i];
+	return (0);
 }
 
 int	in_file(char *file, t_info *info)
@@ -236,8 +237,8 @@ void	init_array(t_mini *mini, t_info *info)
 	//info->env = mini->env;
 	info->total_ops = count_args(mini->tokens);
 	info->done_ops = 0;
-	info->token->infile = '\0';
-	info->token->outfile = '\0';
+	info->token->infile = NULL;
+	info->token->outfile = NULL;
 	info->stdout_fd = dup(STDOUT_FILENO);
 	info->stdin_fd = dup(STDIN_FILENO);
 }
