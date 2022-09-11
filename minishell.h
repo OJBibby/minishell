@@ -48,6 +48,8 @@ typedef struct s_mini
 }		t_mini;
 
 int	parsing(t_mini *mini);
+int	free_token(t_mini *mini);
+int	free_env(t_mini *mini);
 char	**ft_split(char *s, char c, t_mini *mini, t_token *token);
 char	*get_cmd_name(t_mini *mini, char *str, t_token *token);
 int		pipex(t_mini *mini, char **env);
