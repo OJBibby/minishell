@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:51:34 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/11 17:42:16 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/12 23:48:23 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ typedef struct	s_cmd {
 
 int	error_return(int id, void *mem, char *str);
 int ft_echo(t_token *token, t_info *info);
+int	ft_pwd(t_token *token, t_info *info);
+int	ft_cd(t_token *token, t_info *info);
 //int	exit_shell(t_mini *mini);
 
 void	*ft_calloc(size_t elenum, size_t size);

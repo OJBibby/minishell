@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/11 17:43:08 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/13 00:02:59 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,11 +159,11 @@ int	check_inbuilt(t_token *token, t_info *info)
 	len = ft_strlen(token->args[0]);
 	if (!ft_strncmp(token->args[0], "echo", len))
 		return (ft_echo(token, info));
-	/*if (!ft_strncmp(token->args[0], "cd", len))
-		return (change_dir(token, info));
+	if (!ft_strncmp(token->args[0], "cd", len))
+		return (ft_cd(token, info));
 	if (!ft_strncmp(token->args[0], "pwd", len))
-		return (print_dir(token, info));
-	if (!ft_strncmp(token->args[0], "export", len))
+		return (ft_pwd(token, info));
+	/*if (!ft_strncmp(token->args[0], "export", len))
 		return (my_export(token, info));
 	if (!ft_strncmp(token->args[0], "unset", len))
 		return (my_unset(token, info));
@@ -319,24 +319,24 @@ int	main(int argc, char *argv[], char **env)
 
 	(void)argc;
 	(void)argv;
-	token.next = NULL;
+	token.next = &token1;
 	token.args = malloc(5 * sizeof(char *));
-	token.args[0] = "echo";
-	token.args[1] = "-e";
-	token.args[2] = "Hello\nthere.";
+	token.args[0] = "cd";
+	token.args[1] = "../";
+	token.args[2] = NULL;
 	token.args[3] = NULL;
 	token.args[4] = NULL;
 	token.input = NULL;
-	token.output = "file2";
+	token.output = "|";
 	token.heredoc[0] = 0;
 	token.append[0] = 0;
 	token1.next = NULL;
 	token1.args = malloc(4 * sizeof(char *));
-	token1.args[0] = "cat";
+	token1.args[0] = "pwd";
 	token1.args[1] = NULL;
 	token1.args[2] = NULL;
 	token1.args[3] = NULL;
-	token1.input = "|";
+	token1.input = NULL;
 	token1.output = NULL;
 	token1.heredoc[0] = 0;
 	token1.append[0] = 0;

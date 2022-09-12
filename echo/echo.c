@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 21:34:16 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/11 17:43:34 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/12 23:07:35 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ int ft_echo(t_token *token, t_info *info)
 		}
 		i++;
 	}
-	if (info->done_ops + 1 < info->total_ops)
+	if (token->output && token->output[0] == '|')
 	{
 		dup2(info->out_now, STDOUT_FILENO);
 		close(info->out_now);
 	}
-	else if (token->output[0] != '|')
+	else if (token->output)
 	{
 		dup2(info->outfile_no, STDOUT_FILENO);
 		close(info->outfile_no);
