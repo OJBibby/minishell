@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 22:43:46 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/13 00:01:10 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/13 18:09:07 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,6 @@ int	ft_pwd(t_token *token, t_info *info)
 	while (cwd[i])
 		write(1, &cwd[i++], 1);
 	write(1, "\n", 1);
+	free(cwd);
 	return (2);
 }
