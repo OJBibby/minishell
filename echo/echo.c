@@ -6,65 +6,81 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 21:34:16 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/12 23:07:35 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/13 22:38:43 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex/pipex.h"
 
-int ft_echo(t_token *token, t_info *info)
+int	echo_write(t_token *token, int flags, int fd)
 {
-	int i;
-	int j;
-	int	str;
-	int flags;
-	
-	i = 1;
-	flags = 0;
-	str = 0;
-	close(info->in_now);
-	while (token->args[i] && token->args[i][0] == '-')
+	int	i;
+	int	j;
+
+	if (flags == 0)
+		i = 1;
+	else
+		i = 2;
+	j = -1;
+	if (token->args[i])
 	{
-		j = 0;
 		while (token->args[i][++j])
 		{
-			if (token->args[i][j] != 'n' && token->args[i][j] != 'e')
+			if (token->args[i][j] == '\n' && flags < 2)
+				write(fd, "n", 2);
+			else
+				write(fd, &token->args[i][j], 1);
+		}
+		if (flags == 0 || flags == 2)
+			write(fd, "\n", 1);
+	}
+	return (0);
+}
+
+int	echo_set_fd(t_token *token, t_info *info)
+{
+	int	fd;
+
+	fd = 1;
+	if (token->output && token->output[0] == '|')
+		fd = info->out_now;
+	else if (token->output)
+		fd = info->outfile_no;
+	return (fd);
+}
+
+int	echo_set_flags(t_token *token)
+{
+	int	i;
+	int	flags;
+
+	i = 0;
+	flags = 0;
+	if (token->args[1] && token->args[1][0] == '-')
+	{
+		while (token->args[1][++i])
+		{
+			if (token->args[1][i] == 'n')
+				flags += 1;
+			else if (token->args[1][i] == 'e')
+				flags += 2;
+			else
 			{
-				str = 1;
+				flags = 0;
 				break ;
 			}
 		}
-		if (str == 1)
-			break ;
-		j = 0;
-		while (token->args[i][++j])
-		{
-			if (token->args[i][j] == 'n')
-				flags += 1;
-			else if (token->args[i][j] == 'e')
-				flags += 2;
-		}
-		i++;
 	}
-	if (token->output && token->output[0] == '|')
-	{
-		dup2(info->out_now, STDOUT_FILENO);
-		close(info->out_now);
-	}
-	else if (token->output)
-	{
-		dup2(info->outfile_no, STDOUT_FILENO);
-		close(info->outfile_no);
-	}
-	j = -1;
-	while (token->args[i] && token->args[i][++j])
-	{
-		if (token->args[i][j] == '\n' && flags < 2)
-			write(1, "n", 2);
-		else
-			write(1, &token->args[i][j], 1);
-	}
-	if (flags == 0 || flags == 2)
-		write(1, "\n", 1);
+	return (flags);
+}
+
+int	ft_echo(t_token *token, t_info *info)
+{
+	int	flags;
+	int	fd;
+
+	flags = echo_set_flags(token);
+	fd = echo_set_fd(token, info);
+	echo_write(token, flags, fd);
 	return (2);
 }

@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/13 19:00:57 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/13 22:06:31 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ int	final_output(t_token *token, t_info *info, char *path)
 			dup2(info->stdout_fd, STDOUT_FILENO);
 		close(info->out_now);
 		execve(path, token->args, info->env);
+		perror("execve error:");
 	}
 	else
 	{
@@ -112,7 +113,6 @@ int	buff_to_buff(t_token *token, t_info *info, char *path)
 {
 	int	pid;
 
-	//close(info->out_now);
 	dup2(info->in_now, STDIN_FILENO);
 	close(info->in_now);
 	if (info->done_ops + 1 == info->total_ops)
@@ -129,6 +129,7 @@ int	buff_to_buff(t_token *token, t_info *info, char *path)
 		dup2(info->out_now, STDOUT_FILENO);
 		close(info->out_now);
 		execve(path, token->args, info->env);
+		perror("execve error:");
 	}
 	else
 	{
@@ -324,25 +325,25 @@ int	main(int argc, char *argv[], char **env)
 
 	(void)argc;
 	(void)argv;
-	token.next = NULL;
+	token.next = &token1;
 	token.args = malloc(5 * sizeof(char *));
-	token.args[0] = "cat";
-	token.args[1] = NULL;
+	token.args[0] = "echo";
+	token.args[1] = "this";
 	token.args[2] = NULL;
 	token.args[3] = NULL;
 	token.args[4] = NULL;
-	token.input = "file1";
-	token.output = "file2";
+	token.input = NULL;
+	token.output = "|";
 	token.heredoc[0] = 0;
 	token.append[0] = 0;
 	token1.next = NULL;
 	token1.args = malloc(4 * sizeof(char *));
-	token1.args[0] = "grep";
-	token1.args[1] = "test";
+	token1.args[0] = "echo";
+	token1.args[1] = "that";
 	token1.args[2] = NULL;
 	token1.args[3] = NULL;
 	token1.input = "|";
-	token1.output = "file2";
+	token1.output = NULL;
 	token1.heredoc[0] = 0;
 	token1.append[0] = 0;
 	retval = pipex(&token, env);
