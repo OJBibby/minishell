@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/13 22:06:31 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/15 14:25:19 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	free_joined(char **arr)
 	free(arr);
 }
 
-char	*search_path(t_token *token, t_info *info)
+/*char	*search_path(t_token *token, t_info *info)
 {
 	int		i;
 	char	*str;
@@ -68,7 +68,7 @@ char	*search_path(t_token *token, t_info *info)
 	}
 	free_joined(arr);
 	return (str);
-}
+}*/
 
 void	free_arr(t_cmd *cmds, void *ptr)
 {
@@ -150,7 +150,7 @@ int	path_given(t_token *token, char *path)
 		path = ft_calloc(ft_strlen(token->args[0]) + 1, sizeof(char));
 		if (!path)
 			return (1);
-		while (token->args[++i])
+		while (token->args[0][++i])
 			path[i] = token->args[0][i];
 		return (1);
 	}
@@ -189,11 +189,10 @@ int	exec_cmds(t_token *token, t_info *info)
 	if (inbuilt == 2)
 		return (0);
 	if (!path_given(token, path))
-		path = search_path(token, info);
+		return (error_return(0, NULL, "Program not found."));
+		//path = search_path(token, info);
 	else if (!path)
 		return (error_return(0, NULL, "Memory allocation fail."));
-	if (!path)
-		return (1);
 	if (access(path, X_OK) == -1)
 		return (error_return(1, path, "Invalid permissions."));
 	return (buff_to_buff(token, info, path));

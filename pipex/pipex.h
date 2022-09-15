@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:51:34 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/12 23:48:23 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/15 13:43:06 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct	s_info {
 	int		total_ops;
 	int		done_ops;
 	char	**env;
+	t_env	*env_ll;
 	t_token	*token;
 }	t_info;
 
