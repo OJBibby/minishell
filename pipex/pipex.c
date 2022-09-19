@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/19 13:56:15 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/19 14:28:07 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,6 @@ int	path_given(t_token *token, char *path)
 	int	i;
 
 	i = -1;
-	printf("cmd: %s\n", token->cmd_args[0]);
 	if (!access(token->cmd_args[0], F_OK))
 	{
 		path = ft_calloc(ft_strlen(token->cmd_args[0]) + 1, sizeof(char));
@@ -294,7 +293,7 @@ int	input_init(t_token *token, t_info *info)
 
 int	init_files(t_token *token, t_info *info)
 {
-	if (token->input && input_init(token, info))
+	if (token->input && token->input[0][0] != '|' && input_init(token, info))
 		return (1);
 	if (token->output && output_init(token, info))
 		return (1);
@@ -331,6 +330,8 @@ int	pipex(t_mini *mini)
 {
 	t_info	info;
 
+	if (!mini->tokens)
+		return (0);
 	if (!ft_strncmp(mini->tokens->cmd_args[0], "exit", 5))
 		exit_shell(mini);
 	init_array(mini, &info);
