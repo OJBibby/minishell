@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 13:21:45 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/19 11:32:18 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/19 15:20:45 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	ft_env(t_token *token, t_info *info)
 		fd = info->out_now;
 	tmp = info->env_ll;
 	while (tmp->next)
-		tmp = info->env_ll;
+		tmp = tmp->next;
 	i = 0;
 	while (token->cmd_args[++i])
 	{

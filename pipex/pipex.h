@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:51:34 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/19 11:26:40 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/19 15:14:54 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,8 @@ int ft_echo(t_token *token, t_info *info);
 int	ft_pwd(t_token *token, t_info *info);
 int	ft_cd(t_token *token, t_info *info);
 int	exit_shell(t_mini *mini);
-
+int	ft_env(t_token *token, t_info *info);
 void	*ft_calloc(size_t elenum, size_t size);
-int	ft_strncmp(const char *s1, const char *s2, size_t n);
-size_t	ft_strlen(const char *s);
-char	*ft_strjoin_slash(char const *s1, char const *s2);
-char	**ft_split_or(char const *s, char c);
 int	exec_cmds(t_token *token, t_info *info);
 
 #endif
