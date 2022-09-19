@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 21:34:16 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/19 11:51:49 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/19 15:31:00 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ int	echo_write(t_token *token, int flags, int fd)
 				write(fd, &token->cmd_args[i][j], 1);
 		}
 		i++;
+		j = -1;
+		if (token->cmd_args[i])
+			write(fd, " ", 1);
 	}
 	if (flags == 0 || flags == 2)
 		write(fd, "\n", 1);
@@ -82,7 +85,6 @@ int	ft_echo(t_token *token, t_info *info)
 
 	flags = echo_set_flags(token);
 	fd = echo_set_fd(token, info);
-	printf("cmd_args: %s\n", token->cmd_args[1]);
 	echo_write(token, flags, fd);
 	return (2);
 }
