@@ -295,6 +295,7 @@ int	check_args(t_mini *mini)
 	int		i;
 
 	tmp = mini->tokens;
+	printf("token1: %s, token2: %s\n", mini->tokens->cmd_args[0], tmp->cmd_args[0]);
 	ltmp = NULL;
 	while(tmp)
 	{

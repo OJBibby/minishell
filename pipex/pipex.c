@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/19 12:01:04 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/19 13:01:37 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	free_joined(char **arr)
 	i = 0;
 	while (arr[i])
 	{
-		str = ft_strjoin_slash(arr[i++], token->args[0]);
+		str = ft_strjoin_slash(arr[i++], token->cmd_args[0]);
 		if (!str)
 		{
 			free_joined(arr);
@@ -87,7 +87,7 @@ int	final_output(t_token *token, t_info *info, char *path)
 		return (error_return(1, path, "Error creating child process."));
 	if (pid == 0)
 	{
-		if (token->output[0] && token->output[0][0] != '|')
+		if (token->output && token->output[0][0] != '|')
 		{
 			dup2(info->outfile_no, STDOUT_FILENO);
 			close(info->outfile_no);
@@ -100,12 +100,12 @@ int	final_output(t_token *token, t_info *info, char *path)
 	}
 	else
 	{
-		if (token->output[0] && token->output[0][0] != '|')
+		if (token->output && token->output[0][0] != '|')
 			close(info->outfile_no);
 		close(info->out_now);
 		waitpid(pid, NULL, 0);
 	}
-	free(path);
+	//free(path);
 	return (0);
 }
 
@@ -136,7 +136,7 @@ int	buff_to_buff(t_token *token, t_info *info, char *path)
 		close(info->out_now);
 		waitpid(pid, NULL, 0);
 	}
-	free(path);
+	//free(path);
 	return (0);
 }
 
@@ -145,6 +145,7 @@ int	path_given(t_token *token, char *path)
 	int	i;
 
 	i = -1;
+	printf("cmd: %s\n", token->cmd_args[0]);
 	if (!access(token->cmd_args[0], F_OK))
 	{
 		path = ft_calloc(ft_strlen(token->cmd_args[0]) + 1, sizeof(char));
@@ -179,23 +180,23 @@ int	check_inbuilt(t_token *token, t_info *info)
 
 int	exec_cmds(t_token *token, t_info *info)
 {
-	char	*path;
+	//char	*path;
 	int		inbuilt;
 
-	path = NULL;
+	//path = NULL;
 	inbuilt = check_inbuilt(token, info);
 	if (inbuilt == 1)
 		return (1);
 	if (inbuilt == 2)
 		return (0);
-	if (!path_given(token, path))
+	/*if (!path_given(token, path))
 		return (error_return(0, NULL, "Program not found."));
 		//path = search_path(token, info);
 	else if (!path)
-		return (error_return(0, NULL, "Memory allocation fail."));
-	if (access(path, X_OK) == -1)
-		return (error_return(1, path, "Invalid permissions."));
-	return (buff_to_buff(token, info, path));
+		return (error_return(0, NULL, "Memory allocation fail."));*/
+	if (access(token->path, X_OK) == -1)
+		return (error_return(0, NULL, "Invalid permissions."));
+	return (buff_to_buff(token, info, token->path));
 }
 
 int	error_return(int id, void *mem, char *str)
