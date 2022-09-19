@@ -31,7 +31,7 @@ clean :
 
 fclean : clean
 	@printf "$(GREY)Removing $(BLUE)$(NAME)\n"
-	@rm $(NAME)
+	@rm -f $(NAME)
 
 re : fclean all
 
