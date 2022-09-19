@@ -10,21 +10,28 @@ OBJ		= $(SRC:.c=.o)
 CC		= clang
 # CFLAGS	= -Wall -Wextra -Werror -lreadline -fsanitize=address -g
 CFLAGS	= -Wall -Wextra -Werror -lreadline -g -fsanitize=address
+GREY	=	\33[1;30m
+BLUE	=	\33[0;34m
 
 
 all : $(NAME)
 
 %.o : %.c
-	$(CC) -c -g $< -o $@
+	@printf "\r                               "
+	@printf "\r$(GREY)Compiling $(BLUE)$<"
+	@$(CC) -c -g $< -o $@
 
 $(NAME) : $(OBJ) minishell.h Makefile
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+	@printf "\r$(GREY)Compiling $(BLUE)$(NAME)     	\n"
+	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
 clean :
-	rm -f $(OBJ)
+	@printf "$(GREY)Removing $(BLUE)$(OBJ)\n"
+	@rm -f $(OBJ)
 
 fclean : clean
-	rm $(NAME)
+	@printf "$(GREY)Removing $(BLUE)$(NAME)\n"
+	@rm $(NAME)
 
 re : fclean all
 
