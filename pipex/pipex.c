@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/19 13:01:37 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/19 13:54:13 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,8 @@ int	final_output(t_token *token, t_info *info, char *path)
 		else
 			dup2(info->stdout_fd, STDOUT_FILENO);
 		close(info->out_now);
-		execve(path, token->cmd_args, info->env);
-		perror("execve error:");
+		execve(token->path, token->cmd_args, info->env);
+		perror("execve error");
 	}
 	else
 	{
@@ -128,8 +128,8 @@ int	buff_to_buff(t_token *token, t_info *info, char *path)
 	{
 		dup2(info->out_now, STDOUT_FILENO);
 		close(info->out_now);
-		execve(path, token->cmd_args, info->env);
-		perror("execve error:");
+		execve(token->path, token->cmd_args, info->env);
+		perror("execve error");
 	}
 	else
 	{
@@ -334,21 +334,20 @@ int	pipex(t_mini *mini)
 	printf("PIPEX\n");
 	if (!ft_strncmp(mini->tokens->cmd_args[0], "exit", 5))
 		exit_shell(mini);
-	printf("PIPEX1\n");
 	init_array(mini, &info);
-	while (info.done_ops < info.total_ops)
+	while (info.token && info.done_ops < info.total_ops)
 	{
-		printf("PIPEX2\n");
 		if (init_files(info.token, &info))
 			return (1);
-		printf("PIPEX3\n");
 		if (exec_cmds(info.token, &info) == 1)
 			return (1);
-		printf("PIPEX4\n");
 		info.token = info.token->next;
 		info.done_ops++;
 	}
-	printf("PIPEX END\n");
+	if (info.stdin_fd)
+		dup2(info.stdin_fd, STDIN_FILENO);
+	if (info.stdout_fd)
+		dup2(info.stdout_fd, STDOUT_FILENO);
 	return (0);
 }
 

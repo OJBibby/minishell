@@ -226,7 +226,6 @@ int		main(int ac, char **av, char **env)
 {
 	t_mini	mini;
 	// int		i;
-	
 
 	mini.env = init_env(&mini, env);
 	mini.tokens = NULL;

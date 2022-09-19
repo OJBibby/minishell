@@ -113,8 +113,8 @@ int	mng_spaces(t_mini *mini)
 						q_dom = 0;
 					if ((tmp->cmd_args[i][j] == ' ') && !q_dom)
 					{
-						free(tmp->cmd_args[i]);
 						clean = ft_remove(tmp->cmd_args[i], &j, ' ');
+						free(tmp->cmd_args[i]);
 						tmp->cmd_args[i] = clean;
 					}
 					j++;

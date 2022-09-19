@@ -17,7 +17,7 @@ char	**list_to_arr(t_env *env)
 		i++;
 		tmp = tmp->next;
 	}
-	ret = malloc(sizeof(char) * (i + 1));
+	ret = malloc(sizeof(char *) * (i + 1));
 	tmp = env;
 	i = 0;
 	while (tmp)

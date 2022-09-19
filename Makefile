@@ -9,7 +9,7 @@ OBJ		= $(SRC:.c=.o)
 
 CC		= clang
 # CFLAGS	= -Wall -Wextra -Werror -lreadline -fsanitize=address -g
-CFLAGS	= -Wall -Wextra -Werror -lreadline -g  # -fsanitize=address
+CFLAGS	= -Wall -Wextra -Werror -lreadline -g -fsanitize=address
 
 
 all : $(NAME)
