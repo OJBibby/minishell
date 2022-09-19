@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/19 13:54:13 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/19 13:56:15 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -331,7 +331,6 @@ int	pipex(t_mini *mini)
 {
 	t_info	info;
 
-	printf("PIPEX\n");
 	if (!ft_strncmp(mini->tokens->cmd_args[0], "exit", 5))
 		exit_shell(mini);
 	init_array(mini, &info);
