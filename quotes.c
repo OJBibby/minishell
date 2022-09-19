@@ -19,45 +19,50 @@ int	mng_quotes(t_mini *mini)
 		j = 0;
 
 		q_dom = 0;
-
-		while(tmp->cmd_args[i])
+		if (tmp->cmd_args)
 		{
-			j = 0;
-			while(tmp->cmd_args[i][j])
+
+		
+			while(tmp->cmd_args[i])
 			{
-				// printf("before if %c\n", q_dom);
-
-				if((tmp->cmd_args[i][j] == '\"' || tmp->cmd_args[i][j] == '\'') && !q_dom)
+				j = 0;
+				while(tmp->cmd_args[i][j])
 				{
-					// printf("ENTERED if\n");
+					// printf("before if %c\n", q_dom);
 
-					q_dom = tmp->cmd_args[i][j];
-					clean = tmp->cmd_args[i];
-					tmp->cmd_args[i] = ft_remove_q(tmp->cmd_args[i], &j, q_dom);
-					free(clean);
-					j++;
-					// printf("here %c\n", q_dom);
-				}
-				if(q_dom && tmp->cmd_args[i][j] == q_dom)
-				{
-					clean = tmp->cmd_args[i];
-					tmp->cmd_args[i] = ft_remove_q(tmp->cmd_args[i], &j, q_dom);
-					// if (!tmp->cmd_args[i] || !tmp->cmd_args[i][0])
-					// 	tmp->cmd_args[i] = NULL;
-					if (clean)
+					if((tmp->cmd_args[i][j] == '\"' || tmp->cmd_args[i][j] == '\'') && !q_dom)
+					{
+						// printf("ENTERED if\n");
+
+						q_dom = tmp->cmd_args[i][j];
+						clean = tmp->cmd_args[i];
+						tmp->cmd_args[i] = ft_remove_q(tmp->cmd_args[i], &j, q_dom);
 						free(clean);
-					q_dom = 0;
+						j++;
+						// printf("here %c\n", q_dom);
+					}
+					if(q_dom && tmp->cmd_args[i][j] == q_dom)
+					{
+						clean = tmp->cmd_args[i];
+						tmp->cmd_args[i] = ft_remove_q(tmp->cmd_args[i], &j, q_dom);
+						// if (!tmp->cmd_args[i] || !tmp->cmd_args[i][0])
+						// 	tmp->cmd_args[i] = NULL;
+						if (clean)
+							free(clean);
+						q_dom = 0;
+					}
+					// printf("it was %c\n", tmp->cmd_args[i][j]);
+
+					j++;
+					// printf("it is %c\n", tmp->cmd_args[i][j]);
+
+					if (!tmp->cmd_args[i] || !tmp->cmd_args[i][j])
+					// if (!tmp->cmd_args[i][j])
+						break ;
+					
 				}
-				// printf("it was %c\n", tmp->cmd_args[i][j]);
-
-				j++;
-				// printf("it is %c\n", tmp->cmd_args[i][j]);
-
-				if (!tmp->cmd_args[i] || tmp->cmd_args[i][j])
-					break ;
-				
+				i++;
 			}
-			i++;
 		}
 		tmp = tmp->next;
 	}
@@ -80,67 +85,71 @@ int	quotes(t_mini *mini, t_token *tmp)
 	i = 0;
 	j = 0;
 	// printf("in quotes\n");
-
-	while(tmp->cmd_args[i])
+	if(tmp->cmd_args && tmp->type != 'd')
 	{
-		j = 0;
-		// printf("entered i_\n");
 
-		while (tmp->cmd_args[i][j])
+	
+		while(tmp->cmd_args[i])
 		{
-			// printf("entered ij\n");
-			// printf("qdom %c\n", q_dom);
-			// printf("arg num is %i %s\n", i, tmp->cmd_args[i]);
-			// printf("j is %i\n", j);
-			// printf("hehe char is %d\n", tmp->cmd_args[i][j]);
+			j = 0;
+			// printf("entered i_\n");
 
-			while (tmp->cmd_args[i][j] && (!dom_opened && !dom_closed) || (dom_closed && dom_opened) && q_dom == 0)
+			while (tmp->cmd_args[i][j])
 			{
-				// printf("closed %i\n", dom_closed);
-// 				printf("opened %i\n", dom_opened);
-				if (tmp->cmd_args[i][j] == '\"' || tmp->cmd_args[i][j] == '\'')
+				// printf("entered ij\n");
+				// printf("qdom %c\n", q_dom);
+				// printf("arg num is %i %s\n", i, tmp->cmd_args[i]);
+				// printf("j is %i\n", j);
+				// printf("hehe char is %d\n", tmp->cmd_args[i][j]);
+
+				while (tmp->cmd_args[i][j] && (!dom_opened && !dom_closed) || (dom_closed && dom_opened) && q_dom == 0)
 				{
-					if (dom_closed && dom_opened)
+					// printf("closed %i\n", dom_closed);
+	// 				printf("opened %i\n", dom_opened);
+					if (tmp->cmd_args[i][j] == '\"' || tmp->cmd_args[i][j] == '\'')
 					{
-						// printf("entered IF\n");
-						// printf("THAT char is %c\n", tmp->cmd_args[i][j]);
-						q_dom = tmp->cmd_args[i][j];
-						dom_closed = false;
-						// printf("1 %c is the q \n", tmp->cmd_args[i][j]);
-						j++;
-						break ;
+						if (dom_closed && dom_opened)
+						{
+							// printf("entered IF\n");
+							// printf("THAT char is %c\n", tmp->cmd_args[i][j]);
+							q_dom = tmp->cmd_args[i][j];
+							dom_closed = false;
+							// printf("1 %c is the q \n", tmp->cmd_args[i][j]);
+							j++;
+							break ;
+						}
+						else if (!dom_opened && !dom_closed)
+						{
+							// printf("2 %c is the q \n", tmp->cmd_args[i][j]);
+
+							q_dom = tmp->cmd_args[i][j];
+							dom_opened = true;
+							dom_closed = false;
+							j++;
+							break ;
+						}
 					}
-					else if (!dom_opened && !dom_closed)
-					{
-						// printf("2 %c is the q \n", tmp->cmd_args[i][j]);
-
-						q_dom = tmp->cmd_args[i][j];
-						dom_opened = true;
-						dom_closed = false;
-						j++;
-						break ;
-					}
-				}
-				j++;
-				if (!tmp->cmd_args[i][j])
-					break ;
-
-			}
-			while (tmp->cmd_args[i][j] && (dom_opened == true && !dom_closed))
-			{
-				if (tmp->cmd_args[i][j] == q_dom)
-				{
-					// printf("compr %c %c \n", tmp->cmd_args[i][j], q_dom);
-
-					dom_closed = true;
-					q_dom = 0;
 					j++;
-					break ;
+					if (!tmp->cmd_args[i][j])
+						break ;
+
 				}
-				j++;
+				while (tmp->cmd_args[i][j] && (dom_opened == true && !dom_closed))
+				{
+					if (tmp->cmd_args[i][j] == q_dom)
+					{
+						// printf("compr %c %c \n", tmp->cmd_args[i][j], q_dom);
+
+						dom_closed = true;
+						q_dom = 0;
+						j++;
+						break ;
+					}
+					j++;
+				}
 			}
+			i++;
 		}
-		i++;
 	}
 	if (dom_closed && dom_opened)
 	{

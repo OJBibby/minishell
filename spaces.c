@@ -40,18 +40,21 @@ char	*ft_remove(char *str, int *j, char c)
 	int	i;
 	char	*ret;
 	char	*tmp;
+	int		n;
 
 	i = 0;
+	n = 0;
 	ret = malloc(sizeof(char) * ft_strlen(str));
-	while (str[i])
+	while (str[n])
 	{
-		if (str[i] != c)
+		if (str[n] != c)
 		{
-			ret[i] = str[i];
+			ret[i] = str[n];
 			i++;
+			n++;
 		}
 		else
-			str++;
+			n++;
 	}
 	ret[i] = 0;
 	(*j)--;
@@ -88,31 +91,36 @@ int	mng_spaces(t_mini *mini)
 		j = 0;
 
 		q_dom = 0;
-
-		while(tmp->cmd_args[i])
+		// if (tmp->cmd_args && tmp->cmd_args[0])
+		if (tmp->cmd_args)
 		{
-			j = 0;
-			while(tmp->cmd_args[i][j])
+
+		
+			while(tmp->cmd_args[i])
 			{
-				n = 0;
-				if((tmp->cmd_args[i][j] == '\"' || tmp->cmd_args[i][j] == '\'') && !q_dom)
+				j = 0;
+				while(tmp->cmd_args[i][j])
 				{
-					// if (!q_dom)
-					q_dom = tmp->cmd_args[i][j];
+					n = 0;
+					if((tmp->cmd_args[i][j] == '\"' || tmp->cmd_args[i][j] == '\'') && !q_dom)
+					{
+						// if (!q_dom)
+						q_dom = tmp->cmd_args[i][j];
+						j++;
+						// printf("here %c\n", q_dom);
+					}
+					if((q_dom) && (tmp->cmd_args[i][j] == q_dom))
+						q_dom = 0;
+					if ((tmp->cmd_args[i][j] == ' ') && !q_dom)
+					{
+						free(tmp->cmd_args[i]);
+						clean = ft_remove(tmp->cmd_args[i], &j, ' ');
+						tmp->cmd_args[i] = clean;
+					}
 					j++;
-					// printf("here %c\n", q_dom);
 				}
-				if((q_dom) && (tmp->cmd_args[i][j] == q_dom))
-					q_dom = 0;
-				if ((tmp->cmd_args[i][j] == ' ') && !q_dom)
-				{
-					clean = tmp->cmd_args[i];
-					tmp->cmd_args[i] = ft_remove(tmp->cmd_args[i], &j, ' ');
-					free(clean);
-				}
-				j++;
+				i++;
 			}
-			i++;
 		}
 		tmp = tmp->next;
 	}

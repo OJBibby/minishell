@@ -1,5 +1,6 @@
 #include "minishell.h"
 
+// comment for a test
 
 int	check_quotes(char *str)
 {
@@ -38,6 +39,8 @@ int	check_local_adress(t_token *token, char	*adress, t_mini *mini)
 	return (1);
 }
 
+// int		check_path(t_mini *mini, t_token *token, char *cmd)
+
 int		check_path(t_mini *mini, t_token *token)
 {
 	char	**adress;
@@ -46,7 +49,7 @@ int		check_path(t_mini *mini, t_token *token)
 	char	*clean;
 	char	*tmp_adr;
 
-	// printf("cmd name %s\n", token->cmd_name);
+// 	printf("cmd name %s\n", token->cmd_name);
 	// printf("CHECK PATH %s\n", str);
 
 	tmp_adr = get_env_str(mini->env, "PATH");
@@ -59,7 +62,7 @@ int		check_path(t_mini *mini, t_token *token)
 	
 	while (adress[i])
 	{
-		// printf("ENTERED\n");
+// 		printf("ENTERED\n");
 		// printf("%s\n", adress[i]);
 
 		if (ft_strchr(token->cmd_args[0], '/'))
@@ -109,7 +112,7 @@ int		check_path(t_mini *mini, t_token *token)
 
 	token->path = NULL;
 	token->cmd_name = NULL;
-
+	// printf("token->cmd_args[0]%s \n", token->cmd_args[0]);
 	return (1);
 }
 
@@ -141,7 +144,7 @@ char	*get_cmd_name(t_mini *mini, char *str, t_token *token)
 	return (str);
 }
 
-void	get_args(t_mini *mini, char *str, t_token *token)
+int	get_args(t_mini *mini, char *str, t_token *token)
 {
 	int	i;
 	int	m;
@@ -168,16 +171,24 @@ void	get_args(t_mini *mini, char *str, t_token *token)
 		{
 			new = malloc(sizeof(t_token));
 			new->next = NULL;
+			new->prev = token;
 			token->next = new;
 			token = new;
 			token->path = NULL;
 			token->cmd_args = NULL;
 			token->cmd_name = NULL;
+			token->type = 0;
+			token->heredoc = 0;
+			token->append = 0;
+			token->input = NULL;
+			token->output = NULL;
+			// token->appnd = NULL;
+			// token->hered = NULL;
 		}
 		
 		// if (!open_q)
 		// 	str = get_cmd_name(mini, str, token);
-		if (str[i] == '\"' || str[i] == '\"')
+		if (str[i] == '\"' || str[i] == '\'')
 		{
 			open_q = true;
 			q_char = str[i];
@@ -190,14 +201,57 @@ void	get_args(t_mini *mini, char *str, t_token *token)
 			{
 				open_q = false;
 			}
-			else if (str[i] == q_char && open_q == false)
+			else if ((str[i] == '\"' || str[i] == '\'') && open_q == false)
 			{
 				open_q = true;
 			}
-			if (str[i] == '|' && open_q == true)
+			if ((str[i] == '|' || str[i] == '<' || str[i] == '>') && open_q == true)
 				i++;
-			else if (str[i] == '|' && open_q == false)
+			else if ((str[i] == '|' || str[i] == '<' || str[i] == '>')  && open_q == false)
 			{
+				if (str[i] == '<')
+				{
+					token->type = str[i];
+					str[i] = 0;
+					i++;
+					if (str[i] == '<')
+					{
+						str[i] = 0;
+						i++;
+						if (!ft_islower(str[i]) && !ft_isdigit(str[i]) && !ft_isalpha(str[i]) && str[i] != ' ')
+							return (1);
+						else
+							i--;
+						token->type = 'd';
+					}
+					else if (!ft_islower(str[i]) && !ft_isdigit(str[i]) && !ft_isalpha(str[i]) && str[i] != ' ')
+						return (1);
+					else
+						i--;
+				}
+				else if (str[i] == '>')
+				{
+					token->type = str[i];
+					str[i] = 0;
+
+					i++;
+					if (str[i] == '>')
+					{
+						str[i] = 0;
+						i++;
+						if (!ft_islower(str[i]) && !ft_isdigit(str[i]) && !ft_isalpha(str[i]) && str[i] != ' ')
+							return (1);
+						else
+							i--;						
+						token->type = 'a';
+					}
+					else if (!ft_islower(str[i]) && !ft_isdigit(str[i]) && !ft_isalpha(str[i]) && str[i] != ' ')
+						return (1);
+					else
+						i--;
+				}
+				if (!token->type)
+					token->type = str[i];
 				str[i] = 0;
 				i++;
 				break ;
@@ -227,10 +281,82 @@ void	get_args(t_mini *mini, char *str, t_token *token)
 	}
 	// token = head;
 	mini->tokens = head;
-
+	return (0);
 	// printf("done\n");
 }
 
+
+
+int	check_args(t_mini *mini)
+{
+	t_token *tmp;
+	char	*ltmp;
+	char	**new_args;
+	int		i;
+
+	tmp = mini->tokens;
+	ltmp = NULL;
+	while(tmp)
+	{
+		if (tmp->type == 'd')
+		{
+			if (tmp->cmd_args && tmp->cmd_args[0] && tmp->cmd_args[0][0])
+			{
+				// printf("in if 1 \n");
+				// printf("%i\n", tmp->cmd_args[0][0]);
+				if (!tmp->next->cmd_args || !tmp->next->cmd_args[0])
+					return (1);
+				// // tmp->next->cmd_args[0] = tmp->cmd_args[0];
+				new_args = malloc(sizeof(char) * 3);
+				new_args[0] = ft_strdup(tmp->cmd_args[0]);
+				i = 0;
+				// while (tmp->cmd_args[i])
+				// {
+				// 	// free(tmp->cmd_args[i]);
+				// 	// tmp->cmd_args[0] = NULL;
+				// 	i++;
+				// }
+				// free(tmp->cmd_args);
+				tmp->cmd_args = NULL;
+				new_args[1] = ft_strdup(tmp->next->cmd_args[0]);
+				new_args[2] = 0;
+
+
+				// i = 0;
+				// while(tmp->next->cmd_args[i])
+				// {
+				// 	free(tmp->next->cmd_args[i]);
+				// 	i++;
+				// }
+				// free(tmp->next->cmd_args);
+				tmp->next->cmd_args = new_args;
+
+				// tmp->next->type = 'd';
+				// break ;
+
+				
+			}
+			else if (!tmp->next->cmd_args || !tmp->next->cmd_args[0] || !tmp->next->cmd_args [1])
+				return (1);
+			else
+			{
+				// printf("in else 2 \n");
+
+				ltmp = tmp->next->cmd_args[0];
+
+				tmp->next->cmd_args[0] = tmp->next->cmd_args[1];
+				tmp->next->cmd_args[1] = ltmp;
+				// printf("tmp->next->cmd_args[0] %s\n", tmp->next->cmd_args[0]);
+
+			}
+			
+			
+		}
+		tmp = tmp->next;
+	}
+	// printf("left \n");
+	return(0);
+}
 
 
 
@@ -242,6 +368,7 @@ int	parsing(t_mini *mini)
 	int		i;
 	t_token	*tmp;
 	int		j;
+	
 	
 
 	// printf("in parsing\n");
@@ -256,16 +383,93 @@ int	parsing(t_mini *mini)
 	// }
 
 	if (!str || !str[0])
-		return(1);
+		return (0);
 
 	token = malloc(sizeof(t_token));
 	token->next = NULL;
+	token->prev = NULL;
+
 	token->path = NULL;
 	token->cmd_args = NULL;
 	token->cmd_name = NULL;
+	token->type = 0;
+	token->heredoc = 0;
+	token->append = 0;
+	token->input = NULL;
+	token->output = NULL;
+	// token->appnd = NULL;
+	// token->hered = NULL;
+	token->input = NULL;
+	token->output = NULL;
+
 	
-	get_args(mini, str, token);
+	
+	if(get_args(mini, str, token))
+	{
+		free(str);
+
+		printf("invalid special charachter syntax\n");
+		return (1);
+	}
 	free(str);
+
+	// if (check_args(mini))
+	// {
+		// printf("invalid special charachter use\n");
+	// 	return (1);
+	// }
+	// printf("past check_args\n");
+
+	if (fin_token(mini))
+	{
+		printf("invalid special charachter use 2\n");
+		return (1);
+
+	}
+	// printf("past fin_token\n");
+
+	i = 0;
+
+	j = 0;
+	token = mini->tokens;
+		while(token)
+	{
+		i = 0;
+		// printf("token%i\n", j);
+
+		if (token->cmd_args)
+		{
+
+			while(token->cmd_args[i])
+			{
+				// printf("arg[%i] = %s\n", i, token->cmd_args[i]);
+				i++;
+			}
+			// printf("path %s\n", token->path);
+			
+
+		}
+		i = 0;
+		while (token->input && token->input[i])
+		{
+			// printf("input %s\n", token->input[i]);
+			i++;
+		}
+		i = 0;
+		while (token->output && token->output[i])
+		{
+			// printf("output %s\n", token->output[i]);
+			i++;
+		}
+		// printf("append %i\n", token->append);
+		// printf("heredoc %i\n", token->heredoc);			
+		// printf("token type = %c\n", token->type);
+		token = token->next;
+		// printf("\n");
+		j++;
+		
+	}
+	// printf("past printing\n");
 
 	// tmp = mini->tokens;
 	// i = 0;
@@ -273,15 +477,15 @@ int	parsing(t_mini *mini)
 	// while(tmp)
 	// {
 	// 	i = 0;
-	// 	// printf("final token %s\n", tmp->cmd_name);
+		// printf("final token %s\n", tmp->cmd_name);
 
 	// 	while(tmp->cmd_args[i])
 	// 	{
-	// 		// printf("final arg %s\n", tmp->cmd_args[i]);
+			// printf("final arg %s\n", tmp->cmd_args[i]);
 
 	// 		while(tmp->cmd_args[i][j])
 	// 		{
-	// 			// printf(" %d\n", tmp->cmd_args[i][j]);
+				// printf(" %d\n", tmp->cmd_args[i][j]);
 	// 			j++;
 
 	// 		}
@@ -291,11 +495,14 @@ int	parsing(t_mini *mini)
 	// }
 
 	tmp = mini->tokens;
+
 	if (check_env_vr(mini))
 	{
 		printf("env variable does not exist\n");
 		return (1);
 	}
+	// printf("past check_env_vr\n");
+
 	tmp = mini->tokens;
 	// printf("%s\n", tmp->cmd_name);
 	while (tmp)
@@ -308,68 +515,135 @@ int	parsing(t_mini *mini)
 		tmp = tmp->next;
 
 	}
+	// printf("past quotes\n");
+
 	mng_spaces(mini);
+	// printf("past spaces\n");
+
 	mng_quotes(mini);
+	// printf("past quotes2\n");
+
 
 // ^^^^check_path
 
 	tmp = mini->tokens;
 	// printf("%s\n", tmp->cmd_name);
+
 	while (tmp)
 	{
-		if (check_path(mini, tmp))
-		{
-			printf("no such command\n");
-			return (1);
+		if (tmp->cmd_args)
+		{		
+			if (check_path(mini, tmp))
+			{
+				printf("no such command\n");
+				return (1);
+			}
 		}
-		tmp->cmd_name = tmp->cmd_args[0];
+			// tmp->cmd_name = tmp->cmd_args[0];
 		tmp = tmp->next;
 
 	}
 
 	// printf("YAAAAY\n");
 
-	tmp = mini->tokens;
-	i = 0;
-	j = 0;
-	while(tmp)
-	{
-		i = 0;
+	// tmp = mini->tokens;
+	// i = 0;
+	// j = 0;
+	// while(tmp)
+	// {
+	// 	i = 0;
 		// printf("final token %s\n", tmp->cmd_name);
 
-		while(tmp->cmd_args[i])
-		{
-			j = 0;
+	// 	while(tmp->cmd_args[i])
+	// 	{
+	// 		j = 0;
 			// printf("final arg %s\n", tmp->cmd_args[i]);
 			// printf("path %s\n", tmp->path);
-			while(tmp->cmd_args[i][j])
-			{
+	// 		while(tmp->cmd_args[i][j])
+	// 		{
 				// printf(" %d\n", tmp->cmd_args[i][j]);
-				j++;
+	// 			j++;
 
-			}
+	// 		}
 			// printf("n of args %d\n", i);
 
-			i++;
-		}
-		tmp = tmp->next;
-	}
+	// 		i++;
+	// 	}
+	// 	tmp = tmp->next;
+	// }
 
 
 	// i = 0;
+
+	// j = 0;
+	// token = mini->tokens;
 	// while(token)
 	// {
 	// 	i = 0;
-	// 	printf("final token %s\n", token->cmd_name);
+	// 	printf("token%i\n", j);
 
-	// 	while(token->cmd_args[i])
+	// 	if (token->cmd_args)
 	// 	{
-	// 		printf("final arg %s\n", token->cmd_args[i]);
+
+	// 		while(token->cmd_args[i])
+	// 		{
+	// 			printf("arg[%i] = %s@\n", i, token->cmd_args[i]);
+	// 			i++;
+	// 		}
+	// 		printf("path %s\n", token->path);
+			
+
+	// 	}
+	// 	i = 0;
+	// 	while (token->input && token->input[i])
+	// 	{
+	// 		printf("input %s\n", token->input[i]);
 	// 		i++;
 	// 	}
+	// 	i = 0;
+	// 	while (token->output && token->output[i])
+	// 	{
+	// 		printf("output %s\n", token->output[i]);
+	// 		i++;
+	// 	}
+	// 	i = 0;
+	// 	if (token->append)
+	// 	{
+	// 		while (i < 5)
+	// 		{
+	// 			printf("app arr %i\n", token->append[i]);
+	// 			i++;
+	// 		}
+	// 	}
+	// 	i = 0;
+	// 	if (token->heredoc)
+	// 	{
+	// 		while (i < 5)
+	// 		{
+	// 			printf("her arr %i\n", token->heredoc[i]);
+	// 			i++;
+	// 		}
+	// 	}
+	
+	// 	printf("token type = %c\n", token->type);
 	// 	token = token->next;
+	// 	printf("\n");
+	// 	j++;
+		
 	// }
+
 	
 	return (0);
 	
 }
+
+// < file1 cat 
+
+// token0
+// args = cat (command for <, > will always be in the same token as type)
+// type = <
+
+// //here we can eather put files in args, or use the strust 
+// // that we are going to use for << filea
+// token1
+// args =  file

@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/15 14:25:19 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/19 12:01:04 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	final_output(t_token *token, t_info *info, char *path)
 		return (error_return(1, path, "Error creating child process."));
 	if (pid == 0)
 	{
-		if (token->output)
+		if (token->output[0] && token->output[0][0] != '|')
 		{
 			dup2(info->outfile_no, STDOUT_FILENO);
 			close(info->outfile_no);
@@ -95,12 +95,12 @@ int	final_output(t_token *token, t_info *info, char *path)
 		else
 			dup2(info->stdout_fd, STDOUT_FILENO);
 		close(info->out_now);
-		execve(path, token->args, info->env);
+		execve(path, token->cmd_args, info->env);
 		perror("execve error:");
 	}
 	else
 	{
-		if (token->output)
+		if (token->output[0] && token->output[0][0] != '|')
 			close(info->outfile_no);
 		close(info->out_now);
 		waitpid(pid, NULL, 0);
@@ -128,7 +128,7 @@ int	buff_to_buff(t_token *token, t_info *info, char *path)
 	{
 		dup2(info->out_now, STDOUT_FILENO);
 		close(info->out_now);
-		execve(path, token->args, info->env);
+		execve(path, token->cmd_args, info->env);
 		perror("execve error:");
 	}
 	else
@@ -145,13 +145,13 @@ int	path_given(t_token *token, char *path)
 	int	i;
 
 	i = -1;
-	if (!access(token->args[0], F_OK))
+	if (!access(token->cmd_args[0], F_OK))
 	{
-		path = ft_calloc(ft_strlen(token->args[0]) + 1, sizeof(char));
+		path = ft_calloc(ft_strlen(token->cmd_args[0]) + 1, sizeof(char));
 		if (!path)
 			return (1);
-		while (token->args[0][++i])
-			path[i] = token->args[0][i];
+		while (token->cmd_args[0][++i])
+			path[i] = token->cmd_args[0][i];
 		return (1);
 	}
 	return (0);
@@ -161,12 +161,12 @@ int	check_inbuilt(t_token *token, t_info *info)
 {
 	int	len;
 
-	len = ft_strlen(token->args[0]);
-	if (!ft_strncmp(token->args[0], "echo", len))
+	len = ft_strlen(token->cmd_args[0]);
+	if (!ft_strncmp(token->cmd_args[0], "echo", len))
 		return (ft_echo(token, info));
-	if (!ft_strncmp(token->args[0], "cd", len))
+	if (!ft_strncmp(token->cmd_args[0], "cd", len))
 		return (ft_cd(token, info));
-	if (!ft_strncmp(token->args[0], "pwd", len))
+	if (!ft_strncmp(token->cmd_args[0], "pwd", len))
 		return (ft_pwd(token, info));
 	/*if (!ft_strncmp(token->args[0], "export", len))
 		return (my_export(token, info));
@@ -232,18 +232,71 @@ int	in_file(char *file, t_info *info)
 	return (0);
 }
 
+int	read_stdin(t_token *token, t_info *info, int i)
+{
+	char	*ptr;
+
+	ptr = NULL;
+	while (ft_strncmp(ptr, token->input[i], ft_strlen(token->input[i]) + 1))
+	{
+		if (ptr)
+		{
+			write(info->out_now, ptr, ft_strlen(ptr));
+			write(info->out_now, "\n", 1);
+			free(ptr);
+		}
+		ptr = readline(">");
+	}
+	free(ptr);
+	return (0);
+}
+
+int	output_init(t_token *token, t_info *info)
+{
+	int	i;
+
+	i = 0;
+	while (token->output[i])
+	{
+		if (token->output[i][0] != '|')
+			if (out_file(token->output[i], info, token->append[i]))
+				return (1);
+		if (token->output[++i] && token->output[i][0] != '|')
+			close(info->outfile_no);
+	}
+	return (0);
+}
+
+int	input_init(t_token *token, t_info *info)
+{
+	int	i;
+
+	i = 0;
+	while (token->input[i])
+	{
+		pipe(info->pipe_fd);
+		info->in_now = info->pipe_fd[0];
+		info->out_now = info->pipe_fd[1];
+		if (token->heredoc[i])
+			read_stdin(token, info, i);
+		else
+			if (in_file(token->input[i], info))		
+				return (1);
+		if (token->input[++i])
+		{
+			close(info->in_now);
+			close(info->out_now);
+		}
+	}
+	return (0);
+}
+
 int	init_files(t_token *token, t_info *info)
 {
-	if (token->input && token->input[0] != '|' && !token->heredoc[0])
-	{
-		if (in_file(token->input, info))
-			return (1);
-	}
-	if (token->output && token->output[0] != '|')
-	{
-		if (out_file(token->output, info, token->append[0]))
-			return (1);
-	}
+	if (token->input && input_init(token, info))
+		return (1);
+	if (token->output && output_init(token, info))
+		return (1);
 	return (0);
 }
 
@@ -262,61 +315,43 @@ int	count_args(t_token *token)
 	return (i);
 }
 
-void	init_array(t_token *token, t_info *info)
+void	init_array(t_mini *mini, t_info *info)
 {
-	info->token = token;
-	//info->env = mini->env;
-	info->total_ops = count_args(token);
+	info->token = mini->tokens;
+	info->env_ll = mini->env;
+	info->env = list_to_arr(mini->env);
+	info->total_ops = count_args(info->token);
 	info->done_ops = 0;
 	info->stdout_fd = dup(STDOUT_FILENO);
 	info->stdin_fd = dup(STDIN_FILENO);
 }
 
-int	read_stdin(t_token *token, t_info *info)
-{
-	char	*ptr;
-
-	ptr = NULL;
-	while (ft_strncmp(ptr, token->input, ft_strlen(token->input) + 1))
-	{
-		if (ptr)
-		{
-			write(info->out_now, ptr, ft_strlen(ptr));
-			write(info->out_now, "\n", 1);
-			free(ptr);
-		}
-		ptr = readline(">");
-	}
-	free(ptr);
-	return (0);
-}
-
-int	pipex(t_token *token, char **env)
+int	pipex(t_mini *mini)
 {
 	t_info	info;
 
-	if (!ft_strncmp(token->args[0], "exit", 5))
-		return (0); //exit_shell(mini);
-	init_array(token, &info);
-	info.env = env;
-	pipe(info.pipe_fd);
-	info.in_now = info.pipe_fd[0];
-	info.out_now = info.pipe_fd[1];
+	printf("PIPEX\n");
+	if (!ft_strncmp(mini->tokens->cmd_args[0], "exit", 5))
+		exit_shell(mini);
+	printf("PIPEX1\n");
+	init_array(mini, &info);
 	while (info.done_ops < info.total_ops)
 	{
-		if (info.token->heredoc[0])
-			read_stdin(info.token, &info);
+		printf("PIPEX2\n");
 		if (init_files(info.token, &info))
 			return (1);
+		printf("PIPEX3\n");
 		if (exec_cmds(info.token, &info) == 1)
 			return (1);
+		printf("PIPEX4\n");
 		info.token = info.token->next;
 		info.done_ops++;
 	}
+	printf("PIPEX END\n");
 	return (0);
 }
 
-int	main(int argc, char *argv[], char **env)
+/*int	main(int argc, char *argv[], char **env)
 {
 	t_token token;
 	t_token	token1;
@@ -349,4 +384,4 @@ int	main(int argc, char *argv[], char **env)
 	free(token.args);
 	free(token1.args);
 	return (retval);
-}
+}*/

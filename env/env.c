@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 13:21:45 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/15 14:54:11 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/19 11:32:18 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ int	ft_env(t_token *token, t_info *info)
 	int	j;
 	int	fd;
 	int	retval;
-	char	*tmp_env;
-	char	*saved_env;
+	char	**tmp_env;
+	char	**saved_env;
 	t_env	*tmp;
 
 	fd = 1;
@@ -69,26 +69,26 @@ int	ft_env(t_token *token, t_info *info)
 	while (tmp->next)
 		tmp = info->env_ll;
 	i = 0;
-	while (token->args[++i])
+	while (token->cmd_args[++i])
 	{
 		j = -1;
-		while (token->args[i][++j])
+		while (token->cmd_args[i][++j])
 		{
-			if (token->args[i][j] == '=')
+			if (token->cmd_args[i][j] == '=')
 			{
 				tmp->next = malloc(sizeof(t_env));
 				tmp->next->prev = tmp;
 				tmp = tmp->next;
-				tmp->str = ft_strdup(token->args[i]);
+				tmp->str = ft_strdup(token->cmd_args[i]);
 				tmp->next = NULL;
 				break ;
 			}
 		}
-		if (!token->args[i][j])
+		if (!token->cmd_args[i][j])
 			break ;
 	}
-	tmp_env = list_to_arr(info);
-	if (!token->args[i])
+	tmp_env = list_to_arr(info->env_ll);
+	if (!token->cmd_args[i])
 	{
 		j = 0;
 		while (tmp_env[j])
@@ -97,7 +97,7 @@ int	ft_env(t_token *token, t_info *info)
 		revert_list(tmp, i);
 		return (0);
 	}
-	shift_args(token->args);
+	shift_args(token->cmd_args);
 	saved_env = info->env;
 	info->env = tmp_env;
 	retval = exec_cmds(token, info);
