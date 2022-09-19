@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:51:34 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/19 15:21:52 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/19 15:39:44 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,7 @@ int	exit_shell(t_mini *mini);
 int	ft_env(t_token *token, t_info *info);
 void	*ft_calloc(size_t elenum, size_t size);
 int	exec_cmds(t_token *token, t_info *info);
+int	my_export(t_info *info);
+int	my_unset(t_info *info);
 
 #endif

@@ -5,7 +5,8 @@ OBJ_DIR = obj/
 SRC		= main.c get_args.c ft_split.c ft_strjoin.c ft_strchr.c ft_strncmp.c \
 			extension.c ft_strlen.c ft_isalpha.c quotes.c spaces.c ft_split_or.c \
 			ft_strdup.c fin_token.c ft_calloc.c ft_strjoin_slash.c ft_bzero.c \
-			echo/echo.c cd/cd.c env/env.c exit/exit.c pwd/pwd.c pipex/pipex.c
+			echo/echo.c cd/cd.c env/env.c exit/exit.c pwd/pwd.c pipex/pipex.c \
+			builtin.c
 OBJ		= $(SRC:%.c=$(OBJ_DIR)%.o)
 
 CC		= clang

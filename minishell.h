@@ -50,7 +50,6 @@ typedef struct s_mini
 int parsing(t_mini *mini);
 char **ft_split(char *s, char c, t_mini *mini, t_token *token);
 char *get_cmd_name(t_mini *mini, char *str, t_token *token);
-
 char *ft_strjoin(char const *s1, char const *s2);
 char *ft_strchr(const char *s, int c);
 int ft_strchr_nb(const char *s, int c);
