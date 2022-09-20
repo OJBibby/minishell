@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 22:43:46 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/19 11:21:37 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/20 13:03:48 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	ft_pwd(t_token *token, t_info *info)
 {
 	char	*cwd;
 	int		i;
+	int		fd;
 
 	close(info->in_now);
 	cwd = getcwd(NULL, 0);
@@ -24,20 +25,15 @@ int	ft_pwd(t_token *token, t_info *info)
 		printf("Error retrieving working directory.\n");
 		return (1);
 	}
-	if (token->output[0] && token->output[0][0] == '|')
-	{
-		dup2(info->out_now, STDOUT_FILENO);
-		close(info->out_now);
-	}
-	else if (token->output[0])
-	{
-		dup2(info->outfile_no, STDOUT_FILENO);
-		close(info->outfile_no);
-	}
+	fd = info->stdout_fd;
+	if (token->output && token->output[0][0] == '|')
+		fd = info->out_now;
+	else if (token->output)
+		fd = info->outfile_no;
 	i = 0;
 	while (cwd[i])
-		write(1, &cwd[i++], 1);
-	write(1, "\n", 1);
+		write(fd, &cwd[i++], 1);
+	write(fd, "\n", 1);
 	free(cwd);
 	return (2);
 }

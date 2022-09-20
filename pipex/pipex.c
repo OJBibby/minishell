@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/19 15:38:27 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/20 15:08:44 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,6 +241,7 @@ int	read_stdin(t_token *token, t_info *info, int i)
 	{
 		if (ptr)
 		{
+			ptr = env_var(ptr, info->env);
 			write(info->out_now, ptr, ft_strlen(ptr));
 			write(info->out_now, "\n", 1);
 			free(ptr);
@@ -331,6 +332,8 @@ int	pipex(t_mini *mini)
 	t_info	info;
 
 	if (!mini->tokens)
+		return (0);
+	if (!mini->tokens->cmd_args)
 		return (0);
 	if (!ft_strncmp(mini->tokens->cmd_args[0], "exit", 5))
 		exit_shell(mini);
