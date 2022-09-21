@@ -1,25 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/12 23:37:12 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/21 09:37:00 by obibby           ###   ########.fr       */
+/*   Created: 2022/09/21 11:51:20 by obibby            #+#    #+#             */
+/*   Updated: 2022/09/21 14:12:03 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../execute/execute.h"
+#include "../minishell.h"
 
-int	ft_cd(t_token *token, t_info *info)
+void	sig_quit(int sig)
 {
-	close(info->out_now);
-	close(info->in_now);
-	if (!token->output && chdir(token->cmd_args[1]))
-	{
-		printf("Error changing directory.\n");
-		return (1);
-	}
-	return (2);
+	(void)sig;
+	rl_replace_line("", 1);
+	rl_on_new_line();
+	rl_redisplay();
+	rl_pending_input = 0;
+}
+
+void	sig_int(int	sig)
+{
+	(void)sig;
+	kill(0, SIGQUIT);
+	write(1, "\n", 1);
+	rl_replace_line("", 1);
+	rl_on_new_line();
+	rl_redisplay();
 }

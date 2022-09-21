@@ -6,68 +6,64 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 13:21:45 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/20 13:15:22 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/21 11:40:01 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../pipex/pipex.h"
+#include "../execute/execute.h"
 
-int	revert_list(t_env *tmp, int i)
+int	output_env(char **env, t_env *tmp, int fd, int i)
 {
-	while (i-- > 0)
+	int	j;
+
+	j = -1;
+	while (env[++j])
 	{
-		free(tmp->str);
-		tmp = tmp->prev;
-		free(tmp->next);
-		tmp->next = NULL;
+		write(fd, env[j], ft_strlen(env[j]));
+		write(fd, "\n", 1);
 	}
+	free(env);
+	revert_list(tmp, i);
 	return (0);
 }
 
-int	shift_args(char **args)
+int	use_env(t_token *token, t_info *info, t_env *tmp, int i)
 {
-	int	i;
-	int	j;
+	int		j;
+	int		fd;
+	int		retval;
+	char	**tmp_env;
+	char	**saved_env;
 
-	i = 0;
-	while (args[++i])
+	fd = set_fd(token, info);
+	tmp_env = list_to_arr(info->env_ll);
+	if (!tmp_env)
+		return (error_return(0, NULL, "Memory allocation fail."));
+	if (!token->cmd_args[i])
+		retval = output_env(tmp_env, tmp, fd, i);
+	else
 	{
-		free(args[i - 1]);
-		args[i - 1] = ft_calloc(ft_strlen(args[i]) + 1, sizeof(char));
-		if (!args[i - 1])
-			return (1);
-		j = -1;
-		while (args[i][++j])
-			args[i - 1][j] = args[i][j];
-		args[i - 1][j] = '\0';
+		if (shift_args(token->cmd_args))
+			return (error_return(1, tmp_env, "Memory allocation fail."));
+		saved_env = info->env;
+		info->env = tmp_env;
+		retval = exec_cmds(token, info);
+		info->env = saved_env;
+		free(tmp_env);
+		revert_list(tmp, i);
 	}
-	free(args[i - 1]);
-	args[i - 1] = ft_calloc(1, sizeof(char));
-	if (!args[i - 1])
-		return (1);
-	args[i - 1] = NULL;
-	free(args[i]);
-	return (0);
+	/*if (info->stdout_fd == -1)
+		info->stdout_fd = dup(STDOUT_FILENO);*/
+	return (retval);
 }
 
 int	ft_env(t_token *token, t_info *info)
 {
-	int	i;
-	int	j;
-	int	fd;
-	int	retval;
-	char	**tmp_env;
-	char	**saved_env;
+	int		i;
+	int		j;
 	t_env	*tmp;
 
-	fd = 1;
-	if (info->outfile_no)
-		fd = info->outfile_no;
-	else if (token->output)
-		fd = info->out_now;
-	tmp = info->env_ll;
-	while (tmp->next)
-		tmp = tmp->next;
+	tmp = get_last_node(info->env_ll);
 	i = 0;
 	while (token->cmd_args[++i])
 	{
@@ -87,22 +83,5 @@ int	ft_env(t_token *token, t_info *info)
 		if (!token->cmd_args[i][j])
 			break ;
 	}
-	tmp_env = list_to_arr(info->env_ll);
-	if (!token->cmd_args[i])
-	{
-		j = 0;
-		while (tmp_env[j])
-			write(fd, &tmp_env[j++], 1);
-		free(tmp_env);
-		revert_list(tmp, i);
-		return (0);
-	}
-	shift_args(token->cmd_args);
-	saved_env = info->env;
-	info->env = tmp_env;
-	retval = exec_cmds(token, info);
-	info->env = saved_env;
-	free(tmp_env);
-	revert_list(tmp, i);
-	return (retval);
+	return (use_env(token, info, tmp, i));
 }

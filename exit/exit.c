@@ -6,11 +6,11 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 19:22:40 by obibby            #+#    #+#             */
-/*   Updated: 2022/08/24 19:31:44 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/21 09:37:09 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../pipex/pipex.h"
+#include "../execute/execute.h"
 
 int	exit_shell(t_mini *mini)
 {

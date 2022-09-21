@@ -66,7 +66,6 @@ char *ft_remove(char *str, int *j, char c);
 char *ft_remove_q(char *str, int *j, char c);
 char **ft_split_or(char const *s, char c);
 char *ft_strdup(const char *s1);
-int execution(t_mini *mini);
 int ft_islower(int c);
 int ft_isdigit(int c);
 int check_path(t_mini *mini, t_token *token);
@@ -76,8 +75,11 @@ int free_token(t_mini *mini);
 void free_d_arr(char **arr);
 int free_token_light(t_token *tokens);
 char	**list_to_arr(t_env *env);
-int	pipex(t_mini *mini);
+int	execute(t_mini *mini);
 void	ft_bzero(void *str, size_t n);
 int	free_env(t_mini *mini);
+void	*ft_calloc(size_t elenum, size_t size);
+void	sig_quit(int i);
+void	sig_int(int	sig);
 
 #endif

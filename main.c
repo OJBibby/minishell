@@ -227,6 +227,10 @@ int		main(int ac, char **av, char **env)
 	t_mini	mini;
 	// int		i;
 
+	//signal(SIGQUIT, sig_quit);
+	signal(SIGQUIT, sig_quit);
+	signal(SIGINT, sig_int);
+	signal(SIG)
 	mini.env = init_env(&mini, env);
 	mini.tokens = NULL;
 	// i = 1;
@@ -235,7 +239,7 @@ int		main(int ac, char **av, char **env)
 		if(parsing(&mini))
 			printf("string passed to the shell is not valid\n");
 	    else
-			pipex(&mini);
+			execute(&mini);
 		free_token(&mini);
 	}
 	free_env(&mini);

@@ -6,10 +6,8 @@ char	**list_to_arr(t_env *env)
 {
 	t_env	*tmp;
 	int		i;
-	int		j;
 	char	**ret;
 
-	j = 0;
 	i = 0;
 	tmp = env;
 	while (tmp)
@@ -17,7 +15,9 @@ char	**list_to_arr(t_env *env)
 		i++;
 		tmp = tmp->next;
 	}
-	ret = malloc(sizeof(char *) * (i + 1));
+	ret = ft_calloc((i + 1), sizeof(char *));
+	if (!ret)
+		return (NULL);
 	tmp = env;
 	i = 0;
 	while (tmp)

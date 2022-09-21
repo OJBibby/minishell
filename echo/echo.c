@@ -6,11 +6,11 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 21:34:16 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/20 16:15:26 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/21 11:40:33 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../pipex/pipex.h"
+#include "../execute/execute.h"
 
 char	*env_var(char *arg, char **env)
 {
@@ -116,7 +116,7 @@ int	echo_write(t_token *token, t_info *info, int flags, int fd)
 	return (0);
 }
 
-int	echo_set_fd(t_token *token, t_info *info)
+int	set_fd(t_token *token, t_info *info)
 {
 	if (token->output)
 	{
@@ -125,6 +125,9 @@ int	echo_set_fd(t_token *token, t_info *info)
 		else
 			return (info->outfile_no);
 	}
+	/*dup2(info->stdout_fd, STDOUT_FILENO);
+	close(info->stdout_fd);
+	info->stdout_fd = -1;*/
 	return (1);
 }
 
@@ -159,7 +162,9 @@ int	ft_echo(t_token *token, t_info *info)
 	int	fd;
 
 	flags = echo_set_flags(token);
-	fd = echo_set_fd(token, info);
+	fd = set_fd(token, info);
 	echo_write(token, info, flags, fd);
+	/*if (info->stdout_fd == -1)
+		info->stdout_fd = dup(STDOUT_FILENO);*/
 	return (2);
 }

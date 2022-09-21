@@ -6,11 +6,11 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 22:43:46 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/20 13:03:48 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/21 09:37:21 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../pipex/pipex.h"
+#include "../execute/execute.h"
 
 int	ft_pwd(t_token *token, t_info *info)
 {
