@@ -1,38 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/07 13:18:50 by cgreenpo          #+#    #+#             */
-/*   Updated: 2022/09/19 11:36:34 by obibby           ###   ########.fr       */
+/*   Created: 2021/10/06 11:48:32 by cgreenpo          #+#    #+#             */
+/*   Updated: 2022/09/21 15:46:42 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "libft.h"
-#include "minishell.h"
+#include "../minishell.h"
 
-char	*ft_strchr(const char *s, int c)
+size_t	ft_strlen(const char *s)
 {
-	while ((char)c != *s && *s)
-		s++;
-	if (*s == (char)c)
-		return ((char *)s);
-	return (NULL);
-}
-
-int	ft_strchr_nb(const char *s, int c)
-{
-	int	i;
+	size_t	i;
 
 	i = 0;
-	while ((char)c != *s && *s)
-	{
+	while (s[i] != 0)
 		i++;
-		s++;
-	}
-	if (*s == (char)c)
-		return (i);
-	return (-1);
+	return (i);
 }

@@ -6,12 +6,11 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 09:41:17 by cgreenpo          #+#    #+#             */
-/*   Updated: 2022/08/22 16:36:45 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/21 15:46:29 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "libft.h"
-#include "minishell.h"
+#include "../minishell.h"
 
 
 

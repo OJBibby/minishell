@@ -1,24 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgreenpo <cgreenpo@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/06 11:48:32 by cgreenpo          #+#    #+#             */
-/*   Updated: 2021/10/22 20:31:50 by cgreenpo         ###   ########.fr       */
+/*   Created: 2021/10/09 09:35:57 by cgreenpo          #+#    #+#             */
+/*   Updated: 2022/09/21 15:46:22 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "libft.h"
-#include "minishell.h"
+#include "../minishell.h"
 
-size_t	ft_strlen(const char *s)
+
+char	*ft_strdup(const char *s1)
 {
 	size_t	i;
+	char	*s2;
 
 	i = 0;
-	while (s[i] != 0)
+	s2 = (char *)malloc(sizeof(const char) * (ft_strlen(s1) + 1));
+	if (s2 == NULL)
+		return (NULL);
+	while (s1[i])
+	{
+		s2[i] = s1[i];
 		i++;
-	return (i);
+	}
+	s2[i] = '\0';
+	return (s2);
 }

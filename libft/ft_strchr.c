@@ -1,25 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/23 21:36:05 by obibby            #+#    #+#             */
-/*   Updated: 2022/08/22 14:17:51 by obibby           ###   ########.fr       */
+/*   Created: 2021/10/07 13:18:50 by cgreenpo          #+#    #+#             */
+/*   Updated: 2022/09/21 15:46:15 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-//#include "libft.h"
+#include "../minishell.h"
 
-void	*ft_calloc(size_t elenum, size_t size)
+char	*ft_strchr(const char *s, int c)
 {
-	void	*ptr;
+	while ((char)c != *s && *s)
+		s++;
+	if (*s == (char)c)
+		return ((char *)s);
+	return (NULL);
+}
 
-	ptr = malloc(elenum * size);
-	if (ptr == NULL)
-		return (NULL);
-	ft_bzero(ptr, elenum * size);
-	return (ptr);
+int	ft_strchr_nb(const char *s, int c)
+{
+	int	i;
+
+	i = 0;
+	while ((char)c != *s && *s)
+	{
+		i++;
+		s++;
+	}
+	if (*s == (char)c)
+		return (i);
+	return (-1);
 }

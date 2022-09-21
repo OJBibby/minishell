@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgreenpo <cgreenpo@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 09:41:17 by cgreenpo          #+#    #+#             */
-/*   Updated: 2021/10/22 19:45:27 by cgreenpo         ###   ########.fr       */
+/*   Updated: 2022/09/21 15:46:35 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "libft.h"
-#include "minishell.h"
+#include "../minishell.h"
 
 
 
