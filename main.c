@@ -227,7 +227,6 @@ int		main(int ac, char **av, char **env)
 	t_mini	mini;
 	// int		i;
 
-	//signal(SIGQUIT, sig_quit);
 	signal(SIGQUIT, sig_quit);
 	signal(SIGINT, sig_int);
 	mini.env = init_env(&mini, env);
