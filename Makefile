@@ -10,10 +10,12 @@ SRC		= main.c get_args.c libft/ft_split.c libft/ft_strjoin.c libft/ft_strchr.c l
 			builtin.c signals/signals.c
 OBJ		= $(SRC:%.c=$(OBJ_DIR)%.o)
 CC		= gcc
-CFLAGS	= -Wall -Wextra -Werror -lreadline -g -fsanitize=address
+#-g -fsanitize=address
+CFLAGS	= -Wall -Wextra -Werror
+LIBS	= -lreadline
 GREY	=	\33[1;30m
 BLUE	=	\33[0;34m
-
+GREEN	=	\33[0;32m
 
 all : $(NAME)
 
@@ -25,7 +27,7 @@ $(OBJ_DIR)%.o : %.c
 
 $(NAME) : $(OBJ) minishell.h Makefile
 	@printf "\r$(GREY)Compiling $(BLUE)$(NAME)        \n"
-	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(LIBS)
 
 clean :
 	@printf "$(GREY)Removing $(BLUE)$(OBJ)\n"
