@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:39:52 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/21 09:40:11 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/22 19:25:59 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	output_child(t_token *token, t_info *info, char *path)
 	close(info->out_now);
 	execve(token->path, token->cmd_args, info->env);
 	perror("execve error");
-	return (1);
+	exit (1);
 }
 
 int	final_output(t_token *token, t_info *info, char *path)

@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 13:21:45 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/22 14:16:25 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/22 18:48:32 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	output_env(char **env, t_env *tmp, int fd, int i)
 {
 	int	j;
+	int	k;
 
 	j = -1;
 	while (env[++j])
@@ -24,7 +25,7 @@ int	output_env(char **env, t_env *tmp, int fd, int i)
 	}
 	free(env);
 	revert_list(tmp, i);
-	return (0);
+	return (2);
 }
 
 int	use_env(t_token *token, t_info *info, t_env *tmp, int i)
@@ -91,7 +92,6 @@ int	ft_env(t_token *token, t_info *info)
 	t_env	*tmp;
 	int i;
 
-	
 	tmp = get_last_node(info->env_ll);
 	i = add_env(token, tmp);
 	if (i == -1)

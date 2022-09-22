@@ -31,7 +31,7 @@ int	check_local_adress(t_token *token, char	*adress, t_mini *mini)
 	// }
 	if (access(adress, F_OK) == 0)
 	{
-		token->path = adress;
+		token->path = ft_strdup(adress);
 		// printf("local\n");
 
 		return (0);
@@ -144,6 +144,7 @@ char	*get_cmd_name(t_mini *mini, char *str, t_token *token)
 	return (str);
 }
 
+
 int	get_args(t_mini *mini, char *str, t_token *token)
 {
 	int	i;
@@ -155,6 +156,8 @@ int	get_args(t_mini *mini, char *str, t_token *token)
 	bool	open_q;
 	char	q_char;
 	char	**tmp_arr;
+	int		bg;
+	int		end;
 	
 	// n = 0;
 	i = 0;
@@ -164,6 +167,8 @@ int	get_args(t_mini *mini, char *str, t_token *token)
 	open_q = false;
 	mini->tokens = token;
 	// printf("in get_args\n");
+	bg = 0;
+	end = 0;
 
 	while (str && str[i])
 	{
@@ -188,10 +193,14 @@ int	get_args(t_mini *mini, char *str, t_token *token)
 		
 		// if (!open_q)
 		// 	str = get_cmd_name(mini, str, token);
-		if (str[i] == '\"' || str[i] == '\'')
+		// if (str[i] == '\"' || str[i] == '\'')
+		// if ((str[i] == '\"' || str[i] == '\'') && open_q == false)
+
+		if ((str[i] == '\"' || str[i] == '\''))
 		{
 			open_q = true;
 			q_char = str[i];
+			i++;
 
 		}
 		// printf("get_cmd_name %s\n", str);
@@ -200,10 +209,23 @@ int	get_args(t_mini *mini, char *str, t_token *token)
 			if (open_q == true && str[i] == q_char)
 			{
 				open_q = false;
+				q_char = 0;
+
 			}
 			else if ((str[i] == '\"' || str[i] == '\'') && open_q == false)
+
+			// else if ((str[i] == '\"' || str[i] == '\''))
 			{
 				open_q = true;
+				q_char = str[i];
+				i++;
+			}
+			if (open_q == true && str[i] == q_char)
+			{
+				open_q = false;
+				q_char = 0;
+
+				// end = i;
 			}
 			if ((str[i] == '|' || str[i] == '<' || str[i] == '>') && open_q == true)
 				i++;
@@ -237,6 +259,7 @@ int	get_args(t_mini *mini, char *str, t_token *token)
 					i++;
 					if (str[i] == '>')
 					{
+						printf("*** quote for output %i\n", open_q);
 						str[i] = 0;
 						i++;
 						if (!ft_islower(str[i]) && !ft_isdigit(str[i]) && !ft_isalpha(str[i]) && str[i] != ' ')
@@ -295,7 +318,6 @@ int	check_args(t_mini *mini)
 	int		i;
 
 	tmp = mini->tokens;
-	printf("token1: %s, token2: %s\n", mini->tokens->cmd_args[0], tmp->cmd_args[0]);
 	ltmp = NULL;
 	while(tmp)
 	{
@@ -373,15 +395,7 @@ int	parsing(t_mini *mini)
 	
 
 	// printf("in parsing\n");
-	str = readline("👑𝖒𝖎𝖓𝖎𝖘𝖍𝖊𝖑𝖑 ▸ ");
-
-	// if (!mini->prompt)
-	// {
-	// str = readline("👑𝖒𝖎𝖓𝖎𝖘𝖍𝖊𝖑𝖑 ▸ ");
-		// str = strdup("echo hello hey | echo \"$USER\" \" \'   hi\'\"");
-		// printf("%s\n", str);
-	// 	mini->prompt = 1;
-	// }
+	str = readline("👑𝖒 𝖎𝖓𝖎𝖘𝖍𝖊𝖑𝖑 ▸ ");
 
 	if (!str || !str[0])
 		return (0);
@@ -414,6 +428,8 @@ int	parsing(t_mini *mini)
 	}
 	free(str);
 
+
+
 	// if (check_args(mini))
 	// {
 		// printf("invalid special charachter use\n");
@@ -427,49 +443,82 @@ int	parsing(t_mini *mini)
 		return (1);
 
 	}
-	// printf("past fin_token\n");
 
-	i = 0;
-
-	j = 0;
-	token = mini->tokens;
-		while(token)
+	tmp = mini->tokens;
+	while (tmp)
 	{
-		i = 0;
-		// printf("token%i\n", j);
-
-		if (token->cmd_args)
+		if (tmp->input && !tmp->append)
 		{
+			i = 0;
 
-			while(token->cmd_args[i])
+			while (tmp->input[i])
 			{
-				// printf("arg[%i] = %s\n", i, token->cmd_args[i]);
 				i++;
 			}
-			// printf("path %s\n", token->path);
+			tmp->append= calloc(i, sizeof(int));
+		}
+		if (tmp->output && !tmp->heredoc)
+		{
+			i = 0;
+
+			while (tmp->output[i])
+			{
+				i++;
+			}
+			tmp->heredoc= calloc(i, sizeof(int));
+		}
+		tmp = tmp->next;
+	}
+
+
+
+	// printf("index %s", token->cmd_args[i]);
+
+
+	// printf("past fin_token\n");
+
+	// i = 0;
+
+	// j = 0;
+	// token = mini->tokens;
+	// 	while(token)
+	// {
+	// 	i = 0;
+	// 	printf("token%i\n", j);
+
+	// 	if (token->cmd_args)
+	// 	{
+
+	// 		while(token->cmd_args[i])
+	// 		{
+	// 			printf("arg[%i] = %s\n", i, token->cmd_args[i]);
+	// 			i++;
+	// 		}
+	// 		printf("path %s\n", token->path);
 			
 
-		}
-		i = 0;
-		while (token->input && token->input[i])
-		{
-			// printf("input %s\n", token->input[i]);
-			i++;
-		}
-		i = 0;
-		while (token->output && token->output[i])
-		{
-			// printf("output %s\n", token->output[i]);
-			i++;
-		}
-		// printf("append %i\n", token->append);
-		// printf("heredoc %i\n", token->heredoc);			
-		// printf("token type = %c\n", token->type);
-		token = token->next;
-		// printf("\n");
-		j++;
+	// 	}
+	// 	i = 0;
+	// 	while (token->input && token->input[i])
+	// 	{
+	// 		printf("input %s\n", token->input[i]);
+	// 		i++;
+	// 	}
+	// 	i = 0;
+	// 	while (token->output && token->output[i])
+	// 	{
+	// 		printf("output %s\n", token->output[i]);
+	// 		i++;
+	// 	}
 		
-	}
+	// 	printf("token type = %c\n", token->type);
+	// 	token = token->next;
+	// 	printf("\n");
+	// 	j++;
+		
+	// }
+	
+	glue(mini->tokens);
 	// printf("past printing\n");
 
 	// tmp = mini->tokens;
@@ -522,6 +571,18 @@ int	parsing(t_mini *mini)
 	// printf("past spaces\n");
 
 	mng_quotes(mini);
+
+	tmp = mini->tokens;
+
+	while (tmp)
+	{
+		if (tmp->input)
+			mng_quotes_light(tmp->input);
+		if (tmp->output)
+			mng_quotes_light(tmp->output);
+		tmp = tmp->next;
+	}
+
 	// printf("past quotes2\n");
 
 

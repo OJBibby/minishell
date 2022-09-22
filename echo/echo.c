@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 21:34:16 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/21 11:40:33 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/22 19:27:27 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,8 @@ int	ft_echo(t_token *token, t_info *info)
 	flags = echo_set_flags(token);
 	fd = set_fd(token, info);
 	echo_write(token, info, flags, fd);
+	if (token->output && token->output[0][0] != '|')
+		close(info->outfile_no);
 	/*if (info->stdout_fd == -1)
 		info->stdout_fd = dup(STDOUT_FILENO);*/
 	return (2);

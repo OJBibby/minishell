@@ -1,5 +1,66 @@
 #include "minishell.h"
 
+
+int	mng_quotes_light(char **arr)
+{
+	t_token	*tmp;
+	int	i;
+	int j;
+	char	q_dom;
+	// char	*ext;
+	char	*clean;
+	// printf("MANAGE QUOTES\n");
+
+	i = 0;
+	j = 0;
+	q_dom = 0;
+	if (arr)
+	{
+
+		while(arr[i])
+		{
+			j = 0;
+			while(arr[i][j])
+			{
+				// printf("before if %c\n", q_dom);
+
+				if((arr[i][j] == '\"' || arr[i][j] == '\'') && !q_dom)
+				{
+					// printf("ENTERED if\n");
+
+					q_dom = arr[i][j];
+					clean = arr[i];
+					arr[i] = ft_remove_q(arr[i], &j, q_dom);
+					free(clean);
+					j++;
+					// printf("here %c\n", q_dom);
+				}
+				if(q_dom && arr[i][j] == q_dom)
+				{
+					clean = arr[i];
+					arr[i] = ft_remove_q(arr[i], &j, q_dom);
+					// if (!tmp->cmd_args[i] || !tmp->cmd_args[i][0])
+					// 	tmp->cmd_args[i] = NULL;
+					if (clean)
+						free(clean);
+					q_dom = 0;
+				}
+				// printf("it was %c\n", tmp->cmd_args[i][j]);
+
+				j++;
+				// printf("it is %c\n", tmp->cmd_args[i][j]);
+
+				if (!arr[i] || !arr[i][j])
+				// if (!tmp->cmd_args[i][j])
+					break ;
+				
+			}
+			i++;
+		}
+	}
+	return (0);
+}
+
 int	mng_quotes(t_mini *mini)
 {
 	t_token	*tmp;

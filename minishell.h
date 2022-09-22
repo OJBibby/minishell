@@ -15,6 +15,14 @@
 // **cmd_args – array of arguments where cmd_args[0] is the name of the command
 // path – path to the executable
 
+typedef struct s_glue
+{
+	int		bg_arg;
+	int		bg_chr;
+	int		end_arg;
+	int		end_chr;
+}	t_glue;
+
 typedef struct s_token
 {
 	char *cmd_name; // !do not use! (will be removed later)
@@ -66,6 +74,7 @@ char *ft_remove(char *str, int *j, char c);
 char *ft_remove_q(char *str, int *j, char c);
 char **ft_split_or(char const *s, char c);
 char *ft_strdup(const char *s1);
+int execution(t_mini *mini);
 int ft_islower(int c);
 int ft_isdigit(int c);
 int check_path(t_mini *mini, t_token *token);
@@ -74,7 +83,8 @@ int ft_isalpha(int c);
 int free_token(t_mini *mini);
 void free_d_arr(char **arr);
 int free_token_light(t_token *tokens);
-char	**list_to_arr(t_env *env);
+void	glue(t_token *token);
+int		mng_quotes_light(char **arr);
 int	execute(t_mini *mini);
 void	ft_bzero(void *str, size_t n);
 int	free_env(t_mini *mini);
@@ -82,5 +92,6 @@ void	*ft_calloc(size_t elenum, size_t size);
 void	sig_quit(int i);
 void	sig_int(int	sig);
 int		ft_strncmp_env(const char *s1, const char *s2, size_t n);
+char	**list_to_arr(t_env *env);
 
 #endif

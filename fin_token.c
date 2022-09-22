@@ -1,5 +1,279 @@
 #include "minishell.h"
 
+
+int	rearrange(t_glue glue, t_token *token)
+{
+	char	**tmp;
+	char	**ret;
+	int		i;
+	int		j;
+	int		x;
+	int		y;
+	char	*str;
+	int		n;
+	int	res;
+
+	i = 0;
+	j = 0;
+
+	// printf("in rearrange\n");
+	while (token->cmd_args[i])
+		i++;
+
+	x = glue.end_arg - glue.bg_arg + 1;
+	y = i - x + 1;
+
+	if (glue.end_chr != (ft_strlen(token->cmd_args[glue.end_arg] - 1)))
+		y++;
+	if (glue.bg_chr > 0)
+		y++;
+	// printf("d arr %i\n", y + 1);
+
+	ret = malloc(sizeof(char *) * (y + 1));
+	
+	ret[y] = NULL;
+	j = glue.bg_arg;
+	y = glue.bg_chr;
+	// printf("%i\n", glue.bg_arg);
+	i = 0;
+	while(token->cmd_args && token->cmd_args[j] && j <= glue.end_arg)
+	{
+		// printf("%s \n", token->cmd_args[j]);
+		if (j == glue.bg_arg)
+		{
+			while (token->cmd_args[j][y])
+			{
+				y++;
+				i++;
+			}
+			j++;
+		}
+		y = 0;
+		while(token->cmd_args[j] && token->cmd_args[j][y] && j != glue.end_arg)
+		{
+			// printf("-- %c \n", token->cmd_args[j][y]);
+			y++;
+			i++;
+		}
+		if (j == glue.end_arg)
+		{
+			while (token->cmd_args[j][y] && y <= glue.end_chr)
+			{
+				y++;
+				i++;
+			}
+		}
+		j++;
+	}
+
+	// printf("str len %i\n", i + 1);
+	str = malloc(sizeof(char) * (i + 1));
+	str[i] = 0;
+	j = glue.bg_arg;
+	i = glue.bg_chr;
+	n = 0;
+
+	while(token->cmd_args[j] && j <= glue.end_arg)
+	{
+		if (glue.bg_arg == glue.end_arg)
+		{
+			while(token->cmd_args[j][i] && i <= glue.end_chr)
+			{
+				str[n] = token->cmd_args[j][i];
+				n++;
+				i++;
+			}
+			break ;
+		}
+		else
+		{
+
+		
+	
+			while (j != glue.end_arg)
+			{
+				if (j == glue.bg_arg)
+					i = glue.bg_chr;
+				else
+				{
+					i = 0;
+				}
+				// printf("from %s\n", token->cmd_args[j]);
+				while(token->cmd_args[j][i])
+				{
+					
+					str[n] = token->cmd_args[j][i];
+					n++;
+					i++;
+				}
+				j++;
+
+			}
+			// printf("final string %s\n", str);
+
+			if(j == glue.end_arg)
+			{
+				i = 0;
+				while (token->cmd_args[j][i] && i <= glue.end_chr)
+				{
+					str[n] = token->cmd_args[j][i];
+					n++;
+					i++;
+				}
+				break ;
+			}
+		}
+	}
+	// printf("final string %s\n", str);
+	// j = glue.bg_arg;
+	// i = glue.bg_chr;
+	n = 0;
+	j = 0;
+	i = 0;
+	while(token->cmd_args[j])
+	{
+		while (j < glue.bg_arg)
+		{
+			ret[n] = ft_strdup(token->cmd_args[j]);
+			j++;
+			n++;
+		}
+		if (j == glue.bg_arg)
+		{
+			if (glue.bg_chr > 0)
+			{
+				ret[n] = strndup(token->cmd_args[j], glue.bg_chr); //!!!!!!!!!!!!!!
+				n++;
+				while (j < glue.end_arg)
+					j++;
+			}
+
+			ret[n] = str;
+			n++;
+
+		}
+		if (j == glue.end_arg)
+		{
+			if (glue.end_chr != (ft_strlen(token->cmd_args[j] - 1)))
+			{
+				// printf("in != strlen \n");
+				ret[n] = ft_strdup(token->cmd_args[j] + (glue.end_chr + 1)); //!!!!!!!!!!!!!!
+				res = n;
+
+				n++;
+				j++;
+
+			} 
+			else
+			{
+				res = n;
+
+			}
+			
+			while(token->cmd_args && token->cmd_args[j])
+			{
+				// printf("token->cmd_args[j] %s \n", token->cmd_args[j]);
+				if(token->cmd_args[j])
+					ret[n] = ft_strdup(token->cmd_args[j]);
+				n++;
+				j++;
+			}	
+		}
+		
+
+	}
+
+	free_d_arr(token->cmd_args);
+	token->cmd_args = ret;
+
+	i = 0;
+
+	while (token->cmd_args[i])
+	{
+		// printf("arg %s \n", token->cmd_args[i]);
+		i++;
+	}
+	return (res);
+
+	
+
+}
+
+void	glue(t_token *tokens)
+{
+	int	i;
+	int	j;
+	int	arg;
+	int	chr;
+	t_glue	glue;
+	t_token	*token;
+
+
+	bool	open_q;
+	char	q_char;
+
+	i = 0;
+	j = 0;
+	token = tokens;
+
+	glue.end_arg = 0;
+	glue.end_chr = 0;
+	glue.bg_arg = 0;
+	glue.bg_chr = 0;
+	// printf("in glue\n");
+	while (token)
+	{
+		i = 0;
+		open_q = false;
+		q_char = 0;
+		// printf("index %s", token->cmd_args[i]);
+		while (token->cmd_args && token->cmd_args[i])
+		{
+			j = 0;
+			// printf("index %s\n", token->cmd_args[i]);
+
+			while (token->cmd_args[i] && token->cmd_args[i][j])
+			{
+				// printf("index %i", i);
+				if ((token->cmd_args[i][j] == '\"' || token->cmd_args[i][j] == '\'') && open_q == false)
+				{
+					open_q = true;
+					q_char = token->cmd_args[i][j];
+					glue.bg_arg = i;
+					glue.bg_chr = j;
+					j++;
+
+				}
+
+				if (open_q == true && token->cmd_args[i][j] == q_char)
+				{
+					open_q = false;
+					glue.end_arg = i;
+					glue.end_chr = j;
+					// printf("glue %i %i %i %i\n", glue.bg_arg, glue.bg_chr, glue.end_arg, glue.end_chr);
+					i = rearrange(glue, token);
+					// printf("new i = %i ", i);
+					j = 0;
+					break ;
+				}
+				else if ((token->cmd_args[i][j] == '\"' || token->cmd_args[i][j] == '\'') && open_q == false)
+				{
+					open_q = true;
+					glue.bg_arg = i;
+					glue.bg_chr = j;
+					j++;
+				}
+				else
+					j++;
+				// j++;
+			}
+			i++;
+		}
+		token = token->next;
+
+	}
+}
+
 int	*add_int(int *arr, int nb, int q, int len)
 {
 	int	i;
@@ -354,7 +628,7 @@ int	fin_token(t_mini *mini)
 							ret->input = tmp_arr;
 							i++;
 							// printf("string or %s\n", ret->input[0]);
-							ret->output = add_string(ret->output, old->next->cmd_args[0]);
+							// ret->input = add_string(ret->input, old->next->cmd_args[0]);
 							// printf("LEEEN %i\n", ilen);
 							tmp_int = ret->heredoc;
 
@@ -419,6 +693,7 @@ int	fin_token(t_mini *mini)
 				{
 					ret->output = add_string(ret->output, "|");
 				}
+
 			}
 			
 			else if (old->type == '>' || old->type == 'a')
@@ -542,6 +817,7 @@ int	fin_token(t_mini *mini)
 
 				}
 
+
 			}
 			else if (!old->type && !old->next)
 			{
@@ -578,6 +854,12 @@ int	fin_token(t_mini *mini)
 
 			old = old->next;
 			// my_print(ret);
+			// if (!ret->append)
+			// {
+			// 	ret->append = malloc(sizeof(int));
+			// 	// ret->append = NULL;
+			// }
+
 		}
 		// printf("out !| \n");
 
