@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/21 09:50:08 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/22 14:33:01 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,9 +107,9 @@ int	check_inbuilt(t_token *token, t_info *info)
 	if (!ft_strncmp(token->cmd_args[0], "pwd", len))
 		return (ft_pwd(token, info));
 	if (!ft_strncmp(token->cmd_args[0], "export", len))
-		return (my_export(info));
+		return (ft_export(info));
 	if (!ft_strncmp(token->cmd_args[0], "unset", len))
-		return (my_unset(info));
+		return (ft_unset(info));
 	if (!ft_strncmp(token->cmd_args[0], "env", len))
 		return (ft_env(token, info));
 	return (0);

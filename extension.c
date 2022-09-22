@@ -51,15 +51,15 @@ int	free_env_arr(char **env)
 t_env	*get_env_node(t_env *env, char *var)
 {
 	t_env	*tmp;
+	int		len;
 	int		i;
 
 	tmp = env;
-	while(tmp)
+	len = ft_strlen(var);
+	while (tmp)
 	{
-		if (ft_strncmp(tmp->str, var, ft_strlen(var)) == 0)
-		{
+		if (ft_strncmp_env(tmp->str, var, len) == 0)
 			return(tmp);
-		}
 		tmp = tmp->next;
 	}
 	return (NULL);

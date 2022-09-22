@@ -7,11 +7,11 @@ SRC		= main.c get_args.c libft/ft_split.c libft/ft_strjoin.c libft/ft_strchr.c l
 			libft/ft_strdup.c fin_token.c libft/ft_calloc.c libft/ft_strjoin_slash.c libft/ft_bzero.c \
 			echo/echo.c cd/cd.c env/env.c env/utils.c exit/exit.c pwd/pwd.c \
 			execute/execute.c execute/init.c execute/io.c execute/output.c \
-			builtin.c signals/signals.c
+			export/export.c signals/signals.c
 OBJ		= $(SRC:%.c=$(OBJ_DIR)%.o)
 CC		= gcc
 #-g -fsanitize=address
-CFLAGS	= -Wall -Wextra -Werror
+CFLAGS	= -Wall -Wextra -Werror -g -fsanitize=address
 LIBS	= -lreadline
 GREY	=	\33[1;30m
 BLUE	=	\33[0;34m

@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:51:34 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/21 10:49:45 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/22 14:08:47 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ int		ft_cd(t_token *token, t_info *info);
 int		exit_shell(t_mini *mini);
 int		ft_env(t_token *token, t_info *info);
 int		exec_cmds(t_token *token, t_info *info);
-int		my_export(t_info *info);
-int		my_unset(t_info *info);
+int		ft_export(t_info *info);
+int		ft_unset(t_info *info);
 char	*env_var(char *arg, char **env);
 int		buff_to_buff(t_token *token, t_info *info, char *path);
 void	init_array(t_mini *mini, t_info *info);
@@ -59,5 +59,6 @@ int		set_fd(t_token *token, t_info *info);
 int		shift_args(char **args);
 int		revert_list(t_env *tmp, int i);
 t_env	*get_last_node(t_env *env);
+int		add_env(t_token *token, t_env *env);
 
 #endif

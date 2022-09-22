@@ -81,5 +81,6 @@ int	free_env(t_mini *mini);
 void	*ft_calloc(size_t elenum, size_t size);
 void	sig_quit(int i);
 void	sig_int(int	sig);
+int		ft_strncmp_env(const char *s1, const char *s2, size_t n);
 
 #endif

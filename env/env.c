@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 13:21:45 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/21 11:40:01 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/22 14:16:25 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,11 @@ int	use_env(t_token *token, t_info *info, t_env *tmp, int i)
 	return (retval);
 }
 
-int	ft_env(t_token *token, t_info *info)
+int	add_env(t_token *token, t_env *env)
 {
-	int		i;
-	int		j;
-	t_env	*tmp;
+	int	i;
+	int	j;
 
-	tmp = get_last_node(info->env_ll);
 	i = 0;
 	while (token->cmd_args[++i])
 	{
@@ -72,16 +70,31 @@ int	ft_env(t_token *token, t_info *info)
 		{
 			if (token->cmd_args[i][j] == '=')
 			{
-				tmp->next = malloc(sizeof(t_env));
-				tmp->next->prev = tmp;
-				tmp = tmp->next;
-				tmp->str = ft_strdup(token->cmd_args[i]);
-				tmp->next = NULL;
+				env->next = ft_calloc(1, sizeof(t_env));
+				if (!env->next)
+					return (-1);
+				env->next->prev = env;
+				env = env->next;
+				env->str = ft_strdup(token->cmd_args[i]);
+				env->next = NULL;
 				break ;
 			}
 		}
 		if (!token->cmd_args[i][j])
 			break ;
 	}
+	return (i);
+}
+
+int	ft_env(t_token *token, t_info *info)
+{
+	t_env	*tmp;
+	int i;
+
+	
+	tmp = get_last_node(info->env_ll);
+	i = add_env(token, tmp);
+	if (i == -1)
+		return (error_return(0, NULL, "Memory allocation fail."));
 	return (use_env(token, info, tmp, i));
 }
