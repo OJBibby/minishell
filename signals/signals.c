@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 11:51:20 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/21 15:42:10 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/23 23:38:40 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	sig_quit(int sig)
 	(void)sig;
 	rl_on_new_line();
 	rl_redisplay();
+	g_exit = 128 + sig;
 }
 
 void	sig_int(int sig)
@@ -27,4 +28,5 @@ void	sig_int(int sig)
 	rl_replace_line("", 1);
 	rl_on_new_line();
 	rl_redisplay();
+	g_exit = 128 + sig;
 }

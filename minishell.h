@@ -15,6 +15,8 @@
 // **cmd_args – array of arguments where cmd_args[0] is the name of the command
 // path – path to the executable
 
+static int	g_exit;
+
 typedef struct s_glue
 {
 	int		bg_arg;

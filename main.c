@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+
+
 t_env	*init_env(t_mini *mini, char **or_env)
 {
 	t_env	*env;

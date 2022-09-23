@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/22 19:00:06 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/24 00:02:10 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,9 +121,15 @@ int	exec_cmds(t_token *token, t_info *info)
 
 	inbuilt = check_inbuilt(token, info);
 	if (inbuilt == 1)
+	{
+		g_exit = 2;
 		return (1);
+	}
 	if (inbuilt == 2)
+	{
+		g_exit = 0;
 		return (0);
+	}
 	if (access(token->path, X_OK) == -1)
 		return (error_return(0, NULL, "Invalid permissions."));
 	return (buff_to_buff(token, info, token->path));
@@ -135,6 +141,8 @@ int	error_return(int id, void *mem, char *str)
 		free(mem);
 	if (id == 2)
 		close(id);
+	if (id == 3)
+		free(str);
 	printf("%s\n", str);
 	return (1);
 }
@@ -152,13 +160,13 @@ int	execute(t_mini *mini)
 	init_array(mini, &info);
 	while (info.token && info.done_ops < info.total_ops)
 	{
-		printf("args: %s, %s\n", info.token->cmd_args[0], info.token->cmd_args[1]);
 		if (init_files(info.token, &info))
-			return (1);
+			break ;
 		if (exec_cmds(info.token, &info) == 1)
-			return (1);
+			break ;
 		info.token = info.token->next;
 		info.done_ops++;
+		printf("exit status: %d\n", g_exit);
 	}
 	if (info.stdin_fd)
 	{

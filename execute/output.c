@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:39:52 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/22 19:25:59 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/23 23:46:32 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	output_child(t_token *token, t_info *info, char *path)
 {
+	int	retval;
+
 	if (token->output && token->output[0][0] != '|')
 	{
 		dup2(info->outfile_no, STDOUT_FILENO);
@@ -27,14 +29,15 @@ int	output_child(t_token *token, t_info *info, char *path)
 		close(info->stdout_fd);
 	}
 	close(info->out_now);
-	execve(token->path, token->cmd_args, info->env);
-	perror("execve error");
-	exit (1);
+	retval = execve(token->path, token->cmd_args, info->env);
+	perror("");
+	exit (retval);
 }
 
 int	final_output(t_token *token, t_info *info, char *path)
 {
 	int	pid;
+	int status;
 
 	pid = fork();
 	if (pid == -1)
@@ -46,7 +49,8 @@ int	final_output(t_token *token, t_info *info, char *path)
 		if (token->output && token->output[0][0] != '|')
 			close(info->outfile_no);
 		close(info->out_now);
-		waitpid(pid, NULL, 0);
+		waitpid(pid, &status, 0);
+		g_exit = WEXITSTATUS(status);
 	}
 	return (0);
 }
@@ -54,6 +58,7 @@ int	final_output(t_token *token, t_info *info, char *path)
 int	buff_to_buff(t_token *token, t_info *info, char *path)
 {
 	int	pid;
+	int status;
 
 	dup2(info->in_now, STDIN_FILENO);
 	close(info->in_now);
@@ -71,7 +76,8 @@ int	buff_to_buff(t_token *token, t_info *info, char *path)
 	else
 	{
 		close(info->out_now);
-		waitpid(pid, NULL, 0);
+		waitpid(pid, &status, 0);
+		g_exit = WEXITSTATUS(status);
 	}
 	return (0);
 }

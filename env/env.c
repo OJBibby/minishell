@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 13:21:45 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/22 18:48:32 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/24 00:04:36 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,14 @@ int	add_env(t_token *token, t_env *env)
 	i = 0;
 	while (token->cmd_args[++i])
 	{
-		j = -1;
+		j = 0;
 		while (token->cmd_args[i][++j])
 		{
-			if (token->cmd_args[i][j] == '=')
+			if (token->cmd_args[i][j] == '=' && token->cmd_args[i][j + 1])
 			{
 				env->next = ft_calloc(1, sizeof(t_env));
 				if (!env->next)
-					return (-1);
+					return (error_return(0, NULL, "Memory allocation fail.") - 2);
 				env->next->prev = env;
 				env = env->next;
 				env->str = ft_strdup(token->cmd_args[i]);
@@ -82,7 +82,7 @@ int	add_env(t_token *token, t_env *env)
 			}
 		}
 		if (!token->cmd_args[i][j])
-			break ;
+			return (error_return(3, NULL, ft_strjoin(token->cmd_args[i], ": No such file or directory.")) - 2);
 	}
 	return (i);
 }
@@ -95,6 +95,6 @@ int	ft_env(t_token *token, t_info *info)
 	tmp = get_last_node(info->env_ll);
 	i = add_env(token, tmp);
 	if (i == -1)
-		return (error_return(0, NULL, "Memory allocation fail."));
+		return (1);
 	return (use_env(token, info, tmp, i));
 }

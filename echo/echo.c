@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 21:34:16 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/22 19:27:27 by obibby           ###   ########.fr       */
+/*   Updated: 2022/09/23 22:34:10 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,6 @@ int	echo_write(t_token *token, t_info *info, int flags, int fd)
 	{
 		while (token->cmd_args[i][++j])
 		{
-			/*if (token->cmd_args[i][j] == '$')
-				env_var(token->cmd_args[i], j, info->env);*/
 			if (token->cmd_args[i][j] == '\n' && flags < 2)
 				write(fd, "n", 2);
 			else
@@ -121,7 +119,12 @@ int	set_fd(t_token *token, t_info *info)
 	if (token->output)
 	{
 		if (token->output[0][0] == '|')
+		{
+			pipe(info->pipe_fd);
+			info->out_now = info->pipe_fd[1];
+			info->in_now = info->pipe_fd[0];
 			return (info->out_now);
+		}
 		else
 			return (info->outfile_no);
 	}

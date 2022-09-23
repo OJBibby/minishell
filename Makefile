@@ -12,7 +12,8 @@ OBJ		= $(SRC:%.c=$(OBJ_DIR)%.o)
 CC		= gcc
 #-g -fsanitize=address
 CFLAGS	= -Wall -Wextra -Werror
-LIBS	= -lreadline
+LIBS	= -L/usr/local/opt/readline/lib -lreadline
+INCLUDE = -I/usr/local/opt/readline/include
 GREY	=	\33[1;30m
 BLUE	=	\33[0;34m
 GREEN	=	\33[0;32m
@@ -24,7 +25,7 @@ $(OBJ_DIR)%.o : %.c
 	@mkdir -p $(@D)
 	@printf "\r                                         "
 	@printf "\r$(GREY)Compiling $(BLUE)$<"
-	@$(CC) -c -g $< -o $@
+	@$(CC) -c -g $< -o $@ $(INCLUDE)
 
 $(NAME) : $(OBJ) minishell.h Makefile
 	@printf "\r$(GREY)Compiling $(BLUE)$(NAME)$(RESET)        \n"
