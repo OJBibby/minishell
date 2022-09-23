@@ -93,5 +93,6 @@ void	sig_quit(int i);
 void	sig_int(int	sig);
 int		ft_strncmp_env(const char *s1, const char *s2, size_t n);
 char	**list_to_arr(t_env *env);
+char  *ft_itoa(int n);
 
 #endif

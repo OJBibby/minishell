@@ -51,15 +51,15 @@ int	free_env_arr(char **env)
 t_env	*get_env_node(t_env *env, char *var)
 {
 	t_env	*tmp;
-	int		len;
 	int		i;
 
 	tmp = env;
-	len = ft_strlen(var);
-	while (tmp)
+	while(tmp)
 	{
-		if (ft_strncmp_env(tmp->str, var, len) == 0)
+		if (ft_strncmp(tmp->str, var, ft_strlen(var)) == 0)
+		{
 			return(tmp);
+		}
 		tmp = tmp->next;
 	}
 	return (NULL);
@@ -106,6 +106,8 @@ char	*ft_insert(char *s1, char *point_of_in, int remove, int index)
 
 	// printf("point_of_in %s\n", point_of_in);
 	point_of_in += remove;
+	printf("point_of_in %s\n", point_of_in);
+
 	// printf("point_of_in %s\n", point_of_in);
 	clean = ret;
 	ret = ft_strjoin(ret, point_of_in);
@@ -128,6 +130,9 @@ int	check_env_vr(t_mini *mini)
 	int		index;
 	char	*clean;
 	char	*t;
+	int		exit_s;
+
+	exit_s = 127;
 
 	// printf("in env_vr_check\n");
 
@@ -159,70 +164,119 @@ int	check_env_vr(t_mini *mini)
 					if ((tmp->cmd_args[i][j] == '$') && (q_dom == '\"' || !q_dom))
 					{
 						j++;
-
-						s = tmp->cmd_args[i] + j;
-						// printf("ssss %s\n", s);
-
-						index = ft_strchr_nb(tmp->cmd_args[i], '$');
-						while(s[n] >= 'A' && s[n] <= 'Z')
-							n++;
-						if (!n)
+					
+						if (tmp->cmd_args[i][j] == '?')
 						{
-							// printf("err\n");
-							return (0);
-						}
-						clean = strndup(s, n); //!!!
-						ext = get_env_str(mini->env, clean);
-						free(clean);
-						if(!ext)
-						{
-							// printf("err\n");
-							return (1);
-						}
-						s += n;
-						// s = 
-						// ext = get_env_str(mini->env, strndup(s, n)); //!!!
-						// if(!ext)
-						// {
-						// 	printf("err\n");
-						// 	return (1);
-						// }
-						// s += n;
+							s = tmp->cmd_args[i] + j;
 
-						// printf("ssss %s\n", s);
-						// printf("1 tmp = %s\n", tmp->cmd_args[i]);
+							index = ft_strchr_nb(tmp->cmd_args[i], '$');
+							// n = 1;
+							ext = ft_itoa(exit_s);
+							printf("itoa %s\n", ext);
+							if(!ext)
+							{
+								// printf("err\n");
+								return (1);
+							}							
+							// n = ft_strlen(ext);
+							s += 1;							
+							// n = 1;
+
+							clean = ft_insert(tmp->cmd_args[i], ext, -1, index);
+							printf("insert %s\n", clean);
+
+							if(s)
+							{
+								t = tmp->cmd_args[i];
+								tmp->cmd_args[i] = ft_strjoin(clean, s);
+								// printf("after alteration %s\n", tmp->cmd_args[i]);	
 
 
-						clean = ft_insert(tmp->cmd_args[i], ext, n, index);
-						// printf("after alteration %s\n", clean);	
+								free(t);
+								free(clean);
+								// free(s);
+							}
+							else
+							{
+								t = tmp->cmd_args[i];
+								tmp->cmd_args[i] = clean;
+								free(t);
+								// printf("after alteration %s\n", tmp->cmd_args[i]);	
 
-						// printf("2 tmp = %s\n", tmp->cmd_args[i]);
-						// free(tmp->cmd_args[i]); // ###
-						// tmp->cmd_args[i] = clean;
-
-						// free(clean);
-						if(s)
-						{
-							t = tmp->cmd_args[i];
-							tmp->cmd_args[i] = ft_strjoin(clean, s);
+							}
 							// printf("after alteration %s\n", tmp->cmd_args[i]);	
+							j = -1;
+							q_dom = 0;
 
-
-							free(t);
-							free(clean);
-							// free(s);
 						}
 						else
 						{
-							t = tmp->cmd_args[i];
-							tmp->cmd_args[i] = clean;
-							free(t);
-							// printf("after alteration %s\n", tmp->cmd_args[i]);	
 
+						
+							s = tmp->cmd_args[i] + j;
+							// printf("ssss %s\n", s);
+
+							index = ft_strchr_nb(tmp->cmd_args[i], '$');
+							while(s[n] >= 'A' && s[n] <= 'Z')
+								n++;
+							if (!n)
+							{
+								// printf("err\n");
+								return (0);
+							}
+							clean = strndup(s, n); //!!!
+							ext = get_env_str(mini->env, clean);
+							free(clean);
+							if(!ext)
+							{
+								// printf("err\n");
+								return (1);
+							}
+							s += n;
+							// s = 
+							// ext = get_env_str(mini->env, strndup(s, n)); //!!!
+							// if(!ext)
+							// {
+							// 	printf("err\n");
+							// 	return (1);
+							// }
+							// s += n;
+
+							// printf("ssss %s\n", s);
+							// printf("1 tmp = %s\n", tmp->cmd_args[i]);
+
+
+							clean = ft_insert(tmp->cmd_args[i], ext, n, index);
+							// printf("after alteration %s\n", clean);	
+
+							// printf("2 tmp = %s\n", tmp->cmd_args[i]);
+							// free(tmp->cmd_args[i]); // ###
+							// tmp->cmd_args[i] = clean;
+
+							// free(clean);
+							if(s)
+							{
+								t = tmp->cmd_args[i];
+								tmp->cmd_args[i] = ft_strjoin(clean, s);
+								// printf("after alteration %s\n", tmp->cmd_args[i]);	
+
+
+								free(t);
+								free(clean);
+								// free(s);
+							}
+							else
+							{
+								t = tmp->cmd_args[i];
+								tmp->cmd_args[i] = clean;
+								free(t);
+								// printf("after alteration %s\n", tmp->cmd_args[i]);	
+
+							}
+							// printf("after alteration %s\n", tmp->cmd_args[i]);	
+							j = -1;
+							q_dom = 0;
 						}
-						// printf("after alteration %s\n", tmp->cmd_args[i]);	
-						j = -1;
-						q_dom = 0;
 					}
 					j++;
 				}
