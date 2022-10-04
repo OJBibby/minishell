@@ -1,5 +1,18 @@
 #include "../execute/execute.h"
 
+int	print_exported(t_env *env)
+{
+	t_env	*temp;
+
+	temp = env;
+	while (temp)
+	{
+		printf("declare -x %s\n", temp->str);
+		temp = temp->next;
+	}
+	return (2);
+}
+
 int	ft_unset(t_info *info)
 {
 	t_token	*token;
@@ -29,6 +42,8 @@ int	ft_export(t_info *info)
 {
 	t_env	*env;
 
+	if (!info->token->cmd_args[1])
+		return (print_exported(info->env_ll));
 	env = get_last_node(info->env_ll);
 	if (add_env(info->token, env) == -1)
 		return (error_return(0, NULL, "Memory allocation fail."));
