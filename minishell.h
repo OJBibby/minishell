@@ -55,6 +55,7 @@ typedef struct s_mini
 	// int		prompt;
 	t_env *env;
 	t_token *tokens;
+	int	pid;
 } t_mini;
 
 int parsing(t_mini *mini);
@@ -95,6 +96,12 @@ void	sig_quit(int i);
 void	sig_int(int	sig);
 int		ft_strncmp_env(const char *s1, const char *s2, size_t n);
 char	**list_to_arr(t_env *env);
-char  *ft_itoa(int n);
+char	*ft_itoa(int n);
+void	clean_args(t_token *token);
+int		ft_strncmp_mod(const char *s1, const char *s2, size_t n);
+int		check_builtin(char **args);
+int		ft_strncmp_p(const char *s1, const char *s2, size_t n);
+int		free_env(t_mini *mini);
+void	my_print(t_token *token);
 
 #endif

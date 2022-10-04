@@ -51,7 +51,7 @@ int	rearrange(t_glue glue, t_token *token)
 		y = 0;
 		while(token->cmd_args[j] && token->cmd_args[j][y] && j != glue.end_arg)
 		{
-			// printf("-- %c \n", token->cmd_args[j][y]);
+			// printf("** %c \n", token->cmd_args[j][y]);
 			y++;
 			i++;
 		}
@@ -59,6 +59,8 @@ int	rearrange(t_glue glue, t_token *token)
 		{
 			while (token->cmd_args[j][y] && y <= glue.end_chr)
 			{
+				// printf("** %c \n", token->cmd_args[j][y]);
+
 				y++;
 				i++;
 			}
@@ -79,10 +81,15 @@ int	rearrange(t_glue glue, t_token *token)
 		{
 			while(token->cmd_args[j][i] && i <= glue.end_chr)
 			{
+				// printf("** fr = %c \n", token->cmd_args[j][y]);
+
 				str[n] = token->cmd_args[j][i];
+				// printf("** to = %c \n", str[n]);
+
 				n++;
 				i++;
 			}
+			str[n] = 0;
 			break ;
 		}
 		else
@@ -193,6 +200,8 @@ int	rearrange(t_glue glue, t_token *token)
 		// printf("arg %s \n", token->cmd_args[i]);
 		i++;
 	}
+
+	// printf("EXIT REARRANGE\n");
 	return (res);
 
 	
@@ -252,9 +261,11 @@ void	glue(t_token *tokens)
 					glue.end_chr = j;
 					// printf("glue %i %i %i %i\n", glue.bg_arg, glue.bg_chr, glue.end_arg, glue.end_chr);
 					i = rearrange(glue, token);
+					// printf("after rearrange\n");
+					my_print(token);
 					// printf("new i = %i ", i);
 					j = 0;
-					break ;
+					// break ;
 				}
 				else if ((token->cmd_args[i][j] == '\"' || token->cmd_args[i][j] == '\'') && open_q == false)
 				{
@@ -365,24 +376,24 @@ void	my_print(t_token *token)
 		{
 			// printf("arg[%i] = %s\n", i, token->cmd_args[i]);
 			i++;
-		}
+		}	// while (token->input && token->input[i])
+	// {
+	// 	printf("input %s\n", token->input[i]);
+	// 	i++;
+	// }
+	// i = 0;
+	// while (token->output && token->output[i])
+	// {
+	// 	printf("output %s\n", token->output[i]);
+	// 	i++;
+	// }
 		// printf("path %s\n", token->path);
 		
 		
 
 	}
 	i = 0;
-	while (token->input && token->input[i])
-	{
-		// printf("input %s\n", token->input[i]);
-		i++;
-	}
-	i = 0;
-	while (token->output && token->output[i])
-	{
-		// printf("output %s\n", token->output[i]);
-		i++;
-	}
+
 	// printf("append %i\n", token->append);
 	// printf("heredoc %i\n", token->heredoc);			
 	// printf("token type = %c\n", token->type);

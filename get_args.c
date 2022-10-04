@@ -259,7 +259,7 @@ int	get_args(t_mini *mini, char *str, t_token *token)
 					i++;
 					if (str[i] == '>')
 					{
-						printf("*** quote for output %i\n", open_q);
+						// printf("*** quote for output %i\n", open_q);
 						str[i] = 0;
 						i++;
 						if (!ft_islower(str[i]) && !ft_isdigit(str[i]) && !ft_isalpha(str[i]) && str[i] != ' ')
@@ -396,9 +396,17 @@ int	parsing(t_mini *mini)
 
 	// printf("in parsing\n");
 	str = readline("👑𝖒 𝖎𝖓𝖎𝖘𝖍𝖊𝖑𝖑 ▸ ");
+	// if (str = )
+	if (!str)
+	{
+		free_env(mini);
+		exit(1);
 
-	if (!str || !str[0])
+	}
+		// printf("str = null\n");
+	else if (str && !str[0])
 		return (0);
+	add_history(str);
 
 	token = malloc(sizeof(t_token));
 	token->next = NULL;
@@ -428,14 +436,6 @@ int	parsing(t_mini *mini)
 	}
 	free(str);
 
-
-
-	// if (check_args(mini))
-	// {
-		// printf("invalid special charachter use\n");
-	// 	return (1);
-	// }
-	// printf("past check_args\n");
 
 	if (fin_token(mini))
 	{
@@ -519,39 +519,77 @@ int	parsing(t_mini *mini)
 	// }
 	
 	glue(mini->tokens);
-	// printf("past printing\n");
 
-	// tmp = mini->tokens;
 	// i = 0;
 	// j = 0;
-	// while(tmp)
+	// token = mini->tokens;
+	// while(token)
 	// {
 	// 	i = 0;
-		// printf("final token %s\n", tmp->cmd_name);
+	// 	printf("token%i\n", j);
 
-	// 	while(tmp->cmd_args[i])
+	// 	if (token->cmd_args)
 	// 	{
-			// printf("final arg %s\n", tmp->cmd_args[i]);
 
-	// 		while(tmp->cmd_args[i][j])
+	// 		while(token->cmd_args[i])
 	// 		{
-				// printf(" %d\n", tmp->cmd_args[i][j]);
-	// 			j++;
-
+	// 			printf("arg[%i] = %s@\n", i, token->cmd_args[i]);
+	// 			i++;
 	// 		}
+	// 		printf("path %s\n", token->path);
+			
+
+	// 	}
+	// 	i = 0;
+	// 	while (token->input && token->input[i])
+	// 	{
+	// 		printf("input %s\n", token->input[i]);
 	// 		i++;
 	// 	}
-	// 	tmp = tmp->next;
+	// 	i = 0;
+	// 	while (token->output && token->output[i])
+	// 	{
+	// 		printf("output %s\n", token->output[i]);
+	// 		i++;
+	// 	}
+	// 	i = 0;
+	// 	if (token->append)
+	// 	{
+	// 		while (i < 5)
+	// 		{
+	// 			printf("app arr %i\n", token->append[i]);
+	// 			i++;
+	// 		}
+	// 	}
+	// 	i = 0;
+	// 	if (token->heredoc)
+	// 	{
+	// 		while (i < 5)
+	// 		{
+	// 			printf("her arr %i\n", token->heredoc[i]);
+	// 			i++;
+	// 		}
+	// 	}
+	
+	// 	printf("token type = %c\n", token->type);
+	// 	token = token->next;
+	// 	printf("\n");
+	// 	j++;
+		
 	// }
+
+
+	// printf("past glue\n");
 
 	tmp = mini->tokens;
 
 	if (check_env_vr(mini))
 	{
-		printf("env variable does not exist\n");
+		printf("incorrect use of env variable\n");
 		return (1);
 	}
-	// printf("past check_env_vr\n");
+	// printf("\n past check_env_vr\n");
+	// my_print(tmp);
 
 	tmp = mini->tokens;
 	// printf("%s\n", tmp->cmd_name);
@@ -571,6 +609,7 @@ int	parsing(t_mini *mini)
 	// printf("past spaces\n");
 
 	mng_quotes(mini);
+	clean_args(mini->tokens);
 
 	tmp = mini->tokens;
 
@@ -588,17 +627,25 @@ int	parsing(t_mini *mini)
 
 // ^^^^check_path
 
+
 	tmp = mini->tokens;
 	// printf("%s\n", tmp->cmd_name);
+
+
 
 	while (tmp)
 	{
 		if (tmp->cmd_args)
-		{		
-			if (check_path(mini, tmp))
+		{	
+			if (!check_builtin(tmp->cmd_args))
 			{
-				printf("no such command\n");
-				return (1);
+
+				if (check_path(mini, tmp))
+				{
+				
+					printf("no such command\n");
+					return (1);
+				}
 			}
 		}
 			// tmp->cmd_name = tmp->cmd_args[0];
@@ -607,32 +654,6 @@ int	parsing(t_mini *mini)
 	}
 
 	// printf("YAAAAY\n");
-
-	// tmp = mini->tokens;
-	// i = 0;
-	// j = 0;
-	// while(tmp)
-	// {
-	// 	i = 0;
-		// printf("final token %s\n", tmp->cmd_name);
-
-	// 	while(tmp->cmd_args[i])
-	// 	{
-	// 		j = 0;
-			// printf("final arg %s\n", tmp->cmd_args[i]);
-			// printf("path %s\n", tmp->path);
-	// 		while(tmp->cmd_args[i][j])
-	// 		{
-				// printf(" %d\n", tmp->cmd_args[i][j]);
-	// 			j++;
-
-	// 		}
-			// printf("n of args %d\n", i);
-
-	// 		i++;
-	// 	}
-	// 	tmp = tmp->next;
-	// }
 
 
 	// i = 0;
@@ -698,14 +719,3 @@ int	parsing(t_mini *mini)
 	return (0);
 	
 }
-
-// < file1 cat 
-
-// token0
-// args = cat (command for <, > will always be in the same token as type)
-// type = <
-
-// //here we can eather put files in args, or use the strust 
-// // that we are going to use for << filea
-// token1
-// args =  file

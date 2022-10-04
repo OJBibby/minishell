@@ -1,6 +1,43 @@
 #include "minishell.h"
 
 
+char	*extract(char *str, int start, int n)
+{
+	int	i;
+	int	j;
+	char *ret;
+
+	i = 0;
+	// printf("start is %i\n", start);
+	// start--;
+	while(str[i])
+		i++;
+	ret = malloc(sizeof(char) * (i - n + 1));
+	i = 0;
+	j = 0;
+	while (str[i] && i < start)
+	{
+		ret[j] = str[i];
+		j++;
+		i++;
+	}
+	if (i == start)
+	{
+		while(str[i] && n--)
+			i++;
+	}
+	while(str[i])
+	{
+		ret[j] = str[i];
+		j++;
+		i++;
+	}
+	ret[j] = 0;
+
+	return(ret);
+
+}
+
 
 char	**list_to_arr(t_env *env)
 {
@@ -73,7 +110,7 @@ char	*get_env_str(t_env *env, char *var)
 	tmp = env;
 	while(tmp)
 	{
-		if (ft_strncmp(tmp->str, var, ft_strlen(var)) == 0)
+		if (ft_strncmp_mod(tmp->str, var, ft_strlen(var)) == 0)
 		{
 			// printf("not fail?");
 
@@ -106,7 +143,7 @@ char	*ft_insert(char *s1, char *point_of_in, int remove, int index)
 
 	// printf("point_of_in %s\n", point_of_in);
 	point_of_in += remove;
-	printf("point_of_in %s\n", point_of_in);
+	// printf("point_of_in %s\n", point_of_in);
 
 	// printf("point_of_in %s\n", point_of_in);
 	clean = ret;
@@ -172,7 +209,7 @@ int	check_env_vr(t_mini *mini)
 							index = ft_strchr_nb(tmp->cmd_args[i], '$');
 							// n = 1;
 							ext = ft_itoa(exit_s);
-							printf("itoa %s\n", ext);
+							// printf("itoa %s\n", ext);
 							if(!ext)
 							{
 								// printf("err\n");
@@ -183,7 +220,7 @@ int	check_env_vr(t_mini *mini)
 							// n = 1;
 
 							clean = ft_insert(tmp->cmd_args[i], ext, -1, index);
-							printf("insert %s\n", clean);
+							// printf("insert %s\n", clean);
 
 							if(s)
 							{
@@ -212,70 +249,82 @@ int	check_env_vr(t_mini *mini)
 						else
 						{
 
-						
+					
 							s = tmp->cmd_args[i] + j;
 							// printf("ssss %s\n", s);
 
 							index = ft_strchr_nb(tmp->cmd_args[i], '$');
-							while(s[n] >= 'A' && s[n] <= 'Z')
+							while((s[n] >= 'A' && s[n] <= 'Z') || (s[n] >= 'a' && s[n] <= 'z'))
+							// while (s[n] && s[n] != ' ')
 								n++;
 							if (!n)
 							{
 								// printf("err\n");
-								return (0);
+								n++;
+								if (!s[n])
+									return (0);
+								else
+								j++;
+								break ;
+								
 							}
 							clean = strndup(s, n); //!!!
+							// printf("clean is %s\n", clean);
 							ext = get_env_str(mini->env, clean);
-							free(clean);
+							// printf("ext is %s\n", ext);
+
+							if (clean)
+								free(clean);
 							if(!ext)
 							{
 								// printf("err\n");
-								return (1);
-							}
-							s += n;
-							// s = 
-							// ext = get_env_str(mini->env, strndup(s, n)); //!!!
-							// if(!ext)
-							// {
-							// 	printf("err\n");
-							// 	return (1);
-							// }
-							// s += n;
+								// tmp->cmd_args[i] = extract(tmp->cmd_args[i], )
+								// return (1);
 
-							// printf("ssss %s\n", s);
-							// printf("1 tmp = %s\n", tmp->cmd_args[i]);
+								clean = tmp->cmd_args[i];
+								j--;
+								n++;
+								tmp->cmd_args[i] = extract(tmp->cmd_args[i], j, n);
+								if (clean)
+									free(clean);
+								j = -1;
+								q_dom = 0;
 
-
-							clean = ft_insert(tmp->cmd_args[i], ext, n, index);
-							// printf("after alteration %s\n", clean);	
-
-							// printf("2 tmp = %s\n", tmp->cmd_args[i]);
-							// free(tmp->cmd_args[i]); // ###
-							// tmp->cmd_args[i] = clean;
-
-							// free(clean);
-							if(s)
-							{
-								t = tmp->cmd_args[i];
-								tmp->cmd_args[i] = ft_strjoin(clean, s);
-								// printf("after alteration %s\n", tmp->cmd_args[i]);	
-
-
-								free(t);
-								free(clean);
-								// free(s);
+								// return (0);
 							}
 							else
 							{
-								t = tmp->cmd_args[i];
-								tmp->cmd_args[i] = clean;
-								free(t);
-								// printf("after alteration %s\n", tmp->cmd_args[i]);	
 
+								s += n;
+							
+
+								clean = ft_insert(tmp->cmd_args[i], ext, n, index);
+							
+
+								// free(clean);
+								if(s)
+								{
+									t = tmp->cmd_args[i];
+									tmp->cmd_args[i] = ft_strjoin(clean, s);
+									// printf("after alteration %s\n", tmp->cmd_args[i]);	
+
+
+									free(t);
+									free(clean);
+									// free(s);
+								}
+								else
+								{
+									t = tmp->cmd_args[i];
+									tmp->cmd_args[i] = clean;
+									free(t);
+									// printf("after alteration %s\n", tmp->cmd_args[i]);	
+
+								}
+								// printf("after alteration %s\n", tmp->cmd_args[i]);	
+								j = -1;
+								q_dom = 0;
 							}
-							// printf("after alteration %s\n", tmp->cmd_args[i]);	
-							j = -1;
-							q_dom = 0;
 						}
 					}
 					j++;
