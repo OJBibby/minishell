@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:41:00 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/22 18:37:51 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/05 12:38:30 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,6 @@ void	init_array(t_mini *mini, t_info *info)
 	info->done_ops = 0;
 	info->stdout_fd = dup(STDOUT_FILENO);
 	info->stdin_fd = dup(STDIN_FILENO);
+	info->infile_no = -1;
+	info->outfile_no = -1;
 }

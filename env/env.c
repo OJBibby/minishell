@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 13:21:45 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/24 00:04:36 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/05 15:26:32 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	output_env(char **env, t_env *tmp, int fd, int i)
 	}
 	free(env);
 	revert_list(tmp, i);
-	return (2);
+	return (0);
 }
 
 int	use_env(t_token *token, t_info *info, t_env *tmp, int i)
@@ -44,8 +44,10 @@ int	use_env(t_token *token, t_info *info, t_env *tmp, int i)
 		retval = output_env(tmp_env, tmp, fd, i);
 	else
 	{
-		if (shift_args(token->cmd_args))
-			return (error_return(1, tmp_env, "Memory allocation fail."));
+		j = i;
+		while (j-- > 0)
+			if (shift_args(token->cmd_args))
+				return (error_return(1, tmp_env, "Memory allocation fail."));
 		saved_env = info->env;
 		info->env = tmp_env;
 		retval = exec_cmds(token, info);
@@ -58,43 +60,69 @@ int	use_env(t_token *token, t_info *info, t_env *tmp, int i)
 	return (retval);
 }
 
-int	add_env(t_token *token, t_env *env)
+int	replace_var(char *var, t_env *env)
+{
+	free(env->str);
+	env->str = NULL;
+	env->str = ft_strdup(var);
+	if (!env->str)
+	{
+		if (env->next && env->prev)
+		{
+			env->prev->next = env->next;
+			env->next->prev = env->prev;
+		}
+		else if (env->next)
+			env->next->prev = NULL;
+		else if (env->prev)
+			env->prev->next = NULL;
+		return (error_return(1, env, "Memory allocation fail."));
+	}
+	return (0);
+}
+
+int	add_env(char *var, t_env *env)
 {
 	int	i;
 	int	j;
 
-	i = 0;
-	while (token->cmd_args[++i])
+	if (env->str)
+		return (replace_var(var, env));
+	i = -1;
+	while (var[++i])
 	{
-		j = 0;
-		while (token->cmd_args[i][++j])
+		if (var[i] == '=' && var[i + 1])
 		{
-			if (token->cmd_args[i][j] == '=' && token->cmd_args[i][j + 1])
-			{
-				env->next = ft_calloc(1, sizeof(t_env));
-				if (!env->next)
-					return (error_return(0, NULL, "Memory allocation fail.") - 2);
-				env->next->prev = env;
-				env = env->next;
-				env->str = ft_strdup(token->cmd_args[i]);
-				env->next = NULL;
-				break ;
-			}
+			env->str = ft_strdup(var);
+			if (!env->str)
+				return (error_return(1, env, "Memory allocation fail."));
+			break ;
 		}
-		if (!token->cmd_args[i][j])
-			return (error_return(3, NULL, ft_strjoin(token->cmd_args[i], ": No such file or directory.")) - 2);
 	}
-	return (i);
+	/*if (!token->cmd_args[i][j])
+		return (error_return(3, NULL, ft_strjoin(token->cmd_args[i], ": No such file or directory.")) - 2);*/
+	return (0);
 }
 
 int	ft_env(t_token *token, t_info *info)
 {
 	t_env	*tmp;
-	int i;
+	int 	i;
+	int		j;
 
-	tmp = get_last_node(info->env_ll);
-	i = add_env(token, tmp);
-	if (i == -1)
-		return (1);
+	i = 0;
+	while (token->cmd_args[++i])
+	{
+		j = 0;
+		while (token->cmd_args[i][j] && token->cmd_args[i][j] != '=')
+			j++;
+		if (!token->cmd_args[i][j])
+			return (use_env(token, info, tmp, i));
+		tmp = find_env_node(info->env_ll, token->cmd_args[i], j);
+		if (!tmp)
+			return (error_return(0, NULL, "Memory allocation fail."));
+		if (add_env(token->cmd_args[i], tmp))
+			return (1);
+	}
 	return (use_env(token, info, tmp, i));
 }

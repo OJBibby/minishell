@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:42:19 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/22 19:31:18 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/05 12:44:27 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	read_stdin(t_token *token, t_info *info, int i)
 	char	*ptr;
 
 	ptr = NULL;
-	while (ft_strncmp(ptr, token->input[i], ft_strlen(token->input[i]) + 1))
+	while (ft_strncmp(ptr, token->input[i], ft_strlen(token->input[i])))
 	{
 		if (ptr)
 		{
@@ -87,7 +87,11 @@ int	input_init(t_token *token, t_info *info)
 			read_stdin(token, info, i);
 		else
 			if (in_file(token->input[i], info))
+			{
+				close(info->in_now);
+				close(info->out_now);
 				return (1);
+			}
 		if (token->input[++i])
 		{
 			close(info->in_now);

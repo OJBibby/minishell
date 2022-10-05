@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 10:34:31 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/21 10:35:23 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/05 14:45:17 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,26 @@ int	shift_args(char **args)
 	return (0);
 }
 
-t_env	*get_last_node(t_env *env)
+t_env	*find_env_node(t_env *env, char *str, int i)
 {
 	t_env	*tmp;
+	t_env	*prev;
+	int		len;
 
 	tmp = env;
-	while (tmp->next)
+	while (tmp)
+	{
+		if (!ft_strncmp(tmp->str, str, i + 1))
+			return (tmp);
+		prev = tmp;
 		tmp = tmp->next;
+	}
+	tmp = ft_calloc(1, sizeof(t_env));
+	if (!tmp)
+		return (NULL);
+	tmp->prev = prev;
+	prev->next = tmp;
+	tmp->str = NULL;
+	tmp->next = NULL;
 	return (tmp);
 }

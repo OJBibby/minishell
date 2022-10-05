@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 23:37:12 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/23 22:50:55 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/05 15:28:22 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,5 @@ int	ft_cd(t_token *token, t_info *info)
 			return (1);
 		}
 	}
-	return (2);
+	return (0);
 }

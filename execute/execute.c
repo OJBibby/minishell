@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/04 21:46:03 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/05 15:25:34 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ int	check_inbuilt(t_token *token, t_info *info)
 		return (ft_unset(info));
 	if (!ft_strncmp(token->cmd_args[0], "env", len))
 		return (ft_env(token, info));
-	return (0);
+	return (-1);
 }
 
 int	exec_cmds(t_token *token, t_info *info)
@@ -125,7 +125,7 @@ int	exec_cmds(t_token *token, t_info *info)
 		g_exit = 2;
 		return (1);
 	}
-	if (inbuilt == 2)
+	if (inbuilt == 0)
 	{
 		g_exit = 0;
 		return (0);
@@ -153,14 +153,12 @@ int	execute(t_mini *mini)
 
 	if (!mini->tokens)
 		return (0);
-	if (!mini->tokens->cmd_args)
-		return (0);
-	if (!ft_strncmp(mini->tokens->cmd_args[0], "exit", ft_strlen(mini->tokens->cmd_args[0])))
+	if (mini->tokens->cmd_args && !ft_strncmp(mini->tokens->cmd_args[0], "exit", ft_strlen(mini->tokens->cmd_args[0])))
 		exit_shell(mini);
 	init_array(mini, &info);
 	while (info.token && info.done_ops < info.total_ops)
 	{
-		if (init_files(info.token, &info))
+		if (init_files(info.token, &info) || !mini->tokens->cmd_args)
 			break ;
 		if (exec_cmds(info.token, &info) == 1)
 			break ;
@@ -179,5 +177,7 @@ int	execute(t_mini *mini)
 		dup2(info.stdout_fd, STDOUT_FILENO);
 		close(info.stdout_fd);
 	}
+	if (info.outfile_no != -1)
+		close(info.outfile_no);
 	return (0);
 }

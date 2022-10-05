@@ -1,16 +1,18 @@
 #include "../execute/execute.h"
 
-int	print_exported(t_env *env)
+int	print_exported(t_env *env, int fd)
 {
 	t_env	*temp;
 
 	temp = env;
 	while (temp)
 	{
-		printf("declare -x %s\n", temp->str);
+		write(fd, "declare -x ", 11);
+		write(fd, temp->str, ft_strlen(temp->str));
+		write(fd, "\n", 1);
 		temp = temp->next;
 	}
-	return (2);
+	return (0);
 }
 
 int	ft_unset(t_info *info)
@@ -26,7 +28,7 @@ int	ft_unset(t_info *info)
 	{
 		delete = get_env_node(info->env_ll, token->cmd_args[i]);
 		if (!delete)
-			return(1);
+			return (1);
 		if (delete->prev)
 			delete->prev->next = delete->next;
 		if (delete->next)
@@ -35,17 +37,30 @@ int	ft_unset(t_info *info)
 			free(delete->str);
 		free(delete);
 	}
-	return (2);
+	return (0);
 }
 
 int	ft_export(t_info *info)
 {
 	t_env	*env;
+	int		fd;
+	int		i;
+	int		j;
 
+	fd = set_fd(info->token, info);
 	if (!info->token->cmd_args[1])
-		return (print_exported(info->env_ll));
-	env = get_last_node(info->env_ll);
-	if (add_env(info->token, env) == -1)
-		return (error_return(0, NULL, "Memory allocation fail."));
-	return (2);
+		return (print_exported(info->env_ll, fd));
+	i = 0;
+	while (info->token->cmd_args[++i])
+	{
+		j = 0;
+		while (info->token->cmd_args[i][j] && info->token->cmd_args[i][j] != '=')
+			j++;
+		env = find_env_node(info->env_ll, info->token->cmd_args[i], j);
+		if (!env)
+			return (error_return(0, NULL, "Memory allocation fail."));
+		if (add_env(info->token->cmd_args[i], env) == -1)
+			return (error_return(0, NULL, "Memory allocation fail."));
+	}
+	return (0);
 }

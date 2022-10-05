@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 21:34:16 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/23 22:34:10 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/05 15:28:14 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,5 +171,5 @@ int	ft_echo(t_token *token, t_info *info)
 		close(info->outfile_no);
 	/*if (info->stdout_fd == -1)
 		info->stdout_fd = dup(STDOUT_FILENO);*/
-	return (2);
+	return (0);
 }
