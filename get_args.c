@@ -404,8 +404,8 @@ int	parsing(t_mini *mini)
 
 	}
 		// printf("str = null\n");
-	/*else if (str && !str[0])
-		return (0);*/
+	else if (str && !str[0])
+		return (0);
 	add_history(str);
 
 	token = malloc(sizeof(t_token));

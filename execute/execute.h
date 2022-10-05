@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:51:34 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/05 14:28:36 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/05 16:30:46 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <fcntl.h>
 # include <sys/wait.h>
+# include <sys/stat.h>
 # include "../minishell.h"
 
 typedef struct s_info {

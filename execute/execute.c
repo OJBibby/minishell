@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/05 15:25:34 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/05 16:41:49 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,9 +141,9 @@ int	error_return(int id, void *mem, char *str)
 		free(mem);
 	if (id == 2)
 		close(id);
+	printf("%s\n", str);
 	if (id == 3)
 		free(str);
-	printf("%s\n", str);
 	return (1);
 }
 

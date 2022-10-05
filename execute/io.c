@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:42:19 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/05 12:44:27 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/05 16:42:02 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,12 @@ int	out_file(char *file, t_info *info, int append)
 int	in_file(char *file, t_info *info)
 {
 	char	buf[1];
+	struct stat	stats;
 
 	info->infile_no = open(file, O_RDONLY);
+	fstat(info->infile_no, &stats);
+	if (S_ISDIR(stats.st_mode))
+		return (error_return(3, NULL, ft_strjoin(file, ": is a directory.")));
 	if (info->infile_no == -1)
 		return (error_return(0, NULL, "Unable to read input file."));
 	while (read(info->infile_no, buf, 1))
