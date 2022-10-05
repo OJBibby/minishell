@@ -167,9 +167,7 @@ int	check_env_vr(t_mini *mini)
 	int		index;
 	char	*clean;
 	char	*t;
-	int		exit_s;
 
-	exit_s = 127;
 
 	// printf("in env_vr_check\n");
 
@@ -208,7 +206,7 @@ int	check_env_vr(t_mini *mini)
 
 							index = ft_strchr_nb(tmp->cmd_args[i], '$');
 							// n = 1;
-							ext = ft_itoa(exit_s);
+							ext = ft_itoa(g_exit);
 							// printf("itoa %s\n", ext);
 							if(!ext)
 							{

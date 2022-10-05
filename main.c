@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-
+int	g_exit;
 
 t_env	*init_env(t_mini *mini, char **or_env)
 {
@@ -231,6 +231,7 @@ int		main(int ac, char **av, char **env)
 
 	signal(SIGQUIT, sig_quit);
 	signal(SIGINT, sig_int);
+	rl_catch_signals = 0;
 	mini.pid = getpid();
 	mini.env = init_env(&mini, env);
 	mini.tokens = NULL;

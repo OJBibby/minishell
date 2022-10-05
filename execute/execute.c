@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/24 00:02:10 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/04 21:46:03 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ int	execute(t_mini *mini)
 		return (0);
 	if (!mini->tokens->cmd_args)
 		return (0);
-	if (!ft_strncmp(mini->tokens->cmd_args[0], "exit", 5))
+	if (!ft_strncmp(mini->tokens->cmd_args[0], "exit", ft_strlen(mini->tokens->cmd_args[0])))
 		exit_shell(mini);
 	init_array(mini, &info);
 	while (info.token && info.done_ops < info.total_ops)
@@ -164,9 +164,10 @@ int	execute(t_mini *mini)
 			break ;
 		if (exec_cmds(info.token, &info) == 1)
 			break ;
+		if (g_exit != 0)
+			break ;
 		info.token = info.token->next;
 		info.done_ops++;
-		printf("exit status: %d\n", g_exit);
 	}
 	if (info.stdin_fd)
 	{

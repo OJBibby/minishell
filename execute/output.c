@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:39:52 by obibby            #+#    #+#             */
-/*   Updated: 2022/09/23 23:46:32 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/04 21:46:26 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ int	final_output(t_token *token, t_info *info, char *path)
 			close(info->outfile_no);
 		close(info->out_now);
 		waitpid(pid, &status, 0);
-		g_exit = WEXITSTATUS(status);
+		if (WIFEXITED(status))
+			g_exit = WEXITSTATUS(status);
 	}
 	return (0);
 }
@@ -77,7 +78,8 @@ int	buff_to_buff(t_token *token, t_info *info, char *path)
 	{
 		close(info->out_now);
 		waitpid(pid, &status, 0);
-		g_exit = WEXITSTATUS(status);
+		if (WIFEXITED(status))
+			g_exit = WEXITSTATUS(status);
 	}
 	return (0);
 }
