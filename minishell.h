@@ -103,5 +103,7 @@ int		check_builtin(char **args);
 int		ft_strncmp_p(const char *s1, const char *s2, size_t n);
 int		free_env(t_mini *mini);
 void	my_print(t_token *token);
+int		get_args(t_mini *mini, char *str, t_token *token);
+char	**add_string(char **arr, char *str);
 
 #endif

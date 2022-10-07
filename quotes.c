@@ -61,6 +61,88 @@ int	mng_quotes_light(char **arr)
 	return (0);
 }
 
+// int	mng_quotes(t_mini *mini)
+// {
+// 	t_token	*tmp;
+// 	int	i;
+// 	int j;
+// 	char	q_dom;
+// 	// char	*ext;
+// 	char	*clean;
+
+// 	tmp = mini->tokens;
+// 	// printf("MANAGE QUOTES\n");
+// 	q_dom = 0;
+
+// 	while (tmp)
+// 	{
+// 		i = 0;
+// 		j = 0;
+
+// 		q_dom = 0;
+// 		if (tmp->cmd_args)
+// 		{
+
+		
+// 			while(tmp->cmd_args[i])
+// 			{
+// 				j = 0;
+// 				while(tmp->cmd_args[i][j])
+// 				{
+// 					// printf("before if %c\n", q_dom);
+
+// 					if((tmp->cmd_args[i][j] == '\"' || tmp->cmd_args[i][j] == '\'') && !q_dom)
+// 					{
+// 						// printf("ENTERED if\n");
+// 						printf("1 option\n");
+
+// 						q_dom = tmp->cmd_args[i][j];
+// 						clean = tmp->cmd_args[i];
+// 						printf("before %s\n", tmp->cmd_args[i]);
+// 						tmp->cmd_args[i] = ft_remove_q(tmp->cmd_args[i], &j, q_dom);
+// 						free(clean);
+// 						printf("after %s\n", tmp->cmd_args[i]);
+
+// 						// j++;
+// 						printf("char j %c\n", tmp->cmd_args[i][j]);
+
+// 						printf("here %c\n", q_dom);
+// 					}
+// 					if(q_dom && tmp->cmd_args[i][j] == q_dom)
+// 					{
+// 						printf("2 option\n");
+// 						clean = tmp->cmd_args[i];
+// 						tmp->cmd_args[i] = ft_remove_q(tmp->cmd_args[i], &j, q_dom);
+
+// 						// if (!tmp->cmd_args[i] || !tmp->cmd_args[i][0])
+// 						// 	tmp->cmd_args[i] = NULL;
+// 						if (clean)
+// 							free(clean);
+// 						q_dom = 0;
+// 					}
+// 					// else
+// 					j++;
+// 					// printf("it was %c\n", tmp->cmd_args[i][j]);
+
+// 					// j++;
+// 					// printf("it is %c\n", tmp->cmd_args[i][j]);
+
+// 					if (!tmp->cmd_args[i] || !tmp->cmd_args[i][j])
+// 					// if (!tmp->cmd_args[i][j])
+// 						break ;
+					
+// 				}
+// 				i++;
+// 			}
+// 		}
+// 		tmp = tmp->next;
+// 	}
+// 	return (0);
+// }
+
+
+//or >
+
 int	mng_quotes(t_mini *mini)
 {
 	t_token	*tmp;
@@ -87,30 +169,58 @@ int	mng_quotes(t_mini *mini)
 			while(tmp->cmd_args[i])
 			{
 				j = 0;
+				// if (tmp->cmd_args[i][j])
+				// {
+				// 	if (tmp->cmd_args[i][j] == '\"' || tmp->cmd_args[i][j] == '\'' && !q_dom)
+				// 	{
+				// 		q_dom = tmp->cmd_args[i][j];
+				// 		clean = tmp->cmd_args[i];
+				// 		tmp->cmd_args[i] = ft_remove_q(tmp->cmd_args[i], &j, q_dom);
+				// 		if (clean)
+				// 			free(clean);						
+				// 		j++;
+
+				// 	}
+				// }
+
 				while(tmp->cmd_args[i][j])
 				{
+
+
 					// printf("before if %c\n", q_dom);
-
-					if((tmp->cmd_args[i][j] == '\"' || tmp->cmd_args[i][j] == '\'') && !q_dom)
-					{
-						// printf("ENTERED if\n");
-
-						q_dom = tmp->cmd_args[i][j];
-						clean = tmp->cmd_args[i];
-						tmp->cmd_args[i] = ft_remove_q(tmp->cmd_args[i], &j, q_dom);
-						free(clean);
-						j++;
-						// printf("here %c\n", q_dom);
-					}
-					if(q_dom && tmp->cmd_args[i][j] == q_dom)
+					if (q_dom && tmp->cmd_args[i][j] == q_dom)
 					{
 						clean = tmp->cmd_args[i];
-						tmp->cmd_args[i] = ft_remove_q(tmp->cmd_args[i], &j, q_dom);
+						tmp->cmd_args[i] = ft_remove(tmp->cmd_args[i], &j, q_dom);
 						// if (!tmp->cmd_args[i] || !tmp->cmd_args[i][0])
 						// 	tmp->cmd_args[i] = NULL;
 						if (clean)
 							free(clean);
 						q_dom = 0;
+						// j++;
+
+					}
+					else if((tmp->cmd_args[i][j] == '\"' || tmp->cmd_args[i][j] == '\'') && !q_dom)
+					{
+						// printf("ENTERED if\n");
+
+						q_dom = tmp->cmd_args[i][j];
+						clean = tmp->cmd_args[i];
+						tmp->cmd_args[i] = ft_remove(tmp->cmd_args[i], &j, q_dom);
+						free(clean);
+						// j++;
+						// printf("here %c\n", q_dom);
+					}
+					else if(q_dom && tmp->cmd_args[i][j] == q_dom)
+					{
+						clean = tmp->cmd_args[i];
+						tmp->cmd_args[i] = ft_remove(tmp->cmd_args[i], &j, q_dom);
+						// if (!tmp->cmd_args[i] || !tmp->cmd_args[i][0])
+						// 	tmp->cmd_args[i] = NULL;
+						if (clean)
+							free(clean);
+						q_dom = 0;
+						j++;
 					}
 					// printf("it was %c\n", tmp->cmd_args[i][j]);
 
@@ -129,6 +239,11 @@ int	mng_quotes(t_mini *mini)
 	}
 	return (0);
 }
+
+
+
+
+
 
 int	quotes(t_mini *mini, t_token *tmp)
 {

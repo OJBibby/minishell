@@ -262,7 +262,7 @@ void	glue(t_token *tokens)
 					// printf("glue %i %i %i %i\n", glue.bg_arg, glue.bg_chr, glue.end_arg, glue.end_chr);
 					i = rearrange(glue, token);
 					// printf("after rearrange\n");
-					my_print(token);
+					// my_print(token);
 					// printf("new i = %i ", i);
 					j = 0;
 					// break ;
@@ -360,46 +360,71 @@ void	free_d_arr(char **arr)
 	arr = NULL;
 }
 
-void	my_print(t_token *token)
+void	my_print(t_token *tokens)
 {
-	int i, j;
+	int i;
+	int j;
+	t_token *token;
+
 	i = 0;
 
 	j = 0;
-
-	// printf("FIN token%i\n", j);
-
-	if (token->cmd_args)
+	token = tokens;
+	while(token)
 	{
+		i = 0;
+		printf("token%i\n", j);
 
-		while(token->cmd_args[i])
+		if (token->cmd_args)
 		{
-			// printf("arg[%i] = %s\n", i, token->cmd_args[i]);
+
+			while(token->cmd_args[i])
+			{
+				printf("arg[%i] = %s@\n", i, token->cmd_args[i]);
+				i++;
+			}
+			printf("path %s\n", token->path);
+			
+
+		}
+		i = 0;
+		while (token->input && token->input[i])
+		{
+			printf("input %s\n", token->input[i]);
 			i++;
-		}	// while (token->input && token->input[i])
-	// {
-	// 	printf("input %s\n", token->input[i]);
-	// 	i++;
-	// }
-	// i = 0;
-	// while (token->output && token->output[i])
-	// {
-	// 	printf("output %s\n", token->output[i]);
-	// 	i++;
-	// }
-		// printf("path %s\n", token->path);
+		}
+		i = 0;
+		while (token->output && token->output[i])
+		{
+			printf("output %s\n", token->output[i]);
+			i++;
+		}
+		i = 0;
+		if (token->append)
+		{
+			while (i < 5)
+			{
+				printf("app arr %i\n", token->append[i]);
+				i++;
+			}
+		}
+		i = 0;
+		if (token->heredoc)
+		{
+			while (i < 5)
+			{
+				printf("her arr %i\n", token->heredoc[i]);
+				i++;
+			}
+		}
+	
+		printf("token type = %c\n", token->type);
+		token = token->next;
+		printf("\n");
+		j++;
 		
-		
-
 	}
-	i = 0;
 
-	// printf("append %i\n", token->append);
-	// printf("heredoc %i\n", token->heredoc);			
-	// printf("token type = %c\n", token->type);
-	token = token->next;
-	// printf("\n");
-	j++;
 		
 }
 

@@ -26,8 +26,8 @@ char	*ft_remove_q(char *str, int *j, char c)
 		}
 	}
 	ret[i] = 0;
-	(*j)--;
-	// printf("____after space removing{%sEND\n", ret);
+	// (*j)--;
+	printf("____after q removing{%sEND\n", ret);
 	return (ret);
 
 
@@ -47,7 +47,7 @@ char	*ft_remove(char *str, int *j, char c)
 	ret = malloc(sizeof(char) * ft_strlen(str));
 	while (str[n])
 	{
-		if (str[n] != c)
+		if (n != *j)
 		{
 			ret[i] = str[n];
 			i++;
@@ -58,7 +58,7 @@ char	*ft_remove(char *str, int *j, char c)
 	}
 	ret[i] = 0;
 	(*j)--;
-	// printf("____after space removing{%sEND\n", ret);
+	// printf("____after removing{%sEND\n", ret);
 	return (ret);
 
 
@@ -99,23 +99,36 @@ int	mng_spaces(t_mini *mini)
 			while(tmp->cmd_args[i])
 			{
 				j = 0;
+				// q_dom = 0;
+
 				while(tmp->cmd_args[i][j])
 				{
 					n = 0;
 					if((tmp->cmd_args[i][j] == '\"' || tmp->cmd_args[i][j] == '\'') && !q_dom)
 					{
+						// printf("opt 1\n");
 						// if (!q_dom)
 						q_dom = tmp->cmd_args[i][j];
-						j++;
+						// j++;
 						// printf("here %c\n", q_dom);
+						// printf("arg %s\n", tmp->cmd_args[i]);
+
 					}
-					if((q_dom) && (tmp->cmd_args[i][j] == q_dom))
-						q_dom = 0;
-					if ((tmp->cmd_args[i][j] == ' ') && !q_dom)
+					else if(q_dom && (tmp->cmd_args[i][j] == q_dom))
 					{
-						clean = ft_remove(tmp->cmd_args[i], &j, ' ');
+						// printf("opt 2\n");
+						// printf("here %c\n", tmp->cmd_args[i][j]);
+						q_dom = 0;
+						// j++;
+					}
+					else if ((tmp->cmd_args[i][j] == ' ') && !q_dom)
+					{
+						// printf("opt 3\n");
+
 						free(tmp->cmd_args[i]);
+						clean = ft_remove(tmp->cmd_args[i], &j, ' ');
 						tmp->cmd_args[i] = clean;
+						// j++;
 					}
 					j++;
 				}
