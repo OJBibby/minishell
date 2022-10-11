@@ -56,6 +56,8 @@ int	ft_export(t_info *info)
 		j = 0;
 		while (info->token->cmd_args[i][j] && info->token->cmd_args[i][j] != '=')
 			j++;
+		if (!info->token->cmd_args[i][j])
+			continue ;
 		env = find_env_node(info->env_ll, info->token->cmd_args[i], j);
 		if (!env)
 			return (error_return(0, NULL, "Memory allocation fail."));

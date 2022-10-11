@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:41:00 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/05 12:38:30 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/07 18:48:27 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	init_files(t_token *token, t_info *info)
 {
+	token->input = NULL;
 	if (token->input && token->input[0][0] != '|' && input_init(token, info))
 		return (1);
 	if (token->output && output_init(token, info))

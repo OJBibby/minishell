@@ -398,7 +398,7 @@ int	parsing(t_mini *mini)
 	
 
 	// printf("in parsing\n");
-	str = readline("👑𝖒𝖎𝖓𝖎𝖘𝖍𝖊𝖑𝖑 ▸ ");
+	str = readline("👑𝖒 𝖎𝖓𝖎𝖘𝖍𝖊𝖑𝖑 ▸ ");
 	// if (str = )
 	if (!str)
 	{

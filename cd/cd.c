@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 23:37:12 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/05 15:28:22 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/07 17:32:23 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,27 +15,31 @@
 int	ft_cd(t_token *token, t_info *info)
 {
 	t_env	*env;
-	int		retval;
 	char	*str;
 
 	close(info->out_now);
 	close(info->in_now);
+	str = NULL;
 	if (!token->output)
 	{
-		if (!token->cmd_args[1] || !ft_strncmp(token->cmd_args[1], "~", 2))
+		if (!token->cmd_args[1] || token->cmd_args[1][0] == '~')
 		{
 			env = get_env_node(info->env_ll, "HOME");
-			str = ft_strdup(&env->str[5]);
-			retval = chdir(str);
-			free(str);
+			if (!env)
+				return (error_return(0, NULL, "minishell: cd: HOME not set"));
+			str = ft_strjoin(&env->str[5], &token->cmd_args[1][1]);
 		}
 		else
-			retval = chdir(token->cmd_args[1]);
-		if (retval)
+			str = ft_strdup(token->cmd_args[1]);
+		if (!str)
+			return (error_return(0, NULL, "Unable to allocate memory."));
+		if (chdir(str))
 		{
 			printf("Error changing directory.\n");
+			free (str);
 			return (1);
 		}
 	}
+	free (str);
 	return (0);
 }
