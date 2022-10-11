@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/07 17:46:10 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/11 19:30:44 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,18 +149,23 @@ int	error_return(int id, void *mem, char *str)
 
 int	exec_close_fd(t_info *info)
 {
-	if (info->stdin_fd)
+	if (info->stdin_fd != -1)
 	{
 		dup2(info->stdin_fd, STDIN_FILENO);
 		close(info->stdin_fd);
+		info->stdin_fd = -1;
 	}
-	if (info->stdout_fd)
+	if (info->stdout_fd != -1)
 	{
 		dup2(info->stdout_fd, STDOUT_FILENO);
 		close(info->stdout_fd);
+		info->stdout_fd = -1;
 	}
 	if (info->outfile_no != -1)
+	{
 		close(info->outfile_no);
+		info->outfile_no = -1;
+	}
 	return (0);
 }
 

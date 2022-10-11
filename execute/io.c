@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:42:19 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/05 16:42:02 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/11 19:37:09 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ int	output_init(t_token *token, t_info *info)
 		if (token->output[++i] && token->output[i][0] != '|')
 			close(info->outfile_no);
 	}
-	printf("fd: %d\n", info->outfile_no);
 	return (0);
 }
 

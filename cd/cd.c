@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 23:37:12 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/07 17:32:23 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/11 19:34:57 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ int	ft_cd(t_token *token, t_info *info)
 	t_env	*env;
 	char	*str;
 
-	close(info->out_now);
-	close(info->in_now);
 	str = NULL;
 	if (!token->output)
 	{
