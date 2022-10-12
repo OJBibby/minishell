@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 10:34:31 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/12 09:35:44 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 00:55:39 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,26 +78,24 @@ int	shift_args(char **args)
 	return (0);
 }
 
-t_env	*find_env_node(t_env *env, char *str, int i)
+t_env	*find_env_node(t_env *env, char *str, int mode)
 {
 	t_env	*tmp;
 	t_env	*prev;
 	int		len;
+	int		i;
 
+	i = 0;
+	while (str[i] && str[i] != '=')
+		i++;
 	tmp = env;
 	while (tmp)
 	{
-		if (!ft_strncmp(tmp->str, str, i + 1))
-			return (tmp);
+		if (!ft_strncmp(tmp->str, str, i + mode))
+			if (mode == 1 || (mode == 0 && !str[i] && tmp->str[i] == '='))
+				return (tmp);
 		prev = tmp;
 		tmp = tmp->next;
 	}
-	tmp = ft_calloc(1, sizeof(t_env));
-	if (!tmp)
-		return (NULL);
-	tmp->prev = prev;
-	prev->next = tmp;
-	tmp->str = NULL;
-	tmp->next = NULL;
-	return (tmp);
+	return (NULL);
 }

@@ -26,9 +26,13 @@ int	ft_unset(t_info *info)
 	i = 0;
 	while (token->cmd_args[++i])
 	{
-		delete = get_env_node(info->env_ll, token->cmd_args[i]);
+		delete = find_env_node(info->env_ll, token->cmd_args[i], 0);
 		if (!delete)
 			return (1);
+		if (!delete->prev && delete->next)
+			info->env_ll = delete->next;
+		if (!delete->prev && !delete->next)
+			info->env_ll = NULL;
 		if (delete->prev)
 			delete->prev->next = delete->next;
 		if (delete->next)
@@ -53,15 +57,14 @@ int	ft_export(t_info *info)
 	i = 0;
 	while (info->token->cmd_args[++i])
 	{
-		j = 0;
-		while (info->token->cmd_args[i][j] && info->token->cmd_args[i][j] != '=')
-			j++;
-		if (!info->token->cmd_args[i][j])
-			continue ;
-		env = find_env_node(info->env_ll, info->token->cmd_args[i], j);
+		env = find_env_node(info->env_ll, info->token->cmd_args[i], 1);
 		if (!env)
-			return (error_return(0, NULL, "Memory allocation fail."));
-		if (add_env(info->token->cmd_args[i], env) == -1)
+		{
+			env = add_env_node(info);
+			if (!env)
+				return (error_return(0, NULL, "Memory allocation fail."));
+		}
+		if (add_env_var(info->token->cmd_args[i], env) == -1)
 			return (error_return(0, NULL, "Memory allocation fail."));
 	}
 	return (0);

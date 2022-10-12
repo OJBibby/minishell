@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 13:21:45 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/12 10:14:44 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 00:31:31 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,28 @@ int	replace_var(char *var, t_env *env)
 	return (0);
 }
 
-int	add_env(char *var, t_env *env)
+t_env	*add_env_node(t_info *info)
+{
+	t_env	*env;
+	t_env	*prev;
+
+	env = info->env_ll;
+	while (env)
+	{
+		prev = env;
+		env = env->next;
+	}
+	env = ft_calloc(1, sizeof(t_env));
+	if (!env)
+		return (NULL);
+	env->prev = prev;
+	prev->next = env;
+	env->str = NULL;
+	env->next = NULL;
+	return (env);
+}
+
+int	add_env_var(char *var, t_env *env)
 {
 	int	i;
 	int	j;
@@ -96,30 +117,29 @@ int	add_env(char *var, t_env *env)
 			break ;
 		}
 	}
-	/*if (!token->cmd_args[i][j])
-		return (error_return(3, NULL, ft_strjoin(token->cmd_args[i], ": No such file or directory.")) - 2);*/
 	return (0);
 }
 
 int	ft_env(t_token *token, t_info *info)
 {
-	t_env	*tmp;
+	t_env	*env;
 	int 	i;
 	int		j;
 
 	i = 0;
 	while (token->cmd_args[++i])
 	{
-		j = 0;
-		while (token->cmd_args[i][j] && token->cmd_args[i][j] != '=')
-			j++;
-		if (!token->cmd_args[i][j])
-			return (use_env(token, info, tmp, i));
-		tmp = find_env_node(info->env_ll, token->cmd_args[i], j);
-		if (!tmp)
-			return (error_return(0, NULL, "Memory allocation fail."));
-		if (add_env(token->cmd_args[i], tmp))
+		if (!token->cmd_args[i])
+			return (use_env(token, info, env, i));
+		env = find_env_node(info->env_ll, token->cmd_args[i], 1);
+		if (!env)
+		{
+			env = add_env_node(info);
+			if (!env)
+				return (error_return(0, NULL, "Memory allocation fail."));
+		}
+		if (add_env_var(token->cmd_args[i], env))
 			return (1);
 	}
-	return (use_env(token, info, tmp, i));
+	return (use_env(token, info, env, i));
 }
