@@ -23,11 +23,14 @@ int	check_builtin(char **args)
 
 int	check_local_adress(t_token *token, char	*adress, t_mini *mini)
 {
+	printf("in local adress\n");
+
 	if (access(adress, F_OK) == 0)
 	{
 		token->path = ft_strdup(adress);
 		return (0);
 	}
+	printf("can't find adress\n");
 	return (1);
 }
 
@@ -54,8 +57,6 @@ int	iter_path(char **adress, char *str, t_token *token, t_mini *mini)
 	clean = NULL;
 	while (adress[i])
 	{
-		if (ft_strchr(str, '/'))
-			return (check_local_adress(token, str, mini));
 		clean = adress[i];
 		adress[i] = ft_strjoin(adress[i], "/"); //!!!
 		free(clean);
@@ -72,11 +73,12 @@ int	iter_path(char **adress, char *str, t_token *token, t_mini *mini)
 int	check_path(t_mini *mini, t_token *token)
 {
 	char	**adress;
-	char	*str;
 	int		i;
 	char	*clean;
 	char	*tmp_adr;
 
+	if (ft_strchr(token->cmd_args[0], '/'))
+		return (check_local_adress(token, token->cmd_args[0], mini));
 	tmp_adr = get_env_str(mini->env, "PATH");
 	if (tmp_adr)
 		tmp_adr += 5;
