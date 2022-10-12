@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:39:52 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/07 18:25:50 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/12 11:16:49 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,15 @@ int	output_child(t_token *token, t_info *info, char *path)
 		close(info->outfile_no);
 	}
 	else if (token->output)
+	{
 		dup2(info->out_now, STDOUT_FILENO);
+		close(info->out_now);
+	}
 	else
 	{
 		dup2(info->stdout_fd, STDOUT_FILENO);
 		close(info->stdout_fd);
 	}
-	close(info->out_now);
 	retval = execve(token->path, token->cmd_args, info->env);
 	perror("");
 	exit (retval);
@@ -48,7 +50,8 @@ int	final_output(t_token *token, t_info *info, char *path)
 	{
 		if (token->output && token->output[0][0] != '|')
 			close(info->outfile_no);
-		close(info->out_now);
+		if (info->out_now > -1)
+			close(info->out_now);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			g_exit = WEXITSTATUS(status);
