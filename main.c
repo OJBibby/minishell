@@ -12,6 +12,7 @@ t_env	*init_env(t_mini *mini, char **or_env)
 	env = malloc(sizeof(t_env));
 	env->str = ft_strdup(or_env[0]);
 	env->next = NULL;
+	env->prev = NULL;
 	mini->env = env;
 	head = env;
 	i = 1;
