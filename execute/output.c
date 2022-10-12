@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:39:52 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/12 11:16:49 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/12 11:51:11 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,15 +64,19 @@ int	buff_to_buff(t_token *token, t_info *info, char *path)
 	int	pid;
 	int status;
 
-	if (info->done_ops > 0)
+	if (token->input)
 	{
 		dup2(info->in_now, STDIN_FILENO);
 		close(info->in_now);
+		info->in_now = -1;
+	}
+	if (token->input)
+	{
+		close(info->out_now);
+		info->out_now = -1;
 	}
 	if (info->done_ops + 1 == info->total_ops)
 		return (final_output(token, info, path));
-	if (info->done_ops > 0)
-		close(info->out_now);
 	pipe(info->pipe_fd);
 	info->in_now = info->pipe_fd[0];
 	info->out_now = info->pipe_fd[1];
