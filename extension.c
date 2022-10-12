@@ -36,7 +36,7 @@ int	if_question_mark(t_ext *ex, int *i, int *j, t_token *tmp)
 {
 	ex->s = tmp->cmd_args[*i] + *j;
 	ex->index = ft_strchr_nb(tmp->cmd_args[*i], '$');
-	ex->ext = ft_itoa(g_exit);
+	ex->ext = ft_itoa(g_status.exit_status);
 	if (!ex->ext)
 		return (1);
 	ex->s += 1;

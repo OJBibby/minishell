@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/12 12:48:48 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/12 13:14:27 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ int	exec_cmds(t_token *token, t_info *info)
 	inbuilt = check_inbuilt(token, info);
 	if (inbuilt == 1)
 	{
-		g_exit = 2;
+		g_status.exit_status = 2;
 		return (1);
 	}
 	if (inbuilt == 0)
 	{
-		g_exit = 0;
+		g_status.exit_status = 0;
 		return (0);
 	}
 	if (access(token->path, X_OK) == -1)
@@ -112,7 +112,7 @@ int	execute(t_mini *mini)
 			break ;
 		if (exec_cmds(info.token, &info) == 1)
 			break ;
-		if (g_exit != 0)
+		if (g_status.exit_status != 0)
 			break ;
 		info.token = info.token->next;
 		info.done_ops++;

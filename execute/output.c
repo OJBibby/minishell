@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:39:52 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/12 11:51:11 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/12 13:16:16 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,13 @@ int	output_child(t_token *token, t_info *info, char *path)
 
 int	final_output(t_token *token, t_info *info, char *path)
 {
-	int	pid;
+	//int	pid;
 	int status;
 
-	pid = fork();
-	if (pid == -1)
+	g_status.pid = fork();
+	if (g_status.pid == -1)
 		return (error_return(1, path, "Error creating child process."));
-	if (pid == 0)
+	if (g_status.pid == 0)
 		output_child(token, info, path);
 	else
 	{
@@ -52,9 +52,9 @@ int	final_output(t_token *token, t_info *info, char *path)
 			close(info->outfile_no);
 		if (info->out_now > -1)
 			close(info->out_now);
-		waitpid(pid, &status, 0);
+		waitpid(g_status.pid, &status, 0);
 		if (WIFEXITED(status))
-			g_exit = WEXITSTATUS(status);
+			g_status.exit_status = WEXITSTATUS(status);
 	}
 	return (0);
 }
@@ -90,7 +90,7 @@ int	buff_to_buff(t_token *token, t_info *info, char *path)
 		close(info->out_now);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
-			g_exit = WEXITSTATUS(status);
+			g_status.exit_status = WEXITSTATUS(status);
 	}
 	return (0);
 }

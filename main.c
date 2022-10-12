@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	g_exit;
+t_global g_status;
 
 t_env	*init_env(t_mini *mini, char **or_env)
 {
