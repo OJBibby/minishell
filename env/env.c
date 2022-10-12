@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 13:21:45 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/07 17:45:52 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/12 10:14:44 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,6 @@ int	use_env(t_token *token, t_info *info, t_env *tmp, int i)
 		revert_list(tmp, i);
 	}
 	exec_free(tmp_env);
-	/*if (info->stdout_fd == -1)
-		info->stdout_fd = dup(STDOUT_FILENO);*/
 	return (retval);
 }
 

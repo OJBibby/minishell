@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 21:34:16 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/05 15:28:14 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/12 10:07:31 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,9 +128,6 @@ int	set_fd(t_token *token, t_info *info)
 		else
 			return (info->outfile_no);
 	}
-	/*dup2(info->stdout_fd, STDOUT_FILENO);
-	close(info->stdout_fd);
-	info->stdout_fd = -1;*/
 	return (1);
 }
 
@@ -169,7 +166,5 @@ int	ft_echo(t_token *token, t_info *info)
 	echo_write(token, info, flags, fd);
 	if (token->output && token->output[0][0] != '|')
 		close(info->outfile_no);
-	/*if (info->stdout_fd == -1)
-		info->stdout_fd = dup(STDOUT_FILENO);*/
 	return (0);
 }

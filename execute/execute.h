@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:51:34 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/05 16:30:46 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/12 10:14:38 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,7 @@ int		shift_args(char **args);
 int		revert_list(t_env *tmp, int i);
 t_env	*find_env_node(t_env *env, char *str, int i);
 int		add_env(char *var, t_env *env);
+char	**list_to_arr(t_env *env);
+int		exec_free(char **env);
 
 #endif
