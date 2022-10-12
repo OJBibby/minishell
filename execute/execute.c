@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/12 17:40:15 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/12 18:42:11 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	exec_free(char **env)
 int	execute(t_mini *mini)
 {
 	t_info	info;
-	
+
 	if (!mini->tokens)
 		return (0);
 	if (mini->tokens->cmd_args && mini->tokens->cmd_args[0] && !ft_strncmp(mini->tokens->cmd_args[0], "exit", ft_strlen(mini->tokens->cmd_args[0])))

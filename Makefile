@@ -12,7 +12,7 @@ SRC		= main.c get_args.c clean_args.c path.c ext_if_var.c free.c parsing.c redir
 OBJ		= $(SRC:%.c=$(OBJ_DIR)%.o)
 CC		= gcc
 #-g -fsanitize=address
-CFLAGS	= -Wall -Wextra -Werror
+CFLAGS	= -Wall -Wextra -Werror -g -fsanitize=address
 LIBS	= -L/usr/local/opt/readline/lib -lreadline
 INCLUDE = -I/usr/local/opt/readline/include
 GREY	=	\33[1;30m
