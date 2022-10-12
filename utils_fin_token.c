@@ -32,7 +32,7 @@ char	**put_pipe(void)
 {
 	char	**str;
 
-	str = malloc(sizeof(char) * 2);
+	str = malloc(sizeof(char *) * 2);
 	str[0] = ft_strdup("|");
 	str[1] = 0;
 	return (str);
