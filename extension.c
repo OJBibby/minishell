@@ -34,12 +34,9 @@ void	check_s(t_ext *ex, int *i, int *j, t_token *tmp)
 
 int	if_question_mark(t_ext *ex, int *i, int *j, t_token *tmp)
 {
-	int		exit_s;
-
-	exit_s = 127;
 	ex->s = tmp->cmd_args[*i] + *j;
 	ex->index = ft_strchr_nb(tmp->cmd_args[*i], '$');
-	ex->ext = ft_itoa(exit_s);
+	ex->ext = ft_itoa(g_exit);
 	if (!ex->ext)
 		return (1);
 	ex->s += 1;
