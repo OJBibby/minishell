@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 11:51:20 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/12 14:08:07 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/12 14:11:58 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	sig_int(int sig)
 	{
 		kill(g_status.pid, SIGINT);
 		write(1, "\n", 1);
+		g_status.pid = 0;
 	}
 	else
 	{
