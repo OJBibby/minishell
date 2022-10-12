@@ -29,10 +29,14 @@ int	ft_unset(t_info *info)
 		delete = get_env_node(info->env_ll, token->cmd_args[i]);
 		if (!delete)
 			return (1);
-		if (delete->prev)
+		if (delete->prev && delete->next)
 			delete->prev->next = delete->next;
-		if (delete->next)
+		else if (delete->prev)
+			delete->prev->next = NULL;
+		if (delete->next && delete->prev)
 			delete->next->prev = delete->prev;
+		else if (delete->next)
+			delete->next->prev = NULL;
 		if (delete->str)
 			free(delete->str);
 		free(delete);

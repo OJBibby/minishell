@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/12 13:14:27 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/12 17:40:15 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ int	execute(t_mini *mini)
 	init_array(mini, &info);
 	while (info.token && info.done_ops < info.total_ops)
 	{
-		if (init_files(info.token, &info) || !mini->tokens->cmd_args || !mini->tokens->cmd_args[0])
+		if (init_files(info.token, &info) || !info.token->cmd_args || !info.token->cmd_args[0])
 			break ;
 		if (exec_cmds(info.token, &info) == 1)
 			break ;
