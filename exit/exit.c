@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 19:22:40 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/12 13:05:40 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/12 14:27:41 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,18 @@ int	exit_shell(t_mini *mini)
 	int	i;
 	
 	exit_val = 0;
+	printf("exit\n");
 	if (mini->tokens->cmd_args[1] && mini->tokens->cmd_args[2])
 		return (error_return(0, NULL, "minishell: exit: too many arguments"));
 	if (mini->tokens->cmd_args[1])
 	{
 		i = -1;
 		if (mini->tokens->cmd_args[1][0] == '-')
+		{
 			i++;
+			if (!mini->tokens->cmd_args[1][1])
+				printf("minishell: exit: numerical argument required\n");
+		}
 		while (mini->tokens->cmd_args[1][++i])
 		{
 			if (mini->tokens->cmd_args[1][i] > '9' || mini->tokens->cmd_args[1][i] < '0')

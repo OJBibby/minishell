@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:39:52 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/12 13:16:16 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/12 14:16:18 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ int	final_output(t_token *token, t_info *info, char *path)
 		if (info->out_now > -1)
 			close(info->out_now);
 		waitpid(g_status.pid, &status, 0);
+		g_status.pid = 0;
 		if (WIFEXITED(status))
 			g_status.exit_status = WEXITSTATUS(status);
 	}
@@ -89,6 +90,7 @@ int	buff_to_buff(t_token *token, t_info *info, char *path)
 	{
 		close(info->out_now);
 		waitpid(pid, &status, 0);
+		g_status.pid = 0;
 		if (WIFEXITED(status))
 			g_status.exit_status = WEXITSTATUS(status);
 	}
