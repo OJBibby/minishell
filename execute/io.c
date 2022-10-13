@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:42:19 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 11:23:28 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 12:03:16 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	out_file(char *file, t_info *info, int append)
 
 int	in_file(char *file, t_info *info)
 {
-	char	buf[1];
+	char		buf[1];
 	struct stat	stats;
 
 	info->infile_no = open(file, O_RDONLY);
@@ -49,7 +49,7 @@ int	read_stdin(t_token *token, t_info *info, int i)
 	{
 		if (ptr)
 		{
-			ptr = env_var(ptr, info->env);
+			env_var(ptr, info->env);
 			write(info->out_now, ptr, ft_strlen(ptr));
 			write(info->out_now, "\n", 1);
 			free(ptr);
@@ -89,12 +89,14 @@ int	input_init(t_token *token, t_info *info)
 		if (token->heredoc[i])
 			read_stdin(token, info, i);
 		else
+		{
 			if (in_file(token->input[i], info))
 			{
 				close(info->in_now);
 				close(info->out_now);
 				return (1);
 			}
+		}
 		if (token->input[++i])
 		{
 			close(info->in_now);

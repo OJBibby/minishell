@@ -106,6 +106,7 @@ typedef struct s_quo
 
 int			parsing(t_mini *mini);
 char		*ft_strjoin(char const *s1, char const *s2);
+char		*ft_strjoin_slash(char const *s1, char const *s2);
 char		*ft_strchr(const char *s, int c);
 int			ft_strchr_nb(const char *s, int c);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);

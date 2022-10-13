@@ -6,39 +6,11 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 10:34:31 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 00:55:39 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 16:12:32 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../execute/execute.h"
-
-char	**list_to_arr(t_env *env)
-{
-	t_env	*tmp;
-	int		i;
-	char	**ret;
-
-	i = 0;
-	tmp = env;
-	while (tmp)
-	{
-		i++;
-		tmp = tmp->next;
-	}
-	ret = ft_calloc((i + 1), sizeof(char *));
-	if (!ret)
-		return (NULL);
-	tmp = env;
-	i = 0;
-	while (tmp)
-	{
-		ret[i] = ft_strdup(tmp->str);
-		tmp = tmp->next;
-		i++;
-	}
-	ret[i] = NULL;
-	return (ret);
-}
 
 int	revert_list(t_env *tmp, int i)
 {
@@ -52,29 +24,78 @@ int	revert_list(t_env *tmp, int i)
 	return (0);
 }
 
-int	shift_args(char **args)
+int	shift_args(t_token *token)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
+	char	**args;
+	char	**new_args;
 
+	args = token->cmd_args;
+	i = 1;
+	while (args[i])
+		i++;
+	new_args = ft_calloc(i, sizeof(char **));
+	if (!new_args)
+		return (1);
 	i = 0;
+	free(args[i]);
 	while (args[++i])
 	{
-		free(args[i - 1]);
-		args[i - 1] = ft_calloc(ft_strlen(args[i]) + 1, sizeof(char));
-		if (!args[i - 1])
+		new_args[i - 1] = ft_calloc(ft_strlen(args[i]) + 1, sizeof(char *));
+		if (!new_args[i - 1])
 			return (1);
 		j = -1;
 		while (args[i][++j])
-			args[i - 1][j] = args[i][j];
-		args[i - 1][j] = '\0';
+			new_args[i - 1][j] = args[i][j];
+		new_args[i - 1][j] = '\0';
+		free(args[i]);
 	}
-	free(args[i - 1]);
-	args[i - 1] = ft_calloc(1, sizeof(char));
-	if (!args[i - 1])
-		return (1);
-	args[i - 1] = NULL;
 	free(args[i]);
+	free(args);
+	token->cmd_args = new_args;
+	return (0);
+}
+
+t_env	*add_env_node(t_info *info)
+{
+	t_env	*env;
+	t_env	*prev;
+
+	env = info->env_ll;
+	while (env)
+	{
+		prev = env;
+		env = env->next;
+	}
+	env = ft_calloc(1, sizeof(t_env));
+	if (!env)
+		return (NULL);
+	env->prev = prev;
+	prev->next = env;
+	env->str = NULL;
+	env->next = NULL;
+	return (env);
+}
+
+int	replace_var(char *var, t_env *env)
+{
+	free(env->str);
+	env->str = NULL;
+	env->str = ft_strdup(var);
+	if (!env->str)
+	{
+		if (env->next && env->prev)
+		{
+			env->prev->next = env->next;
+			env->next->prev = env->prev;
+		}
+		else if (env->next)
+			env->next->prev = NULL;
+		else if (env->prev)
+			env->prev->next = NULL;
+		return (error_return(1, env, "Memory allocation fail."));
+	}
 	return (0);
 }
 

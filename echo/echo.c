@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 21:34:16 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 11:37:34 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 13:17:48 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,8 @@
 
 char	*env_var(char *arg, char **env)
 {
-	int		j;
 	int		i;
-	int		x;
-	int		y;
-	int		v;
-	int		dif;
+	int		n;
 	char	*var;
 
 	i = -1;
@@ -29,57 +25,11 @@ char	*env_var(char *arg, char **env)
 		if (arg[i] == '$')
 		{
 			i++;
-			x = -1;
-			while (env[++x])
-			{
-				y = 0;
-				j = 0;
-				v = i;
-				while (env[x][y] && arg[i + y] && env[x][y] == arg[i + y] && env[x][y] != '=')
-					y++;
-				if (y != 0 && env[x][y++] == '=')
-				{
-					while (env[x][y + j])
-						j++;
-					var = ft_calloc(ft_strlen(arg) + j + 1 - y, sizeof(char));
-					j = 0;
-					while (arg[j] && j < i - 1)
-					{
-						var[j] = arg[j];
-						j++;
-					}
-					while (arg[v] && arg[v] != ' ' && arg[v] != '$')
-						v++;
-					dif = y - j;
-					while (env[x][y])
-						var[j++] = env[x][y++];
-					while (arg[v])
-						var[j++] = arg[v++];
-					i += y - dif - 2;
-					free(arg);
-					arg = var;
-					break ;
-				}
-			}
+			if (str_rep_var(arg, env, var, i))
+				return (NULL);
 			if (!var)
-			{
-				j = 0;
-				x = 0;
-				y = 0;
-				while (arg[i + j] && arg[i + j] != ' ')
-					j++;
-				var = ft_calloc(ft_strlen(arg) + 1 - j, sizeof(char));
-				while (arg[x] && x < i)
-					var[y++] = arg[x++];
-				j = j + x;
-				while (x < j)
-					x++;
-				while (arg[x])
-					var[y++] = arg[x++];
-				i--;
-				free(arg);
-				arg = var;
-			}
+				str_rem_var(arg, var, i);
+			i -= 2;
 		}
 	}
 	return (arg);

@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:51:34 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 00:31:42 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 16:02:49 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int		input_init(t_token *token, t_info *info);
 int		output_init(t_token *token, t_info *info);
 int		init_files(t_token *token, t_info *info);
 int		set_fd(t_token *token, t_info *info);
-int		shift_args(char **args);
+int		shift_args(t_token *token);
 int		revert_list(t_env *tmp, int i);
 t_env	*find_env_node(t_env *env, char *str, int mode);
 t_env	*add_env_node(t_info *info);
@@ -65,5 +65,9 @@ int		add_env_var(char *var, t_env *env);
 char	**list_to_arr(t_env *env);
 int		exec_free(char **env);
 long	ft_atoi(const char *str);
+int		str_rep_var(char *arg, char **env, char *var, int i);
+int		str_rem_var(char *arg, char *var, int i);
+int		replace_var(char *var, t_env *env);
+char    *search_path(t_token *token, t_info *info);
 
 #endif

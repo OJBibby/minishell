@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:41:00 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/12 11:37:00 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 11:43:47 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,5 @@ void	init_array(t_mini *mini, t_info *info)
 	info->infile_no = -1;
 	info->outfile_no = -1;
 	info->out_now = -1;
-	info-> in_now = -1;
+	info->in_now = -1;
 }

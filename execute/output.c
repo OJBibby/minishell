@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:39:52 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 11:40:28 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 11:44:01 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	output_child(t_token *token, t_info *info, char *path)
 
 int	final_output(t_token *token, t_info *info, char *path)
 {
-	int status;
+	int	status;
 
 	g_status.pid = fork();
 	if (g_status.pid == -1)
@@ -61,7 +61,7 @@ int	final_output(t_token *token, t_info *info, char *path)
 
 int	buff_to_buff(t_token *token, t_info *info, char *path)
 {
-	int status;
+	int	status;
 
 	if (token->input)
 	{
