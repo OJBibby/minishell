@@ -6,15 +6,15 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 11:42:48 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 11:42:51 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 19:58:22 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../execute/execute.h"
 
-int	print_exported(t_env *env, int fd)
+int print_exported(t_env *env, int fd)
 {
-	t_env	*temp;
+	t_env *temp;
 
 	temp = env;
 	while (temp)
@@ -27,12 +27,12 @@ int	print_exported(t_env *env, int fd)
 	return (0);
 }
 
-int	ft_unset(t_info *info)
+int ft_unset(t_info *info)
 {
-	t_token	*token;
-	t_env	*delete;
-	t_env	*env;
-	int		i;
+	t_token *token;
+	t_env *delete;
+	t_env *env;
+	int i;
 
 	token = info->token;
 	i = 0;
@@ -56,12 +56,32 @@ int	ft_unset(t_info *info)
 	return (0);
 }
 
-int	ft_export(t_info *info)
+int check_export(char *str)
 {
-	t_env	*env;
-	int		fd;
-	int		i;
-	int		j;
+	int	j;
+
+	if ((str[0] == '=') || ((str[0] < 'A' || str[0] > 'Z') && (str[0] < 'a' || str[0] > 'z')))
+	{
+		printf("minishell: export: %s: not a valid identifier.\n", str);
+		return (1);
+	}
+	j = 0;
+	while (str[j])
+	{
+		if (str[j++] == '=')
+			break;
+		if (!str[j])
+			return (1);
+	}
+	return (0);
+}
+
+int ft_export(t_info *info)
+{
+	t_env *env;
+	int fd;
+	int i;
+	int j;
 
 	fd = set_fd(info->token, info);
 	if (!info->token->cmd_args[1])
@@ -69,6 +89,8 @@ int	ft_export(t_info *info)
 	i = 0;
 	while (info->token->cmd_args[++i])
 	{
+		if (check_export(info->token->cmd_args[i]))
+			continue ;
 		env = find_env_node(info->env_ll, info->token->cmd_args[i], 1);
 		if (!env)
 		{

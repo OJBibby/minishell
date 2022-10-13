@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 23:37:12 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/11 19:34:57 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 19:37:43 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_cd(t_token *token, t_info *info)
 			env = get_env_node(info->env_ll, "HOME");
 			if (!env)
 				return (error_return(0, NULL, "minishell: cd: HOME not set"));
-			str = ft_strjoin(&env->str[5], &token->cmd_args[1][1]);
+			str = ft_strdup(&env->str[5]);
 		}
 		else
 			str = ft_strdup(token->cmd_args[1]);
