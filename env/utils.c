@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 10:34:31 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 16:12:32 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 17:06:52 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,12 @@ int	shift_args(t_token *token)
 		j = -1;
 		while (args[i][++j])
 			new_args[i - 1][j] = args[i][j];
-		new_args[i - 1][j] = '\0';
+		new_args[i - 1][j] = 0;
 		free(args[i]);
 	}
 	free(args[i]);
 	free(args);
+	new_args[i - 1] = NULL;
 	token->cmd_args = new_args;
 	return (0);
 }

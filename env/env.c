@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 13:21:45 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 16:00:57 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 16:48:30 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,15 @@ int	exec_env(t_token *token, t_info *info, char **tmp_env, int i)
 			return (error_return(1, tmp_env, "Memory allocation fail."));
 	saved_env = info->env;
 	info->env = tmp_env;
-	token->path = search_path(token, info);
+	if (!access(token->cmd_args[0], F_OK))
+		token->path = token->cmd_args[0];
+	else
+		token->path = search_path(token, info);
+	if (!token->path)
+	{
+		info->env = saved_env;
+		return (1);
+	}
 	retval = exec_cmds(token, info);
 	info->env = saved_env;
 	return (retval);
@@ -44,7 +52,6 @@ int	exec_env(t_token *token, t_info *info, char **tmp_env, int i)
 
 int	use_env(t_token *token, t_info *info, t_env *tmp, int i)
 {
-	int		j;
 	int		fd;
 	int		retval;
 	char	**tmp_env;

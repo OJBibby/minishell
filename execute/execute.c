@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 15:28:44 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 17:23:29 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ int	execute(t_mini *mini)
 			break ;
 		if (g_status.exit_status != 0)
 			break ;
+		info.token->cmd_args[0];
 		info.token = info.token->next;
 		info.done_ops++;
 	}

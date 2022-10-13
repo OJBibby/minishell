@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 15:11:55 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 16:11:19 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 16:16:15 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ char	*search_path(t_token *token, t_info *info)
 		}
 		if (access(str, F_OK) == 0)
 			break ;
-		free(str);
 		if (!arr[i])
 			return (null_return(arr, 1, str, "Command not found."));
+		free(str);
 	}
 	free_joined(arr);
 	return (str);

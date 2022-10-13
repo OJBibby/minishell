@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 13:50:37 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 15:17:43 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 16:28:02 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	**list_to_arr(t_env *env)
 		i++;
 		tmp = tmp->next;
 	}
-	ret = ft_calloc((i + 1), sizeof(char *));
+	ret = ft_calloc((i + 1), sizeof(char **));
 	if (!ret)
 		return (NULL);
 	tmp = env;
