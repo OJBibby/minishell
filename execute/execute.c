@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/12 23:43:29 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 11:09:51 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,16 @@ int	exec_close_fd(t_info *info)
 	{
 		close(info->outfile_no);
 		info->outfile_no = -1;
+	}
+	if (info->in_now != -1)
+	{
+		close(info->in_now);
+		info->in_now = -1;
+	}
+	if (info->out_now != -1)
+	{
+		close(info->out_now);
+		info->out_now = -1;
 	}
 	return (0);
 }

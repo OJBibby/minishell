@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 21:34:16 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/12 10:07:31 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 11:25:00 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,10 @@ int	set_fd(t_token *token, t_info *info)
 	{
 		if (token->output[0][0] == '|')
 		{
+			if (info->out_now != -1)
+				close(info->out_now);
+			if (info->in_now != -1)
+				close(info->in_now);
 			pipe(info->pipe_fd);
 			info->out_now = info->pipe_fd[1];
 			info->in_now = info->pipe_fd[0];
@@ -166,5 +170,7 @@ int	ft_echo(t_token *token, t_info *info)
 	echo_write(token, info, flags, fd);
 	if (token->output && token->output[0][0] != '|')
 		close(info->outfile_no);
+	close(info->out_now);
+	info->out_now = -1;
 	return (0);
 }
