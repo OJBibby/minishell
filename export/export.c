@@ -6,15 +6,15 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 11:42:48 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 19:58:22 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 20:03:57 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../execute/execute.h"
 
-int print_exported(t_env *env, int fd)
+int	print_exported(t_env *env, int fd)
 {
-	t_env *temp;
+	t_env	*temp;
 
 	temp = env;
 	while (temp)
@@ -27,12 +27,12 @@ int print_exported(t_env *env, int fd)
 	return (0);
 }
 
-int ft_unset(t_info *info)
+int	ft_unset(t_info *info)
 {
-	t_token *token;
-	t_env *delete;
-	t_env *env;
-	int i;
+	t_token	*token;
+	t_env	*delete;
+	t_env	*env;
+	int		i;
 
 	token = info->token;
 	i = 0;
@@ -56,11 +56,12 @@ int ft_unset(t_info *info)
 	return (0);
 }
 
-int check_export(char *str)
+int	check_export(char *str)
 {
 	int	j;
 
-	if ((str[0] == '=') || ((str[0] < 'A' || str[0] > 'Z') && (str[0] < 'a' || str[0] > 'z')))
+	if ((str[0] == '=') || ((str[0] < 'A' || str[0] > 'Z') && (str[0] < 'a'
+				|| str[0] > 'z')))
 	{
 		printf("minishell: export: %s: not a valid identifier.\n", str);
 		return (1);
@@ -69,19 +70,19 @@ int check_export(char *str)
 	while (str[j])
 	{
 		if (str[j++] == '=')
-			break;
+			break ;
 		if (!str[j])
 			return (1);
 	}
 	return (0);
 }
 
-int ft_export(t_info *info)
+int	ft_export(t_info *info)
 {
-	t_env *env;
-	int fd;
-	int i;
-	int j;
+	t_env	*env;
+	int		fd;
+	int		i;
+	int		j;
 
 	fd = set_fd(info->token, info);
 	if (!info->token->cmd_args[1])

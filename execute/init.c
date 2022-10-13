@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:41:00 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 11:43:47 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 21:16:47 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	init_array(t_mini *mini, t_info *info)
 {
 	info->token = mini->tokens;
 	info->env_ll = mini->env;
+	info->copied_env = NULL;
 	info->env = list_to_arr(mini->env);
 	info->total_ops = count_args(info->token);
 	info->done_ops = 0;

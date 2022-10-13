@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 17:23:29 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 22:29:11 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,14 @@ int	error_return(int id, void *mem, char *str)
 		free(mem);
 	if (id == 2)
 		close(id);
-	printf("%s\n", str);
+	if (str)
+		printf("%s\n", str);
 	if (id == 3)
 		free(str);
+	if (id == 4)
+		free_copied_env(mem);
+	if (id == 5)
+		null_return(mem, 0, NULL, NULL);
 	return (1);
 }
 
@@ -109,6 +114,7 @@ int	exec_free(char **env)
 	while (env[i])
 		free(env[i++]);
 	free(env);
+	env = NULL;
 	return (0);
 }
 

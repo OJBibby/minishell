@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 13:21:45 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 16:48:30 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 22:34:49 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	exec_env(t_token *token, t_info *info, char **tmp_env, int i)
 
 	while (i-- > 0)
 		if (shift_args(token))
-			return (error_return(1, tmp_env, "Memory allocation fail."));
+			return (error_return(1, tmp_env, NULL));
 	saved_env = info->env;
 	info->env = tmp_env;
 	if (!access(token->cmd_args[0], F_OK))
@@ -50,74 +50,79 @@ int	exec_env(t_token *token, t_info *info, char **tmp_env, int i)
 	return (retval);
 }
 
-int	use_env(t_token *token, t_info *info, t_env *tmp, int i)
+int	use_env(t_token *token, t_info *info, int i)
 {
 	int		fd;
 	int		retval;
 	char	**tmp_env;
-	char	**saved_env;
 
 	fd = set_fd(token, info);
-	tmp_env = list_to_arr(info->env_ll);
+	tmp_env = list_to_arr(info->copied_env);
 	if (!tmp_env)
-		return (error_return(0, NULL, "Memory allocation fail."));
+		return (error_return(4, info->copied_env, "Memory allocation fail."));
 	if (!token->cmd_args[i])
 		retval = output_env(tmp_env, fd);
 	else
 		retval = exec_env(token, info, tmp_env, i);
-	revert_list(tmp, i);
-	exec_free(tmp_env);
+	if (tmp_env)
+		exec_free(tmp_env);
+	if (info->copied_env)
+		info->copied_env = free_copied_env(info->copied_env);
 	return (retval);
 }
 
-int	add_env_var(char *var, t_env *env)
+t_env	*copy_ll(t_env *env)
 {
-	int	i;
-	int	j;
+	t_env	*copied_env;
+	t_env	*copied_prev;
+	t_env	*copied_head;
 
-	if (env->str)
-		return (replace_var(var, env));
-	i = -1;
-	while (var[++i])
+	copied_prev = NULL;
+	copied_head = NULL;
+	while (env)
 	{
-		if (var[i] == '=' && var[i + 1])
-		{
-			env->str = ft_strdup(var);
-			if (!env->str)
-				return (error_return(1, env, "Memory allocation fail."));
-			break ;
-		}
+		copied_env = ft_calloc(1, sizeof(t_env));
+		if (!copied_env)
+			return (free_copied_env(copied_prev));
+		if (!copied_head)
+			copied_head = copied_env;
+		if (copied_prev)
+			copied_prev->next = copied_env;
+		copied_env->prev = copied_prev;
+		copied_prev = copied_env;
+		copied_env->str = ft_strdup(env->str);
+		if (!copied_env->str)
+			return (free_copied_env(copied_prev));
+		copied_env->next = NULL;
+		env = env->next;
+		copied_env = copied_env->next;
 	}
-	return (0);
+	return (copied_head);
 }
 
 int	ft_env(t_token *token, t_info *info)
 {
-	t_env	*env;
+	t_env	*env_node;
 	int		i;
-	int		j;
 
 	i = 0;
+	if (info->env_ll && !info->copied_env)
+		info->copied_env = copy_ll(info->env_ll);
+	if (!info->copied_env)
+		return (error_return(0, NULL, "Memory allocation fail."));
 	while (token->cmd_args[++i])
 	{
-		j = 0;
-		while (token->cmd_args[i][j])
+		if (check_env_input(token->cmd_args[i]))
+			return (use_env(token, info, i));
+		env_node = find_env_node(info->copied_env, token->cmd_args[i], 1);
+		if (!env_node)
 		{
-			if (token->cmd_args[i][j] == '=')
-				break ;
-			j++;
-			if (!token->cmd_args[i][j])
-				return (use_env(token, info, env, i));
-		}
-		env = find_env_node(info->env_ll, token->cmd_args[i], 1);
-		if (!env)
-		{
-			env = add_env_node(info);
-			if (!env)
+			env_node = add_env_node(info);
+			if (!env_node)
 				return (error_return(0, NULL, "Memory allocation fail."));
 		}
-		if (add_env_var(token->cmd_args[i], env))
+		if (add_env_var(token->cmd_args[i], env_node))
 			return (1);
 	}
-	return (use_env(token, info, env, i));
+	return (use_env(token, info, i));
 }
