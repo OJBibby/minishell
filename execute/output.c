@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:39:52 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 11:08:39 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 11:40:28 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	buff_to_buff(t_token *token, t_info *info, char *path)
 		close(info->in_now);
 		info->in_now = -1;
 	}
-	if (token->input && info->done_ops == 0)
+	if (token->input && info->done_ops == 0 && info->out_now != -1)
 	{
 		close(info->out_now);
 		info->out_now = -1;
