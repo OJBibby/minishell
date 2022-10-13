@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 11:09:51 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 11:37:24 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,11 @@ int	exec_cmds(t_token *token, t_info *info)
 	if (inbuilt == 0)
 	{
 		g_status.exit_status = 0;
+		if (info->out_now != -1)
+		{
+			close(info->out_now);
+			info->out_now = -1;
+		}
 		return (0);
 	}
 	if (access(token->path, X_OK) == -1)
