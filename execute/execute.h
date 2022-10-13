@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:51:34 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 22:35:09 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/13 22:49:55 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ long	ft_atoi(const char *str);
 int		str_rep_var(char *arg, char **env, char *var, int i);
 int		str_rem_var(char *arg, char *var, int i);
 int		replace_var(char *var, t_env *env);
-char    *search_path(t_token *token, t_info *info);
+char	*search_path(t_token *token, t_info *info);
 t_env	*free_copied_env(t_env *env);
 char	*null_return(char **arr, int id, void *ptr, char *str);
 int		check_env_input(char *str);
