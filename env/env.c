@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 13:21:45 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 11:32:08 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 14:55:29 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ int	ft_env(t_token *token, t_info *info)
 	int		i;
 
 	i = 0;
+	prepare_builtin(token, info);
 	if (info->env_ll && !info->copied_env)
 		info->copied_env = copy_ll(info->env_ll);
 	if (!info->copied_env)

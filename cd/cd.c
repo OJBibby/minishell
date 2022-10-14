@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 23:37:12 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 12:16:44 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 15:00:40 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	ft_cd(t_token *token, t_info *info)
 	char	*str;
 
 	str = NULL;
+	prepare_builtin(token, info);
 	if (!token->output)
 	{
 		str = alloc_addr(token, info);

@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 11:42:48 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 20:03:57 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 14:58:17 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int	ft_export(t_info *info)
 	int		i;
 	int		j;
 
+	prepare_builtin(info->token, info);
 	fd = set_fd(info->token, info);
 	if (!info->token->cmd_args[1])
 		return (print_exported(info->env_ll, fd));
