@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:39:52 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 13:52:31 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 15:19:37 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	output_child(t_token *token, t_info *info, char *path)
 	}
 	retval = execve(token->path, token->cmd_args, info->env);
 	perror("");
-	exit (retval);
+	exit(retval);
 }
 
 int	final_output(t_token *token, t_info *info, char *path)
@@ -49,8 +49,7 @@ int	final_output(t_token *token, t_info *info, char *path)
 	{
 		if (token->output && token->output[0][0] != '|')
 			close(info->outfile_no);
-		if (info->out_now > -1)
-			close(info->out_now);
+		exec_close_fd(info);
 		waitpid(g_status.pid, &status, 0);
 		g_status.pid = 0;
 		if (WIFEXITED(status))
@@ -68,24 +67,15 @@ void	prepare_output(t_token *token, t_info *info)
 			dup2(info->input_in, STDIN_FILENO);
 			close(info->input_in);
 			info->input_in = -1;
-			if (info->input_out != -1)
-			{
-				close(info->input_out);
-				info->input_out = -1;
-			}
 		}
 		else
 		{
 			dup2(info->in_now, STDIN_FILENO);
 			close(info->in_now);
-			if (info->out_now != -1)
-			{
-				close(info->out_now);
-				info->out_now = -1;
-			}
 			info->in_now = -1;
 		}
 	}
+	exec_close_fd2(info);
 }
 
 int	buff_to_buff(t_token *token, t_info *info, char *path)
@@ -106,6 +96,7 @@ int	buff_to_buff(t_token *token, t_info *info, char *path)
 	else
 	{
 		close(info->out_now);
+		info->out_now = -1;
 		waitpid(g_status.pid, &status, 0);
 		g_status.pid = 0;
 		if (WIFEXITED(status))
