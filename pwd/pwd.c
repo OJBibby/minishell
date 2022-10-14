@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 22:43:46 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 14:55:15 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 15:56:35 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	prepare_builtin(t_token *token, t_info *info)
 {
-	prepare_output(token, info);
 	if (token->input && token->input[0][0] == '|')
 	{
+		exec_close_builtin(info);
 		pipe(info->pipe_fd);
 		info->in_now = info->pipe_fd[0];
 		info->out_now = info->pipe_fd[1];

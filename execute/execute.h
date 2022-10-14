@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:51:34 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 15:17:59 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 15:53:04 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,5 +82,6 @@ void	exec_close_fd(t_info *info);
 void	exec_close_fd2(t_info *info);
 void	prepare_output(t_token *token, t_info *info);
 void	prepare_builtin(t_token *token, t_info *info);
+void	exec_close_builtin(t_info *info);
 
 #endif

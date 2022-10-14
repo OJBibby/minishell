@@ -6,11 +6,25 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 14:11:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 14:12:10 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 15:56:26 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+
+void	exec_close_builtin(t_info *info)
+{
+	if (info->out_now != -1)
+	{
+		close(info->out_now);
+		info->out_now = -1;
+	}
+	if (info->in_now != -1)
+	{
+		close(info->in_now);
+		info->in_now = -1;
+	}
+}
 
 void	exec_close_fd2(t_info *info)
 {
