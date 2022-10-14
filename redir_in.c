@@ -19,33 +19,64 @@ int	in_condition_three(t_util *ut, int *i, int *j)
 void	in_condition_two(t_util *ut, int *i, int *j)
 {
 	char	**tmp_arr;
+	int		ct;
 
 	*i = 0;
-	while (ut->old && ut->old->next && ut->old->next->cmd_args
-		&& ut->old->next->cmd_args[*i])
+	// while (ut->old && ut->old->next && ut->old->next->cmd_args
+	// 	&& ut->old->next->cmd_args[*i])
+	// {
+	// 	tmp_arr = add_string(ut->ret->input, ut->old->next->cmd_args[*i]);
+	// 	ut->ret->input = tmp_arr;
+	// 	(*i)++;
+	// 	mod_heredoc(ut, 1);
+	// }
+	tmp_arr = add_string(ut->ret->input, ut->old->next->cmd_args[0]);
+	ut->ret->input = tmp_arr;
+	if (ut->old->next->cmd_args[1])
 	{
-		tmp_arr = add_string(ut->ret->input, ut->old->next->cmd_args[*i]);
-		ut->ret->input = tmp_arr;
-		(*i)++;
-		mod_heredoc(ut, 1);
+		ct = 1;
+		while (ut->old->next->cmd_args[ct])
+		{
+			ut->ret->cmd_args = add_string(ut->ret->cmd_args, ut->old->next->cmd_args[ct]);
+			ct++;
+		}
 	}
+	mod_heredoc(ut, 1);
+
 }
 
 int	in_condition_one(t_util *ut, int *i, int *j)
 {
 	char	**tmp_arr;
+	int		ct;
 
+	printf("in cond one\n");
 	tmp_arr = ut->ret->cmd_args;
 	ut->ret->cmd_args = copy_args(ut->old->cmd_args, 0);
 	if (tmp_arr)
 		free(tmp_arr);
-	tmp_arr = ut->ret->input;
-	if (ut->old->next->cmd_args)
-		ut->ret->input = copy_args(ut->old->next->cmd_args, 0);
+	// tmp_arr = ut->ret->input;
+	// if (ut->old->next->cmd_args)
+	// 	ut->ret->input = copy_args(ut->old->next->cmd_args, 0);
+	if (ut->old->next->cmd_args && ut->old->next->cmd_args[0])
+		ut->ret->input = add_string(ut->ret->input, ut->old->next->cmd_args[0]);
 	else
 		return (1);
-	if (tmp_arr)
-		free_d_arr(tmp_arr);
+	// printf("past input\n");
+
+	// if (tmp_arr)
+	// 	free_d_arr(tmp_arr);
+	if (ut->old->next->cmd_args[1])
+	{
+		ct = 1;
+		while (ut->old->next->cmd_args[ct])
+		{
+			ut->ret->cmd_args = add_string(ut->ret->cmd_args, ut->old->next->cmd_args[ct]);
+			ct++;
+		}
+	}
+	// printf("past args\n");
+
 	*i = 0;
 	*j = ut->ilen;
 	while (ut->ret->input[(*j)++])
