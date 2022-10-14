@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:41:00 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 21:16:47 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 13:33:53 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	init_files(t_token *token, t_info *info)
 {
-	if (token->input && token->input[0][0] != '|' && input_init(token, info))
+	if (token->input && (token->input[0][0] != '|' || token->input[1]) && input_init(token, info))
 		return (1);
 	if (token->output && output_init(token, info))
 		return (1);
@@ -50,4 +50,6 @@ void	init_array(t_mini *mini, t_info *info)
 	info->outfile_no = -1;
 	info->out_now = -1;
 	info->in_now = -1;
+	info->input_in = -1;
+	info->input_out = -1;
 }

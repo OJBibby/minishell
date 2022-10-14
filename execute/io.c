@@ -6,13 +6,13 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:42:19 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 12:03:16 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 13:35:46 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 
-int	out_file(char *file, t_info *info, int append)
+int out_file(char *file, t_info *info, int append)
 {
 	if (append)
 		info->outfile_no = open(file, O_RDWR | O_CREAT | O_APPEND, 0644);
@@ -23,10 +23,10 @@ int	out_file(char *file, t_info *info, int append)
 	return (0);
 }
 
-int	in_file(char *file, t_info *info)
+int in_file(char *file, t_info *info)
 {
-	char		buf[1];
-	struct stat	stats;
+	char buf[1];
+	struct stat stats;
 
 	info->infile_no = open(file, O_RDONLY);
 	if (info->infile_no == -1)
@@ -35,14 +35,14 @@ int	in_file(char *file, t_info *info)
 	if (S_ISDIR(stats.st_mode))
 		return (error_return(3, NULL, ft_strjoin(file, ": is a directory.")));
 	while (read(info->infile_no, buf, 1))
-		write(info->out_now, buf, 1);
+		write(info->input_out, buf, 1);
 	close(info->infile_no);
 	return (0);
 }
 
-int	read_stdin(t_token *token, t_info *info, int i)
+int read_stdin(t_token *token, t_info *info, int i)
 {
-	char	*ptr;
+	char *ptr;
 
 	ptr = NULL;
 	while (ft_strncmp(ptr, token->input[i], ft_strlen(token->input[i])))
@@ -50,8 +50,8 @@ int	read_stdin(t_token *token, t_info *info, int i)
 		if (ptr)
 		{
 			env_var(ptr, info->env);
-			write(info->out_now, ptr, ft_strlen(ptr));
-			write(info->out_now, "\n", 1);
+			write(info->input_out, ptr, ft_strlen(ptr));
+			write(info->input_out, "\n", 1);
 			free(ptr);
 		}
 		ptr = readline(">");
@@ -60,47 +60,65 @@ int	read_stdin(t_token *token, t_info *info, int i)
 	return (0);
 }
 
-int	output_init(t_token *token, t_info *info)
+int output_init(t_token *token, t_info *info)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (token->output[i])
 	{
 		if (token->output[i][0] != '|')
+		{
 			if (out_file(token->output[i], info, token->append[i]))
 				return (1);
+		}
+		else
+		{
+			if (info->out_now == -1 && info->in_now == -1)
+			{
+				pipe(info->pipe_fd);
+				info->out_now = info->pipe_fd[1];
+				info->in_now = info->pipe_fd[0];
+			}
+		}
 		if (token->output[++i] && token->output[i][0] != '|')
 			close(info->outfile_no);
 	}
 	return (0);
 }
 
-int	input_init(t_token *token, t_info *info)
+int input_init(t_token *token, t_info *info)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (token->input[i])
 	{
-		pipe(info->pipe_fd);
-		info->in_now = info->pipe_fd[0];
-		info->out_now = info->pipe_fd[1];
-		if (token->heredoc[i])
+		pipe(info->input_pipe);
+		info->input_in = info->input_pipe[0];
+		info->input_out = info->input_pipe[1];
+		if (token->heredoc && token->heredoc[i])
 			read_stdin(token, info, i);
-		else
+		else if (token->input[i][0] != '|')
 		{
 			if (in_file(token->input[i], info))
 			{
-				close(info->in_now);
-				close(info->out_now);
+				if (info->input_in != -1 && info->input_out != -1)
+				{
+					close(info->input_in);
+					close(info->input_out);
+					info->input_in = -1;
+					info->input_out = -1;
+				}
 				return (1);
 			}
 		}
-		if (token->input[++i])
+		if (token->input[++i] && info->input_in != -1 && info->input_out != -1)
 		{
-			close(info->in_now);
-			close(info->out_now);
+			close(info->input_in);
+			close(info->input_out);
+			info->input_in = -1;
+			info->input_out = -1;
 		}
 	}
 	return (0);

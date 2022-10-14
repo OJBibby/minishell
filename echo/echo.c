@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 21:34:16 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 11:46:00 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 13:10:29 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ int echo_write(t_token *token, t_info *info, int flags, int fd)
 		i = 1;
 	else
 		i = 2;
-	j = -1;
 	while (token->cmd_args[i])
 	{
+		j = -1;
 		while (token->cmd_args[i][++j])
 		{
 			if (token->cmd_args[i][j] == '\n' && flags < 2)
@@ -55,7 +55,6 @@ int echo_write(t_token *token, t_info *info, int flags, int fd)
 				write(fd, &token->cmd_args[i][j], 1);
 		}
 		i++;
-		j = -1;
 		if (token->cmd_args[i])
 			write(fd, " ", 1);
 	}
@@ -66,22 +65,10 @@ int echo_write(t_token *token, t_info *info, int flags, int fd)
 
 int set_fd(t_token *token, t_info *info)
 {
-	if (info->out_now == -1 && info->in_now == -1)
-	{
-		pipe(info->pipe_fd);
-		info->out_now = info->pipe_fd[1];
-		info->in_now = info->pipe_fd[0];
-	}
 	if (token->output)
 	{
 		if (token->output[0][0] == '|')
-		{
-			/*if (info->out_now != -1)
-				close(info->out_now);
-			if (info->in_now != -1)
-				close(info->in_now);*/
 			return (info->out_now);
-		}
 		else
 			return (info->outfile_no);
 	}

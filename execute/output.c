@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:39:52 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 11:44:01 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 13:41:28 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,21 +59,39 @@ int	final_output(t_token *token, t_info *info, char *path)
 	return (0);
 }
 
+void	prepare_output(t_token *token, t_info *info)
+{
+	if (token->input)
+	{
+		if (info->input_in != -1)
+		{
+			dup2(info->input_in, STDIN_FILENO);
+			close(info->input_in);
+			close(info->input_out);
+			info->input_out = -1;
+			info->input_in = -1;
+		}
+		else
+		{
+			dup2(info->in_now, STDIN_FILENO);
+			close(info->in_now);
+			close(info->out_now);
+			info->out_now = -1;
+			info->in_now = -1;
+		}
+	}
+	/*if (token->input && info->done_ops == 0 && info->input_out != -1)
+	{
+		close(info->input_out);
+		info->input_out = -1;
+	}*/
+}
+
 int	buff_to_buff(t_token *token, t_info *info, char *path)
 {
 	int	status;
 
-	if (token->input)
-	{
-		dup2(info->in_now, STDIN_FILENO);
-		close(info->in_now);
-		info->in_now = -1;
-	}
-	if (token->input && info->done_ops == 0 && info->out_now != -1)
-	{
-		close(info->out_now);
-		info->out_now = -1;
-	}
+	prepare_output(token, info);
 	if (info->done_ops + 1 == info->total_ops)
 		return (final_output(token, info, path));
 	pipe(info->pipe_fd);

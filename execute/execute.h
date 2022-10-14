@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:51:34 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 11:32:57 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 13:02:32 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@ typedef struct s_info {
 	int		outfile_no;
 	int		out_now;
 	int		in_now;
+	int		input_out;
+	int		input_in;
 	int		pipe_fd[2];
+	int		input_pipe[2];
 	int		total_ops;
 	int		done_ops;
 	char	**env;

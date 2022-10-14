@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 22:43:46 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/05 15:28:48 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 12:30:24 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	ft_pwd(t_token *token, t_info *info)
 	int		fd;
 
 	close(info->in_now);
+	info->in_now = -1;
 	cwd = getcwd(NULL, 0);
 	if (cwd == NULL)
 	{
