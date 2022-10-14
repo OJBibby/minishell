@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:39:52 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 17:04:20 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 17:20:17 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ void	prepare_output(t_token *token, t_info *info)
 			info->in_now = -1;
 		}
 	}
+	else
+		exec_close_builtin(info);
 }
 
 int	buff_to_buff(t_token *token, t_info *info, char *path)
