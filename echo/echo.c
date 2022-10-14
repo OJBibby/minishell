@@ -6,17 +6,17 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 21:34:16 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 13:10:29 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 13:50:26 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../execute/execute.h"
 
-char *env_var(char *arg, char **env)
+char	*env_var(char *arg, char **env)
 {
-	int i;
-	int n;
-	char *var;
+	int		i;
+	int		n;
+	char	*var;
 
 	i = -1;
 	while (arg[++i])
@@ -35,10 +35,10 @@ char *env_var(char *arg, char **env)
 	return (arg);
 }
 
-int echo_write(t_token *token, t_info *info, int flags, int fd)
+int	echo_write(t_token *token, t_info *info, int flags, int fd)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	if (flags == 0)
 		i = 1;
@@ -63,7 +63,7 @@ int echo_write(t_token *token, t_info *info, int flags, int fd)
 	return (0);
 }
 
-int set_fd(t_token *token, t_info *info)
+int	set_fd(t_token *token, t_info *info)
 {
 	if (token->output)
 	{
@@ -75,10 +75,10 @@ int set_fd(t_token *token, t_info *info)
 	return (1);
 }
 
-int echo_set_flags(t_token *token)
+int	echo_set_flags(t_token *token)
 {
-	int i;
-	int flags;
+	int	i;
+	int	flags;
 
 	i = 0;
 	flags = 0;
@@ -93,17 +93,17 @@ int echo_set_flags(t_token *token)
 			else
 			{
 				flags = 0;
-				break;
+				break ;
 			}
 		}
 	}
 	return (flags);
 }
 
-int ft_echo(t_token *token, t_info *info)
+int	ft_echo(t_token *token, t_info *info)
 {
-	int flags;
-	int fd;
+	int	flags;
+	int	fd;
 
 	flags = echo_set_flags(token);
 	fd = set_fd(token, info);

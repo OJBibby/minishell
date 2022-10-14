@@ -6,13 +6,13 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:42:19 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 13:35:46 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 13:56:15 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 
-int out_file(char *file, t_info *info, int append)
+int	out_file(char *file, t_info *info, int append)
 {
 	if (append)
 		info->outfile_no = open(file, O_RDWR | O_CREAT | O_APPEND, 0644);
@@ -23,10 +23,10 @@ int out_file(char *file, t_info *info, int append)
 	return (0);
 }
 
-int in_file(char *file, t_info *info)
+int	in_file(char *file, t_info *info)
 {
-	char buf[1];
-	struct stat stats;
+	char		buf[1];
+	struct stat	stats;
 
 	info->infile_no = open(file, O_RDONLY);
 	if (info->infile_no == -1)
@@ -40,9 +40,9 @@ int in_file(char *file, t_info *info)
 	return (0);
 }
 
-int read_stdin(t_token *token, t_info *info, int i)
+int	read_stdin(t_token *token, t_info *info, int i)
 {
-	char *ptr;
+	char	*ptr;
 
 	ptr = NULL;
 	while (ft_strncmp(ptr, token->input[i], ft_strlen(token->input[i])))
@@ -60,9 +60,9 @@ int read_stdin(t_token *token, t_info *info, int i)
 	return (0);
 }
 
-int output_init(t_token *token, t_info *info)
+int	output_init(t_token *token, t_info *info)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (token->output[i])
@@ -87,9 +87,9 @@ int output_init(t_token *token, t_info *info)
 	return (0);
 }
 
-int input_init(t_token *token, t_info *info)
+int	input_init(t_token *token, t_info *info)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (token->input[i])
@@ -102,16 +102,7 @@ int input_init(t_token *token, t_info *info)
 		else if (token->input[i][0] != '|')
 		{
 			if (in_file(token->input[i], info))
-			{
-				if (info->input_in != -1 && info->input_out != -1)
-				{
-					close(info->input_in);
-					close(info->input_out);
-					info->input_in = -1;
-					info->input_out = -1;
-				}
 				return (1);
-			}
 		}
 		if (token->input[++i] && info->input_in != -1 && info->input_out != -1)
 		{

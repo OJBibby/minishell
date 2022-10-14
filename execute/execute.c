@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 13:41:03 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 14:11:56 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,47 +74,17 @@ int	error_return(int id, void *mem, char *str)
 	return (1);
 }
 
-int	exec_close_fd(t_info *info)
+int	check_exit(t_mini *mini)
 {
-	if (info->stdin_fd != -1)
-	{
-		dup2(info->stdin_fd, STDIN_FILENO);
-		close(info->stdin_fd);
-		info->stdin_fd = -1;
-	}
-	if (info->stdout_fd != -1)
-	{
-		dup2(info->stdout_fd, STDOUT_FILENO);
-		close(info->stdout_fd);
-		info->stdout_fd = -1;
-	}
-	if (info->outfile_no != -1)
-	{
-		close(info->outfile_no);
-		info->outfile_no = -1;
-	}
-	if (info->in_now != -1)
-	{
-		close(info->in_now);
-		info->in_now = -1;
-	}
-	if (info->out_now != -1)
-	{
-		close(info->out_now);
-		info->out_now = -1;
-	}
-	return (0);
-}
+	int	len;
 
-int	exec_free(char **env)
-{
-	int	i;
-
-	i = 0;
-	while (env[i])
-		free(env[i++]);
-	free(env);
-	env = NULL;
+	if (!mini->tokens->cmd_args)
+		return (0);
+	if (!mini->tokens->cmd_args[0])
+		return (0);
+	len = ft_strlen(mini->tokens->cmd_args[0]);
+	if (!ft_strncmp(mini->tokens->cmd_args[0], "exit", len))
+		return (exit_shell(mini));
 	return (0);
 }
 
@@ -124,12 +94,13 @@ int	execute(t_mini *mini)
 
 	if (!mini->tokens)
 		return (0);
-	if (mini->tokens->cmd_args && mini->tokens->cmd_args[0] && !ft_strncmp(mini->tokens->cmd_args[0], "exit", ft_strlen(mini->tokens->cmd_args[0])))
-		return (exit_shell(mini));
+	if (check_exit(mini))
+		return (1);
 	init_array(mini, &info);
 	while (info.token && info.done_ops < info.total_ops)
 	{
-		if (init_files(info.token, &info) || !info.token->cmd_args || !info.token->cmd_args[0])
+		if (init_files(info.token, &info) || !info.token->cmd_args
+			|| !info.token->cmd_args[0])
 			break ;
 		if (exec_cmds(info.token, &info) == 1)
 			break ;
