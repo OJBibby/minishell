@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 22:01:23 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 22:02:16 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 11:32:47 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,17 @@ t_env	*add_env_node(t_info *info)
 	env->str = NULL;
 	env->next = NULL;
 	return (env);
+}
+
+int	find_exec(t_token *token, t_info *info)
+{
+	if (!access(token->cmd_args[0], F_OK))
+		token->path = token->cmd_args[0];
+	else
+		token->path = search_path(token, info);
+	if (!token->path)
+		return (1);
+	if (access(token->path, X_OK) == -1)
+		return (error_return(0, NULL, "Invalid permissions."));
+	return (0);
 }

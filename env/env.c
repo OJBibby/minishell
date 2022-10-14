@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 13:21:45 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 22:34:49 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 11:32:08 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,21 @@ int	exec_env(t_token *token, t_info *info, char **tmp_env, int i)
 
 	while (i-- > 0)
 		if (shift_args(token))
-			return (error_return(1, tmp_env, NULL));
+			return (1);
 	saved_env = info->env;
 	info->env = tmp_env;
-	if (!access(token->cmd_args[0], F_OK))
-		token->path = token->cmd_args[0];
-	else
-		token->path = search_path(token, info);
-	if (!token->path)
+	retval = check_inbuilt(token, info);
+	if (retval != -1)
+	{
+		info->env = saved_env;
+		return (retval);
+	}
+	if (find_exec(token, info))
 	{
 		info->env = saved_env;
 		return (1);
 	}
-	retval = exec_cmds(token, info);
+	retval = buff_to_buff(token, info, token->path);
 	info->env = saved_env;
 	return (retval);
 }

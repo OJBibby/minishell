@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 10:34:31 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 22:34:58 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 11:14:30 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,10 @@ int	shift_args(t_token *token)
 	i = 1;
 	while (token->cmd_args[i])
 		i++;
-	new_args = ft_calloc(i, sizeof(char *));
+	new_args = ft_calloc(i + 1, sizeof(char *));
 	if (!new_args)
 		return (1);
+	new_args[i] = NULL;
 	assign_args(token, new_args);
 	return (0);
 }
