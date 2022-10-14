@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:39:52 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 15:48:14 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 17:04:20 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,7 @@ int	final_output(t_token *token, t_info *info, char *path)
 		output_child(token, info, path);
 	else
 	{
-		if (token->output && token->output[0][0] != '|')
-			close(info->outfile_no);
-		exec_close_fd(info);
+		exec_close_fd(info, 1);
 		waitpid(g_status.pid, &status, 0);
 		g_status.pid = 0;
 		if (WIFEXITED(status))
@@ -66,7 +64,10 @@ void	prepare_output(t_token *token, t_info *info)
 		{
 			dup2(info->input_in, STDIN_FILENO);
 			close(info->input_in);
+			close(info->input_out);
+			info->input_out = -1;
 			info->input_in = -1;
+			exec_close_builtin(info);
 		}
 		else
 		{
@@ -75,8 +76,6 @@ void	prepare_output(t_token *token, t_info *info)
 			info->in_now = -1;
 		}
 	}
-	if (!token->output)
-		exec_close_fd2(info);
 }
 
 int	buff_to_buff(t_token *token, t_info *info, char *path)
@@ -96,8 +95,7 @@ int	buff_to_buff(t_token *token, t_info *info, char *path)
 		output_child(token, info, path);
 	else
 	{
-		close(info->out_now);
-		info->out_now = -1;
+		exec_close_fd(info, 0);
 		waitpid(g_status.pid, &status, 0);
 		g_status.pid = 0;
 		if (WIFEXITED(status))

@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 14:11:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 15:56:26 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 16:50:10 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ void	exec_close_builtin(t_info *info)
 	}
 }
 
-void	exec_close_fd2(t_info *info)
+void	exec_close_fd2(t_info *info, int id)
 {
-	if (info->in_now != -1)
+	if (id && info->in_now != -1)
 	{
 		close(info->in_now);
 		info->in_now = -1;
@@ -50,15 +50,15 @@ void	exec_close_fd2(t_info *info)
 	}
 }
 
-void	exec_close_fd(t_info *info)
+void	exec_close_fd(t_info *info, int id)
 {
-	if (info->stdin_fd != -1)
+	if (id && info->stdin_fd != -1)
 	{
 		dup2(info->stdin_fd, STDIN_FILENO);
 		close(info->stdin_fd);
 		info->stdin_fd = -1;
 	}
-	if (info->stdout_fd != -1)
+	if (id && info->stdout_fd != -1)
 	{
 		dup2(info->stdout_fd, STDOUT_FILENO);
 		close(info->stdout_fd);
@@ -69,7 +69,7 @@ void	exec_close_fd(t_info *info)
 		close(info->outfile_no);
 		info->outfile_no = -1;
 	}
-	exec_close_fd2(info);
+	exec_close_fd2(info, id);
 }
 
 int	exec_free(char **env)
