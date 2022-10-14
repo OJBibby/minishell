@@ -48,6 +48,9 @@ int	part_three(t_mini *mini)
 	t_token	*tmp;
 
 	tmp = mini->tokens;
+
+	// my_print(mini->tokens);
+
 	while (tmp)
 	{
 		if (tmp->cmd_args)
