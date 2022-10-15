@@ -12,8 +12,6 @@
 
 #include "../minishell.h"
 
-
-
 char	*ft_strjoin_slash(char const *s1, char const *s2)
 {
 	char	*str;

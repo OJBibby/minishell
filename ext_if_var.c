@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cgreenpo <cgreenpo@student.42wolfsburg.de> +#+  +:+       +#+    	  */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/12 22:43:46 by cgreenpo            #+#    #+#           */
+/*   Updated: 2022/10/14 12:30:24 by cgreenpo           ###   ########.fr     */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	valid_var(t_ext *ex, int *i, int *j, t_token *tmp)
@@ -49,7 +61,7 @@ int	if_var(t_ext *ex, int *i, int *j, t_mini *mini)
 		(*j)++;
 		return (1);
 	}
-	ex->clean = ft_strndup(ex->s, ex->n); //!!!
+	ex->clean = ft_strndup(ex->s, ex->n);
 	ex->ext = get_env_str(mini->env, ex->clean);
 	if (ex->clean)
 		free(ex->clean);

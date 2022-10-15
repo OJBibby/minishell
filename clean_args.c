@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cgreenpo <cgreenpo@student.42wolfsburg.de> +#+  +:+       +#+    	  */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/12 22:43:46 by cgreenpo            #+#    #+#           */
+/*   Updated: 2022/10/14 12:30:24 by cgreenpo           ###   ########.fr     */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	**remove_empty(char **or, int *n)
@@ -37,7 +49,6 @@ void	check_empty(int *i, t_token *tmp)
 		tmp->cmd_args = remove_empty(tmp->cmd_args, i);
 		if (clean)
 			free_d_arr(clean);
-		
 	}
 }
 

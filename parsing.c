@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cgreenpo <cgreenpo@student.42wolfsburg.de> +#+  +:+       +#+    	  */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/12 22:43:46 by cgreenpo            #+#    #+#           */
+/*   Updated: 2022/10/14 12:30:24 by cgreenpo           ###   ########.fr     */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	part_one(t_mini *mini)
@@ -5,8 +17,8 @@ int	part_one(t_mini *mini)
 	t_token	*tmp;
 
 	tmp = mini->tokens;
-	// clean_args(mini->tokens);
 	// my_print(mini->tokens);
+	mng_spaces(mini);
 	if (fin_token(mini))
 		return (ft_putstr_fd(SPC, 1));
 	init_in_out(mini->tokens);
@@ -27,7 +39,7 @@ int	part_two(t_mini *mini)
 {
 	t_token	*tmp;
 
-	mng_spaces(mini);
+	// mng_spaces(mini);
 	tmp = mini->tokens;
 	while (tmp)
 	{
@@ -48,9 +60,7 @@ int	part_three(t_mini *mini)
 	t_token	*tmp;
 
 	tmp = mini->tokens;
-
 	// my_print(mini->tokens);
-
 	while (tmp)
 	{
 		if (tmp->cmd_args)
@@ -86,7 +96,7 @@ int	parsing(t_mini *mini)
 		good_exit(mini);
 	else if (str && !str[0])
 	{
-		// free(str);
+		free(str);
 		return (0);
 	}
 	add_history(str);
@@ -100,6 +110,6 @@ int	parsing(t_mini *mini)
 	free(str);
 	if (part_one(mini) || part_two(mini) || part_three(mini))
 		return (1);
-	// my_print(mini->tokens);
+	my_print(mini->tokens);
 	return (0);
 }

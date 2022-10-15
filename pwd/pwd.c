@@ -30,6 +30,9 @@ int	ft_pwd(t_token *token, t_info *info)
 	int		fd;
 
 	prepare_builtin(token, info);
+	if (info->in_now > 0)
+		close(info->in_now);
+	info->in_now = -1;
 	cwd = getcwd(NULL, 0);
 	if (cwd == NULL)
 	{

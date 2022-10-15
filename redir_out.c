@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cgreenpo <cgreenpo@student.42wolfsburg.de> +#+  +:+       +#+    	  */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/12 22:43:46 by cgreenpo            #+#    #+#           */
+/*   Updated: 2022/10/14 12:30:24 by cgreenpo           ###   ########.fr     */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	out_condition_three(t_util *ut, int *i, int *j)
@@ -8,8 +20,6 @@ int	out_condition_three(t_util *ut, int *i, int *j)
 	mod_append(ut, 1);
 	if (ut->old->next->cmd_args[1])
 		ut->ret->cmd_args = copy_args(ut->old->next->cmd_args, 1);
-	// if (ut->old->next->type == '|')
-	// 	ut->ret->output = add_string(ut->ret->output, "|");
 	return (0);
 }
 
@@ -21,27 +31,36 @@ int	out_condition_two(t_util *ut, int *i, int *j)
 	*i = 0;
 	if (check_valid_args(ut))
 		return (1);
-	// if (ut->old->next->cmd_args[1])
-	// {
-	// 	tmp_arr = ut->ret->cmd_args;
-	// 	ut->ret->cmd_args = copy_args(ut->old->next->cmd_args, 1);
-	// 	if (tmp_arr)
-	// 		free_d_arr(tmp_arr);
-	// }
 	ut->ret->output = add_string(ut->ret->output, ut->old->next->cmd_args[0]);
-
 	if (ut->old->next->cmd_args[1])
 	{
 		ct = 1;
 		while (ut->old->next->cmd_args[ct])
 		{
-			ut->ret->cmd_args = add_string(ut->ret->cmd_args, ut->old->next->cmd_args[ct]);
+			ut->ret->cmd_args = add_string(ut->ret->cmd_args, \
+			ut->old->next->cmd_args[ct]);
 			ct++;
 		}
 	}
-
 	mod_append(ut, 1);
 	return (0);
+}
+
+void	cp_args(t_util *ut)
+{
+	int	ct;
+
+	ct = 0;
+	if (ut->old->next->cmd_args[1])
+	{
+		ct = 1;
+		while (ut->old->next->cmd_args[ct])
+		{
+			ut->ret->cmd_args = add_string(ut->ret->cmd_args, \
+			ut->old->next->cmd_args[ct]);
+			ct++;
+		}
+	}
 }
 
 int	out_condition_one(t_util *ut, int *i, int *j)
@@ -55,21 +74,10 @@ int	out_condition_one(t_util *ut, int *i, int *j)
 		free_d_arr(tmp_arr);
 	if (check_valid_args(ut))
 		return (1);
-	// tmp_arr = copy_args(ut->old->next->cmd_args, 0);
 	if (ut->ret->output)
 		free_d_arr(ut->ret->output);
-	// ut->ret->output = tmp_arr;
 	ut->ret->output = add_string(ut->ret->output, ut->old->next->cmd_args[0]);
-	if (ut->old->next->cmd_args[1])
-	{
-		ct = 1;
-		while (ut->old->next->cmd_args[ct])
-		{
-			ut->ret->cmd_args = add_string(ut->ret->cmd_args, ut->old->next->cmd_args[ct]);
-			ct++;
-		}
-	}
-
+	cp_args(ut);
 	*i = 0;
 	*j = ut->olen;
 	while (ut->ret->output[*j])
@@ -99,8 +107,6 @@ int	redir_out(t_util *ut, int *i, int *j)
 			if (out_condition_two(ut, i, j))
 				return (1);
 		}
-		// if (ut->old->next->type == '|')
-		// 	ut->ret->output = add_string(ut->ret->output, "|");
 	}
 	else
 	{

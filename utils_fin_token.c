@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cgreenpo <cgreenpo@student.42wolfsburg.de> +#+  +:+       +#+    	  */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/12 22:43:46 by cgreenpo            #+#    #+#           */
+/*   Updated: 2022/10/14 12:30:24 by cgreenpo           ###   ########.fr     */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	mng_token_list(t_util *ut)
@@ -20,7 +32,7 @@ int	mng_token_list(t_util *ut)
 	{
 		if (!ut->ret->prev->output)
 		{
-			free_token_light(ut->ret);//!!!!!
+			free_token_light(ut->ret);
 			return (1);
 		}
 		ut->ret->input = put_pipe();

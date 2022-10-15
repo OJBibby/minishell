@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cgreenpo <cgreenpo@student.42wolfsburg.de> +#+  +:+       +#+    	  */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/12 22:43:46 by cgreenpo            #+#    #+#           */
+/*   Updated: 2022/10/14 12:30:24 by cgreenpo           ###   ########.fr     */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	check_q_ext(t_ext *ex, t_token *tmp, int *i, int *j)
@@ -44,7 +56,6 @@ int	if_question_mark(t_ext *ex, int *i, int *j, t_token *tmp)
 	check_s(ex, i, j, tmp);
 	*j = -1;
 	ex->q_dom = 0;
-
 	return (0);
 }
 
