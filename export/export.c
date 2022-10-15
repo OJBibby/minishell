@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 11:42:48 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 14:58:17 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/15 22:39:27 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	ft_export(t_info *info)
 		env = find_env_node(info->env_ll, info->token->cmd_args[i], 1);
 		if (!env)
 		{
-			env = add_env_node(info);
+			env = add_env_node(info, 0);
 			if (!env)
 				return (error_return(0, NULL, "Memory allocation fail."));
 		}
