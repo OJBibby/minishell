@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 09:42:19 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 13:56:15 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/15 16:59:34 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	read_stdin(t_token *token, t_info *info, int i)
 	{
 		if (ptr)
 		{
-			env_var(ptr, info->env);
+			ptr = env_var(ptr, info->env);
 			write(info->input_out, ptr, ft_strlen(ptr));
 			write(info->input_out, "\n", 1);
 			free(ptr);
