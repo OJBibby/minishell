@@ -54,6 +54,8 @@ int	if_question_mark(t_ext *ex, int *i, int *j, t_token *tmp)
 	ex->s += 1;
 	ex->clean = ft_insert(tmp->cmd_args[*i], ex->ext, -1, ex->index);
 	check_s(ex, i, j, tmp);
+	if (ex->ext)
+		free(ex->ext);
 	*j = -1;
 	ex->q_dom = 0;
 	return (0);
