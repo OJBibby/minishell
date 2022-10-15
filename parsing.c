@@ -110,6 +110,6 @@ int	parsing(t_mini *mini)
 	free(str);
 	if (part_one(mini) || part_two(mini) || part_three(mini))
 		return (1);
-	my_print(mini->tokens);
+	// my_print(mini->tokens);
 	return (0);
 }
