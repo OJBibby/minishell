@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:44:02 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 15:56:10 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/14 16:45:47 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int	execute(t_mini *mini)
 		info.done_ops++;
 	}
 	mini->env = info.env_ll;
-	exec_close_fd(&info);
+	exec_close_fd(&info, 1);
 	exec_free(info.env);
 	return (0);
 }
