@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 11:42:48 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/15 22:39:27 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/17 20:47:05 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	ft_unset(t_info *info)
 	{
 		delete = find_env_node(info->env_ll, token->cmd_args[i], 0);
 		if (!delete)
-			return (1);
+			continue ;
 		if (!delete->prev && delete->next)
 			info->env_ll = delete->next;
 		if (!delete->prev && !delete->next)
