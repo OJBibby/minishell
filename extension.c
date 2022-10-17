@@ -76,6 +76,8 @@ int	ext_main_body(t_ext *ex, int *i, int *j, t_mini *mini)
 			if (if_question_mark(ex, i, j, tmp))
 				return (1);
 		}
+		else if (!tmp->cmd_args[*i][*j])
+			return (-1);
 		else
 		{
 			ex->exit = if_var(ex, i, j, mini);
