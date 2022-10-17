@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cgreenpo <cgreenpo@student.42wolfsburg.de> +#+  +:+       +#+    	  */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/12 22:43:46 by cgreenpo            #+#    #+#           */
+/*   Updated: 2022/10/14 12:30:24 by cgreenpo           ###   ########.fr     */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -163,6 +175,6 @@ void		sig_quit(int sig);
 void		sig_int(int sig);
 void		*ft_calloc(size_t elenum, size_t size);
 void		ft_bzero(void *str, size_t n);
-
+void		cp_args(t_util *ut);
 
 #endif

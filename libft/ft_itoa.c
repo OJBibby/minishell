@@ -12,7 +12,6 @@
 
 #include "../minishell.h"
 
-
 static void	ft_ntoch(int nb, char *s, size_t *i)
 {
 	if (nb < 0)

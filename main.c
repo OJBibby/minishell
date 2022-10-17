@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cgreenpo <cgreenpo@student.42wolfsburg.de> +#+  +:+       +#+    	  */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/12 22:43:46 by cgreenpo            #+#    #+#           */
+/*   Updated: 2022/10/14 12:30:24 by cgreenpo           ###   ########.fr     */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-t_global g_status;
+t_global	g_status;
 
 t_env	*init_env(t_mini *mini, char **or_env)
 {
@@ -29,12 +41,6 @@ t_env	*init_env(t_mini *mini, char **or_env)
 	return (head);
 }
 
-void	mng_sigint(int sig)
-{
-	if (sig == SIGINT)
-		exit(0);
-}
-
 int	main(int ac, char **av, char **env)
 {
 	t_mini	mini;
@@ -42,7 +48,6 @@ int	main(int ac, char **av, char **env)
 	signal(SIGQUIT, sig_quit);
 	signal(SIGINT, sig_int);
 	rl_catch_signals = 0;
-	mini.pid = getpid();
 	mini.env = init_env(&mini, env);
 	mini.tokens = NULL;
 	mini.tm = NULL;

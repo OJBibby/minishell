@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 15:11:55 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 22:47:29 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/15 15:21:42 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	*null_return(char **arr, int id, void *ptr, char *str)
 	return (NULL);
 }
 
-void	*free_joined(char **arr)
+void	free_joined(char **arr)
 {
 	int	i;
 

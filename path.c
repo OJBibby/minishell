@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cgreenpo <cgreenpo@student.42wolfsburg.de> +#+  +:+       +#+    	  */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/12 22:43:46 by cgreenpo            #+#    #+#           */
+/*   Updated: 2022/10/14 12:30:24 by cgreenpo           ###   ########.fr     */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	check_builtin(char **args)
@@ -23,14 +35,11 @@ int	check_builtin(char **args)
 
 int	check_local_adress(t_token *token, char	*adress, t_mini *mini)
 {
-	printf("in local adress\n");
-
 	if (access(adress, F_OK) == 0)
 	{
 		token->path = ft_strdup(adress);
 		return (0);
 	}
-	printf("can't find adress\n");
 	return (1);
 }
 
@@ -58,7 +67,7 @@ int	iter_path(char **adress, char *str, t_token *token, t_mini *mini)
 	while (adress[i])
 	{
 		clean = adress[i];
-		adress[i] = ft_strjoin(adress[i], "/"); //!!!
+		adress[i] = ft_strjoin(adress[i], "/");
 		free(clean);
 		clean = adress[i];
 		adress[i] = ft_strjoin(adress[i], str);

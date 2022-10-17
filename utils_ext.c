@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cgreenpo <cgreenpo@student.42wolfsburg.de> +#+  +:+       +#+    	  */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/12 22:43:46 by cgreenpo            #+#    #+#           */
+/*   Updated: 2022/10/14 12:30:24 by cgreenpo           ###   ########.fr     */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*extract(char *str, int start, int n)
@@ -75,9 +87,7 @@ char	*ft_insert(char *s1, char *point_of_in, int remove, int index)
 	i = 0;
 	found = 0;
 	clean = 0;
-	ret = ft_strndup(s1, index); //!!!
-	// ret = strndup(s1, index); //!!!
-
+	ret = ft_strndup(s1, index);
 	point_of_in += remove;
 	clean = ret;
 	ret = ft_strjoin(ret, point_of_in);
