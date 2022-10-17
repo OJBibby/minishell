@@ -6,13 +6,39 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 12:48:33 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/13 13:16:39 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/17 14:59:28 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../execute/execute.h"
 
-int	rep_str(char *arg, char *var, char *env, int i)
+char	*insert_exit_stat(char *arg, char **env, int i)
+{
+	char	*var;
+	char	*exit_stat;
+	int		j;
+	int		x;
+
+	exit_stat = ft_itoa(g_status.exit_status);
+	var = ft_calloc(ft_strlen(arg) + ft_strlen(exit_stat) - 1, sizeof(char *));
+	j = 0;
+	while (arg[j] && j < i - 1)
+	{
+		var[j] = arg[j];
+		j++;
+	}
+	x = 0;
+	while (exit_stat[x])
+		var[j++] = (char)exit_stat[x++];
+	while (arg[++i])
+		var[j++] = arg[i];
+	var[j] = '\0';
+	free(exit_stat);
+	free(arg);
+	return (var);
+}
+
+char	*rep_str(char *arg, char *var, char *env, int i)
 {
 	int	j;
 	int	x;
@@ -31,20 +57,22 @@ int	rep_str(char *arg, char *var, char *env, int i)
 	while (arg[i])
 		var[j++] = arg[i++];
 	free(arg);
-	arg = var;
-	return (0);
+	return (var);
 }
 
-int	str_rem_var(char *arg, char *var, int i)
+char	*str_rem_var(char *arg, int i)
 {
-	int	j;
-	int	x;
+	int		j;
+	int		x;
+	char	*var;
 
 	j = 0;
 	x = 0;
 	while (arg[i + j] && arg[i + j] != ' ')
 		j++;
 	var = ft_calloc(ft_strlen(arg) + 1 - j, sizeof(char));
+	if (!var)
+		return (null_return(NULL, 0, NULL, "Memory allocation fail\n"));
 	while (arg[x] && x < i)
 	{
 		var[x] = arg[x];
@@ -54,15 +82,15 @@ int	str_rem_var(char *arg, char *var, int i)
 	while (arg[j])
 		var[x++] = arg[j++];
 	free(arg);
-	arg = var;
-	return (0);
+	return (var);
 }
 
-int	str_rep_var(char *arg, char **env, char *var, int i)
+char	*str_rep_var(char *arg, char **env, int i)
 {
-	int	x;
-	int	y;
-	int	j;
+	int		x;
+	int		y;
+	int		j;
+	char	*var;
 
 	x = -1;
 	while (env[++x])
@@ -72,15 +100,16 @@ int	str_rep_var(char *arg, char **env, char *var, int i)
 		while (env[x][y] && arg[i + y]
 			&& env[x][y] == arg[i + y] && env[x][y] != '=')
 			y++;
-		if (y != 0 && env[x][y++] == '=')
+		if (y != 0 && env[x][y++] == '='
+			&& (!arg[i + y - 1] || arg[i + y - 1] == ' '))
 		{
 			while (env[x][y + j])
 				j++;
 			var = ft_calloc(ft_strlen(arg) + j + 1 - y, sizeof(char));
 			if (!var)
-				return (error_return(0, NULL, "Memory allocation fail\n"));
+				return (null_return(NULL, 0, NULL, "Memory allocation fail\n"));
 			return (rep_str(arg, var, &env[x][y], i));
 		}
 	}
-	return (0);
+	return (NULL);
 }

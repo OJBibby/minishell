@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 11:51:34 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 16:42:04 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/17 14:20:31 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,9 @@ int		add_env_var(char *var, t_env *env);
 char	**list_to_arr(t_env *env);
 int		exec_free(char **env);
 long	ft_atoi(const char *str);
-int		str_rep_var(char *arg, char **env, char *var, int i);
-int		str_rem_var(char *arg, char *var, int i);
+char	*str_rep_var(char *arg, char **env, int i);
+char	*str_rem_var(char *arg, int i);
+char	*insert_exit_stat(char *arg, char **env, int i);
 int		replace_var(char *var, t_env *env);
 char	*search_path(t_token *token, t_info *info);
 t_env	*free_copied_env(t_env *env);

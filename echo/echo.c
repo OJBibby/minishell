@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 21:34:16 by obibby            #+#    #+#             */
-/*   Updated: 2022/10/14 17:12:46 by obibby           ###   ########.fr       */
+/*   Updated: 2022/10/17 14:57:28 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,21 @@ char	*env_var(char *arg, char **env)
 	char	*var;
 
 	i = -1;
-	while (arg[++i])
+	while (arg && arg[++i])
 	{
 		var = NULL;
-		if (arg[i] == '$')
+		if (arg[i] == '$' && arg[i + 1] && arg[i + 1] != ' ')
 		{
 			i++;
-			if (str_rep_var(arg, env, var, i))
-				return (NULL);
-			if (!var)
-				str_rem_var(arg, var, i);
+			if (arg[i] == '?' && (!arg[i + 1] || arg[i + 1] == ' '))
+				var = insert_exit_stat(arg, env, i);
+			else
+			{
+				var = str_rep_var(arg, env, i);
+				if (!var)
+					var = str_rem_var(arg, i - 1);
+			}
+			arg = var;
 			i -= 2;
 		}
 	}
