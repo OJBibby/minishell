@@ -10,32 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
-int	in_condition_three(t_util *ut, int *i, int *j)
+int	out_condition_three(t_util *ut, int *i, int *j)
 {
-	char	**tmp_arr;
-
 	if (check_valid_args(ut))
 		return (1);
-	if (ut->ret->input)
-		free_d_arr(ut->ret->input);
-	ut->ret->input = NULL;
-	ut->ret->input = add_string(ut->ret->input, ut->old->next->cmd_args[0]);
-	mod_heredoc(ut, 1);
+	ut->ret->output = add_string(ut->ret->output, ut->old->next->cmd_args[0]);
+	mod_append(ut, 1);
 	if (ut->old->next->cmd_args[1])
 		ut->ret->cmd_args = copy_args(ut->old->next->cmd_args, 1);
 	return (0);
 }
 
-void	in_condition_two(t_util *ut, int *i, int *j)
+int	out_condition_two(t_util *ut, int *i, int *j)
 {
 	char	**tmp_arr;
 	int		ct;
 
 	*i = 0;
-	tmp_arr = add_string(ut->ret->input, ut->old->next->cmd_args[0]);
-	ut->ret->input = tmp_arr;
+	if (check_valid_args(ut))
+		return (1);
+	ut->ret->output = add_string(ut->ret->output, ut->old->next->cmd_args[0]);
 	if (ut->old->next->cmd_args[1])
 	{
 		ct = 1;
@@ -46,10 +42,28 @@ void	in_condition_two(t_util *ut, int *i, int *j)
 			ct++;
 		}
 	}
-	mod_heredoc(ut, 1);
+	mod_append(ut, 1);
+	return (0);
 }
 
-int	in_condition_one(t_util *ut, int *i, int *j)
+void	cp_args(t_util *ut)
+{
+	int	ct;
+
+	ct = 0;
+	if (ut->old->next->cmd_args[1])
+	{
+		ct = 1;
+		while (ut->old->next->cmd_args[ct])
+		{
+			ut->ret->cmd_args = add_string(ut->ret->cmd_args, \
+			ut->old->next->cmd_args[ct]);
+			ct++;
+		}
+	}
+}
+
+int	out_condition_one(t_util *ut, int *i, int *j)
 {
 	char	**tmp_arr;
 	int		ct;
@@ -57,41 +71,46 @@ int	in_condition_one(t_util *ut, int *i, int *j)
 	tmp_arr = ut->ret->cmd_args;
 	ut->ret->cmd_args = copy_args(ut->old->cmd_args, 0);
 	if (tmp_arr)
-		free(tmp_arr);
-	if (ut->old->next->cmd_args && ut->old->next->cmd_args[0])
-		ut->ret->input = add_string(ut->ret->input, ut->old->next->cmd_args[0]);
-	else
+		free_d_arr(tmp_arr);
+	if (check_valid_args(ut))
 		return (1);
+	if (ut->ret->output)
+		free_d_arr(ut->ret->output);
+	ut->ret->output = add_string(ut->ret->output, ut->old->next->cmd_args[0]);
 	cp_args(ut);
 	*i = 0;
-	*j = ut->ilen;
-	while (ut->ret->input[(*j)++])
+	*j = ut->olen;
+	while (ut->ret->output[*j])
+	{
+		(*j)++;
 		(*i)++;
-	mod_heredoc(ut, *i);
+	}
+	mod_append(ut, *i);
 	return (0);
 }
 
-int	redir_in(t_util *ut, int *i, int *j)
+int	redir_out(t_util *ut, int *i, int *j)
 {
 	char	**tmp_arr;
 	int		*tmp_int;
 
 	if (ut->old->cmd_args && ut->old->cmd_args[0] && ut->old->cmd_args[0][0])
 	{
-		if ((ut->old->prev && ut->old->prev->type != '<'
-				&& ut->old->prev->type != '>' && ut->old->prev->type != 'd'
-				&& ut->old->prev->type != 'a') || !ut->old->prev)
+		if ((ut->old->prev && ut->old->prev->type == '|') || !ut->old->prev)
 		{
-			if (in_condition_one(ut, i, j))
+			if (out_condition_one(ut, i, j))
 				return (1);
 		}
-		else if (ut->old->prev->type == '<' || ut->old->prev->type == '>'
-			|| ut->old->prev->type == 'd' || ut->old->prev->type == 'a')
-			in_condition_two(ut, i, j);
+		else if (ut->old->prev->type == '>' || ut->old->prev->type == '<'
+			|| ut->old->prev->type == 'a' || ut->old->prev->type == 'd')
+		{
+			if (out_condition_two(ut, i, j))
+				return (1);
+		}
 	}
 	else
 	{
-		if (in_condition_three(ut, i, j))
+		if (out_condition_three(ut, i, j))
 			return (1);
 	}
 	if (ut->old->next->type == '|')

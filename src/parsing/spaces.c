@@ -10,88 +10,79 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
-char	*extract(char *str, int start, int n)
+char	*ft_remove(char **str, int *j, char c)
 {
 	int		i;
-	int		j;
 	char	*ret;
+	char	*tmp;
+	int		n;
 
 	i = 0;
-	while (str[i])
-		i++;
-	ret = malloc(sizeof(char) * (i - n + 1));
-	i = 0;
-	j = 0;
-	while (str[i] && i < start)
-		ret[j++] = str[i++];
-	if (i == start)
+	n = 0;
+	ret = malloc(sizeof(char) * ft_strlen(*str));
+	while ((*str)[n])
 	{
-		while (str[i] && n--)
+		if (n != *j)
+		{
+			ret[i] = (*str)[n];
 			i++;
+			n++;
+		}
+		else
+			n++;
 	}
-	while (str[i])
-	{
-		ret[j] = str[i];
-		j++;
-		i++;
-	}
-	ret[j] = 0;
+	ret[i] = 0;
+	(*j)--;
+	if (*str)
+		free (*str);
+	*str = NULL;
 	return (ret);
 }
 
-t_env	*get_env_node(t_env *env, char *var)
+void	spaces_main_body(t_token *tmp, int i)
 {
-	t_env	*tmp;
-	int		i;
-
-	tmp = env;
-	while (tmp)
-	{
-		if (ft_strncmp(tmp->str, var, ft_strlen(var)) == 0)
-		{
-			return (tmp);
-		}
-		tmp = tmp->next;
-	}
-	return (NULL);
-}
-
-char	*get_env_str(t_env *env, char *var)
-{
-	t_env	*tmp;
-	int		i;
-
-	tmp = env;
-	while (tmp)
-	{
-		if (ft_strncmp_mod(tmp->str, var, ft_strlen(var)) == 0)
-		{
-			return (tmp->str);
-		}
-		tmp = tmp->next;
-	}
-	return (NULL);
-}
-
-char	*ft_insert(char *s1, char *point_of_in, int remove, int index)
-{
-	int		i;
-	char	*ret;
-	char	*tail;
-	int		found;
 	char	*clean;
+	int		j;
+	char	q_dom;
 
-	remove++;
-	i = 0;
-	found = 0;
-	clean = 0;
-	ret = ft_strndup(s1, index);
-	point_of_in += remove;
-	clean = ret;
-	ret = ft_strjoin(ret, point_of_in);
-	if (clean)
-		free(clean);
-	return (ret);
+	j = 0;
+	q_dom = 0;
+	while (tmp->cmd_args[i][j])
+	{
+		if ((tmp->cmd_args[i][j] == '\"'
+			|| tmp->cmd_args[i][j] == '\'') && !q_dom)
+			q_dom = tmp->cmd_args[i][j];
+		else if (q_dom && (tmp->cmd_args[i][j] == q_dom))
+			q_dom = 0;
+		else if ((tmp->cmd_args[i][j] == ' ') && !q_dom)
+		{
+			clean = ft_remove(&tmp->cmd_args[i], &j, ' ');
+			tmp->cmd_args[i] = clean;
+		}
+		j++;
+	}
+}
+
+int	mng_spaces(t_mini *mini)
+{
+	t_token	*tmp;
+	int		i;
+
+	tmp = mini->tokens;
+	while (tmp)
+	{
+		i = 0;
+		if (tmp->cmd_args)
+		{
+			while (tmp->cmd_args[i])
+			{
+				spaces_main_body(tmp, i);
+				i++;
+			}
+		}
+		tmp = tmp->next;
+	}
+	return (0);
 }

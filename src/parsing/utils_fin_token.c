@@ -10,44 +10,50 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
-void	mod_heredoc(t_util *ut, int i)
-{
-	int		*tmp_int;
+int	mng_token_list(t_util *ut)
+{	
+	t_token	*new;
 
-	tmp_int = ut->ret->heredoc;
-	if (ut->old->type == '<')
-		ut->ret->heredoc = add_int(ut->ret->heredoc, 0, i, ut->ilen);
-	else
-		ut->ret->heredoc = add_int(ut->ret->heredoc, 1, i, ut->ilen);
-	(ut->ilen)++;
-	if (tmp_int)
-		free(tmp_int);
-}
-
-void	mod_append(t_util *ut, int i)
-{
-	int		*tmp_int;
-
-	tmp_int = ut->ret->append;
-	if (ut->old->type == '>')
-		ut->ret->append = add_int(ut->ret->append, 0, i, ut->olen);
-	else
-		ut->ret->append = add_int(ut->ret->append, 1, i, ut->olen);
-	ut->olen += i;
-	if (tmp_int)
-		free(tmp_int);
-}
-
-int	check_valid_args(t_util *ut)
-{
-	if (!ut->old->next || !ut->old->next->cmd_args
-		|| !ut->old->next->cmd_args[0] || !ut->old->next->cmd_args[0][0])
+	new = init_token();
+	if (!ut->ret)
 	{
-		free_token_light(ut->head);
-		ut->head = NULL;
-		return (1);
+		ut->ret = new;
+		ut->head = new;
+	}
+	else
+	{
+		new->prev = ut->ret;
+		ut->ret->next = new;
+		ut->ret = ut->ret->next;
+	}
+	if (ut->ret->prev)
+	{
+		if (!ut->ret->prev->output)
+		{
+			free_token_light(ut->ret);
+			return (1);
+		}
+		ut->ret->input = put_pipe();
 	}
 	return (0);
+}
+
+char	**put_pipe(void)
+{
+	char	**str;
+
+	str = malloc(sizeof(char *) * 2);
+	str[0] = ft_strdup("|");
+	str[1] = 0;
+	return (str);
+}
+
+void	init_var(t_util *ut, int *i, int *j, t_mini *mini)
+{
+	*i = 0;
+	*j = 0;
+	ut->old = mini->tokens;
+	ut->ret = NULL;
 }

@@ -3,11 +3,11 @@ NAME	= minishell
 
 OBJ_DIR = obj/
 SRC_DIR	= src/
-SRC		= main.c get_args.c clean_args.c path.c ext_if_var.c free.c parsing.c redir_in.c redir_out.c \
-			utils_ext.c utils_fin_token.c utils_get_args.c utils_one.c utils_redir.c extension.c quotes.c \
-			spaces.c libft/ft_atoi.c libft/ft_strjoin.c libft/ft_strchr.c libft/ft_strlen.c libft/ft_isalpha.c \
-			libft/ft_strdup.c libft/ft_strndup.c fin_token.c libft/ft_calloc.c libft/ft_strjoin_slash.c libft/ft_bzero.c \
-			libft/ft_itoa.c libft/ft_putstr_fd.c libft/ft_strncmp.c libft/ft_split_or.c echo/echo.c echo/utils.c \
+SRC		= main.c parsing/get_args.c parsing/clean_args.c parsing/path.c parsing/ext_if_var.c parsing/free.c parsing/parsing.c \
+			parsing/redir_in.c parsing/redir_out.c parsing/utils_ext.c parsing/utils_fin_token.c parsing/utils_get_args.c parsing/utils_one.c \
+			parsing/utils_redir.c parsing/extension.c parsing/quotes.c parsing/spaces.c libft/ft_atoi.c libft/ft_strjoin.c libft/ft_strchr.c \
+			libft/ft_strlen.c libft/ft_isalpha.c libft/ft_strdup.c libft/ft_strndup.c parsing/fin_token.c libft/ft_calloc.c libft/ft_strjoin_slash.c \
+			libft/ft_bzero.c libft/ft_itoa.c libft/ft_putstr_fd.c libft/ft_strncmp.c libft/ft_split_or.c echo/echo.c echo/utils.c \
 			cd/cd.c env/env.c env/utils.c env/path.c env/node.c exit/exit.c pwd/pwd.c execute/execute.c execute/init.c execute/io.c \
 			execute/output.c execute/utils.c export/export.c export/utils.c signals/signals.c
 SRCS	=	$(addprefix $(SRC_DIR), $(SRC))

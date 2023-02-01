@@ -10,50 +10,71 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
-int	mng_token_list(t_util *ut)
-{	
-	t_token	*new;
+char	**remove_empty(char **or, int *n)
+{
+	int		i;
+	int		j;
+	char	**ret;
 
-	new = init_token();
-	if (!ut->ret)
+	i = 0;
+	j = 0;
+	while (or[i])
+		i++;
+	ret = malloc(sizeof(char *) * i);
+	ret[--i] = NULL;
+	i = 0;
+	while (or[i])
 	{
-		ut->ret = new;
-		ut->head = new;
+		if (i == *n)
+			i++;
+		else
+			ret[j++] = ft_strdup(or[i++]);
 	}
-	else
+	(*n)--;
+	i = 0;
+	while (ret[i])
+		i++;
+	return (ret);
+}
+
+void	check_empty(int *i, t_token *tmp)
+{
+	char	**clean;
+
+	if (!tmp->cmd_args[*i][0])
 	{
-		new->prev = ut->ret;
-		ut->ret->next = new;
-		ut->ret = ut->ret->next;
+		clean = tmp->cmd_args;
+		tmp->cmd_args = remove_empty(tmp->cmd_args, i);
+		if (clean)
+			free_d_arr(clean);
 	}
-	if (ut->ret->prev)
+}
+
+void	clean_args(t_token *token)
+{
+	t_token	*tmp;
+	int		i;
+	int		j;
+
+	tmp = token;
+	while (tmp)
 	{
-		if (!ut->ret->prev->output)
+		i = 0;
+		while (tmp->cmd_args && tmp->cmd_args[i])
 		{
-			free_token_light(ut->ret);
-			return (1);
+			j = 0;
+			if (tmp->cmd_args[i])
+				check_empty(&i, tmp);
+			else
+			{
+				i++;
+				if (!tmp->cmd_args[i])
+					break ;
+			}
+			i++;
 		}
-		ut->ret->input = put_pipe();
+		tmp = tmp->next;
 	}
-	return (0);
-}
-
-char	**put_pipe(void)
-{
-	char	**str;
-
-	str = malloc(sizeof(char *) * 2);
-	str[0] = ft_strdup("|");
-	str[1] = 0;
-	return (str);
-}
-
-void	init_var(t_util *ut, int *i, int *j, t_mini *mini)
-{
-	*i = 0;
-	*j = 0;
-	ut->old = mini->tokens;
-	ut->ret = NULL;
 }

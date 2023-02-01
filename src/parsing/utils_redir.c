@@ -10,71 +10,44 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
-char	**remove_empty(char **or, int *n)
+void	mod_heredoc(t_util *ut, int i)
 {
-	int		i;
-	int		j;
-	char	**ret;
+	int		*tmp_int;
 
-	i = 0;
-	j = 0;
-	while (or[i])
-		i++;
-	ret = malloc(sizeof(char *) * i);
-	ret[--i] = NULL;
-	i = 0;
-	while (or[i])
-	{
-		if (i == *n)
-			i++;
-		else
-			ret[j++] = ft_strdup(or[i++]);
-	}
-	(*n)--;
-	i = 0;
-	while (ret[i])
-		i++;
-	return (ret);
+	tmp_int = ut->ret->heredoc;
+	if (ut->old->type == '<')
+		ut->ret->heredoc = add_int(ut->ret->heredoc, 0, i, ut->ilen);
+	else
+		ut->ret->heredoc = add_int(ut->ret->heredoc, 1, i, ut->ilen);
+	(ut->ilen)++;
+	if (tmp_int)
+		free(tmp_int);
 }
 
-void	check_empty(int *i, t_token *tmp)
+void	mod_append(t_util *ut, int i)
 {
-	char	**clean;
+	int		*tmp_int;
 
-	if (!tmp->cmd_args[*i][0])
-	{
-		clean = tmp->cmd_args;
-		tmp->cmd_args = remove_empty(tmp->cmd_args, i);
-		if (clean)
-			free_d_arr(clean);
-	}
+	tmp_int = ut->ret->append;
+	if (ut->old->type == '>')
+		ut->ret->append = add_int(ut->ret->append, 0, i, ut->olen);
+	else
+		ut->ret->append = add_int(ut->ret->append, 1, i, ut->olen);
+	ut->olen += i;
+	if (tmp_int)
+		free(tmp_int);
 }
 
-void	clean_args(t_token *token)
+int	check_valid_args(t_util *ut)
 {
-	t_token	*tmp;
-	int		i;
-	int		j;
-
-	tmp = token;
-	while (tmp)
+	if (!ut->old->next || !ut->old->next->cmd_args
+		|| !ut->old->next->cmd_args[0] || !ut->old->next->cmd_args[0][0])
 	{
-		i = 0;
-		while (tmp->cmd_args && tmp->cmd_args[i])
-		{
-			j = 0;
-			if (tmp->cmd_args[i])
-				check_empty(&i, tmp);
-			else
-			{
-				i++;
-				if (!tmp->cmd_args[i])
-					break ;
-			}
-			i++;
-		}
-		tmp = tmp->next;
+		free_token_light(ut->head);
+		ut->head = NULL;
+		return (1);
 	}
+	return (0);
 }

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 void	check_q_ext(t_ext *ex, t_token *tmp, int *i, int *j)
 {
